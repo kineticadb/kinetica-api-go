@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"bitbucket.org/gisfederal/gpudb-api-go/example"
-	"bitbucket.org/gisfederal/gpudb-api-go/kinetica"
 	"github.com/gocarina/gocsv"
+	"github.com/kineticadb/gpudb-api-go/example"
+	"github.com/kineticadb/gpudb-api-go/kinetica"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 )

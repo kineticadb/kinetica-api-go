@@ -1,4 +1,4 @@
-module bitbucket.org/gisfederal/gpudb-api-go
+module github.com/kineticadb/gpudb-api-go
 
 go 1.20
 
@@ -22,7 +22,6 @@ require (
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/gocarina/gocsv v0.0.0-20230616125104-99d496ca653d
-	github.com/hamba/avro/v2 v2.13.0
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
