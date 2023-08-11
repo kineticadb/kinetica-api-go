@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gocarina/gocsv"
-	"github.com/kineticadb/gpudb-api-go/example"
-	"github.com/kineticadb/gpudb-api-go/kinetica"
+	"github.com/kineticadb/kinetica-api-go/example"
+	"github.com/kineticadb/kinetica-api-go/kinetica"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 )

@@ -1,4 +1,4 @@
-module github.com/kineticadb/gpudb-api-go
+module github.com/kineticadb/kinetica-api-go
 
 go 1.20
 
