@@ -1,0 +1,36 @@
+{
+    "endpoint": "/alter/table/metadata", 
+    "type": "record", 
+    "name": "alter_table_metadata_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "Value of @{input table_names}.", 
+            "value": {}
+        }, 
+        {
+            "name": "metadata_map", 
+            "type": {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Value of @{input metadata_map}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

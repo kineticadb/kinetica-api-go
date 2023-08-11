@@ -1,0 +1,69 @@
+{
+    "endpoint": "/has/permission", 
+    "type": "record", 
+    "name": "has_permission_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "name", 
+            "type": "string",
+            "doc": "Value of @{input name}", 
+            "value": {}
+        },
+        {
+            "name": "target", 
+            "type": "string",
+            "doc": "Fully-qualified value of @{input target}",
+            "value": {}
+        },
+        {
+            "name": "permission", 
+            "type": "string",
+            "doc": "Value of @{input permission}", 
+            "value": {}
+        },
+        {
+            "name": "has_permission", 
+            "type": "boolean",
+            "doc": "Indicates whether the specified user has the specified permission on the specified target.", 
+            "value": 
+            {
+                "valid_choices" :
+                {
+                    "true" :
+                    {
+                        "doc" : "User has the effective queried permission",
+                        "type" : "boolean",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "User does not have the queried permission",
+                        "type" : "boolean",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "filters",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Map of column/filters that have been granted.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

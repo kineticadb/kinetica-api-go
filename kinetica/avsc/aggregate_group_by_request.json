@@ -1,0 +1,496 @@
+{
+    "endpoint": "/aggregate/groupby",
+    "type": "record",
+    "name": "aggregate_group_by_request",
+    "desc_name": "Aggregate Group By",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Calculate unique combinations of values for the given columns in a given dataset",
+    "doc": "Calculates unique combinations (groups) of values for the given columns in a given table or view and computes aggregates on each unique combination. This is somewhat analogous to an SQL-style SELECT...GROUP BY.
+
+For aggregation details and examples, see {Aggregation}@{link /concepts/aggregation/}.  For limitations, see {Aggregation Limitations}@{link /concepts/aggregation/#limitations}.
+
+Any column(s) can be grouped on, and all column types except unrestricted-length strings may be used for computing applicable aggregates; columns marked as {store-only}@{link /concepts/types/#data-handling} are unable to be used in grouping or aggregation.
+
+The results can be paged via the @{input offset} and @{input limit} parameters. For example, to get 10 groups with the largest counts the inputs would be: limit=10, options={\"sort_order\":\"descending\", \"sort_by\":\"value\"}.
+
+@{Input options} can be used to customize behavior of this call e.g. filtering or sorting the results.
+
+To group by columns 'x' and 'y' and compute the number of objects within each group, use:  column_names=['x','y','count(*)'].
+
+To also compute the sum of 'z' over each group, use:  column_names=['x','y','count(*)','sum(z)'].
+
+Available {aggregation functions}@{link /concepts/expressions/#aggregate-expressions} are: count(*), sum, min, max, avg, mean, stddev, stddev_pop, stddev_samp, var, var_pop, var_samp, arg_min, arg_max and count_distinct.
+
+Available grouping functions are {Rollup}@{link /concepts/rollup/}, {Cube}@{link /concepts/cube/}, and {Grouping Sets}@{link /concepts/grouping_sets/}
+
+This service also provides support for {Pivot}@{link /concepts/pivot/} operations.
+
+Filtering on aggregates is supported via expressions using {aggregation functions}@{link /concepts/expressions/#aggregate-expressions} supplied to {having}@{key of input options}.
+
+The response is returned as a dynamic schema. For details see: {dynamic schemas documentation}@{link /api/#dynamic-schemas}.
+
+If a {result_table}@{key of input options} name is specified in the @{input options}, the results are stored in a new table with that name--no results are returned in the response.  Both the table name and resulting column names must adhere to {standard naming conventions}@{link /concepts/tables/#table}; column/aggregation expressions will need to be aliased.  If the source table's {shard key}@{link /concepts/tables/#shard-keys} is used as the grouping column(s) and all result records are selected (@{input offset} is 0 and @{input limit} is -9999), the result table will be sharded, in all other cases it will be replicated.  Sorting will properly function only if the result table is replicated or if there is only one processing node and should not be relied upon in other cases.  Not available when any of the values of @{input column_names} is an unrestricted-length string.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of an existing table or view on which the operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of one or more column names, expressions, and aggregate expressions.",
+            "value": {}
+        },
+        {
+            "name": "offset",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the number of initial results to skip (this can be useful for paging through the results).",
+            "value" :
+            {
+                "default": 0,
+                "min" : "0",
+                "max" : "MAX_INT"
+            }
+        },
+        {
+            "name" : "limit",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the maximum number of results to be returned, or END_OF_SET (-9999) to indicate that the max number of results should be returned.  The number of records returned will never exceed the server's own limit, defined by the {max_get_records_size}@{link /config/#general} parameter in the server configuration.  Use @{output has_more_records} to see if more records exist in the result to be fetched, and @{input offset} & @{input limit} to request subsequent pages of results.",
+            "value" :
+            {
+                "default": -9999
+            }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc": "Indicates that the returned records should be binary encoded.",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc": "Indicates that the returned records should be json encoded.",
+                        "value" : {}
+                    }
+                },
+                "default" : "binary",
+                "semantics":
+                {
+                    "type" : "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema as part of {result_table}@{key of input options} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema which is to contain the table specified in {result_table}@{key of input options}. If the schema provided is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "expression" :
+                    {
+                        "doc"  : "Filter expression to apply to the table prior to computing the aggregate group by.",
+                        "value" : {}
+                    },
+                    "having" :
+                    {
+                        "doc"  : "Filter expression to apply to the aggregated results.",
+                        "value" : {}
+                    },
+                    "sort_order" :
+                    {
+                        "doc"  : "String indicating how the returned values should be sorted - ascending or descending.",
+                        "value" :
+                        {
+                            "default" : "ascending",
+                            "valid_choices" :
+                            {
+                                "ascending" :
+                                {
+                                    "doc" : "Indicates that the returned values should be sorted in ascending order.",
+                                    "value" : {}
+                                },
+                                "descending" :
+                                {
+                                    "doc" : "Indicates that the returned values should be sorted in descending order.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "sort_by" :
+                    {
+                        "doc"  : "String determining how the results are sorted.",
+                        "value" :
+                        {
+                            "default" : "value",
+                            "valid_choices" :
+                            {
+                                "key" :
+                                {
+                                    "doc" : "Indicates that the returned values should be sorted by key, which corresponds to the grouping columns. If you have multiple grouping columns (and are sorting by key), it will first sort the first grouping column, then the second grouping column, etc.",
+                                    "value" : {}
+                                },
+                                "value" :
+                                {
+                                    "doc" : "Indicates that the returned values should be sorted by value, which corresponds to the aggregates. If you have multiple aggregates (and are sorting by value), it will first sort by the first aggregate, then the second aggregate, etc.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "join_from" :
+                    {
+                        "doc"  : "TODO.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "result_table":
+                    {
+                        "doc" : "The name of a table used to store the results, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Column names (group-by and aggregate fields) need to be given aliases e.g. [\"FChar256 as fchar256\", \"sum(FDouble) as sfd\"].  If present, no results are returned in the response.  This option is not available if one of the grouping attributes is an unrestricted string (i.e.; not charN) type.",
+                        "value" :
+                        {
+                            "is_output_table_name": true
+                        }
+                    },
+                    "result_table_persist" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.result_table_persist}, then the result table specified in {result_table}@{key of input options} will be persisted and will not expire unless a {ttl}@{key of input options} is specified.   If {false}@{choice of input.key options.result_table_persist}, then the result table will be an in-memory table and will expire unless a {ttl}@{key of input options} is specified otherwise.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "result_table_force_replicated":
+                    {
+                        "doc" : "Force the result table to be replicated (ignores any sharding). Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "result_table_generate_pk":
+                    {
+                        "doc" : "If {true}@{choice of input.key options.result_table_generate_pk} then set a primary key for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the table specified in {result_table}@{key of input options}.",
+                        "value" : {}
+                    },
+                    "chunk_size" :
+                    {
+                        "doc"  : "Indicates the number of records per chunk to be used for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "chunk_column_max_memory" :
+                    {
+                        "doc"  : "Indicates the target maximum data size for each column in a chunk to be used for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "create_indexes" :
+                    {
+                        "doc"  : "Comma-separated list of columns on which to create indexes on the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "ID of view of which the result table will be a member",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "materialize_on_gpu" :
+                    {
+                        "doc": "No longer used.  See {Resource Management Concepts}@{link /rm/concepts/} for information about how resources are managed.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "pmerge_grain_size" :
+                    {
+                        "doc"  : "Sets the grain size for multi-threaded merge used in the group by processing. Valid range is 1 to 9999 (in multiples of 1024). Default is 100.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "merge_size" :
+                    {
+                        "doc"  : "Set the value of k in k-way merge. The valid values are 2 to 64. The optimal values are (8,16,32,64). Any value other than 2-64 will change the method to binary merge. The zero is the default and response message count is used to determine the binary/kway(64) merge.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+		    "pivot" :
+		    {
+			    "doc": "pivot column",
+			    "value" :
+			    {
+				    "internal_option" : false
+			    }
+		    },
+
+		    "pivot_values" :
+		    {
+			    "doc" : "The value list provided will become the column headers in the output. Should be the values from the pivot_column.",
+			    "value" :
+			    {
+				  "internal_option": false
+			    }
+		    },
+                    "grouping_sets" :
+                    {
+                        "doc" : "Customize the grouping attribute sets to compute the aggregates. These sets can include ROLLUP or CUBE operartors. The attribute sets should be enclosed in paranthesis and can include composite attributes. All attributes specified in the grouping sets must present in the groupby attributes.",
+                        "value" :
+                        {
+                        "internal_option": false
+                        }
+                    },
+                    "rollup" :
+                    {
+                        "doc" : "This option is used to specify the multilevel aggregates.",
+                        "value" :
+                        {
+                        "internal_option": false
+                        }
+                    },
+                    "cube" :
+                    {
+                        "doc" : "This option is used to specify the multidimensional aggregates.",
+                        "value" :
+                        {
+                        "internal_option": false
+                        }
+                    },
+                    "having_constraint" :
+                    {
+                        "doc" : "This option is used to report error if having filter qualifies rows.",
+                        "value" :
+                        {
+                        "internal_option": true
+                        }
+                    },
+                    "sleep_on_refresh":
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "refresh_type":
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_definition" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "create_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "no_count" :
+                    {
+                        "doc"  : "return a count of 0 for the join table for logging and for show_table. optimization needed for large overlapped equi-join stencils",
+                        "value" :
+                        {
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    },
+                    "in_initialize_materialized_view":
+                    {
+                        "doc"  :  "option set internally to indicate to worker the group-by result table is part of a persisted materialized view being created at startup - in combination with throw_error:on_worker_restart will cause worker to throw an error",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default": ""
+                        }
+                    },
+                    "throw_error":
+                    {
+                        "doc"  :  "The option can be set to throw errors on the worker or the head node and the error can be thrown either during the initial creation of the table, during initialization of a view member at restart or during view refresh.",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "on_worker_creation":
+                                {
+                                    "doc": "throw an error from the worker when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_worker_refresh" :
+                                {
+                                    "doc": "throw an error from the worker when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_worker_restart" :
+                                {
+                                    "doc": "throw an error from the worker when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                },
+                                "on_head_node_creation":
+                                {
+                                    "doc": "throw an error from the head node when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_head_node_refresh" :
+                                {
+                                    "doc": "throw an error from the head node when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_head_node_restart" :
+                                {
+                                    "doc": "throw an error from the head node when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "retain_latent_view_members":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "shard_local":
+                    {
+                        "doc" : "When true the group-by results-table is genrated such that group-by results created for the local tom are the group-by results.  Resulting table is randomly sharded",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

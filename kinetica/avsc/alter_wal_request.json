@@ -1,0 +1,110 @@
+{
+    "endpoint": "/alter/wal",
+    "type": "record",
+    "name": "alter_wal_request",
+    "desc_name": "Alter Wal",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alters table wal settings",
+    "doc": "Alters table wal settings.",
+    "fields": [
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of tables to modify. An asterisk changes the system settings.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "max_segment_size" :
+                    {
+                        "doc" : "Maximum size of an individual segment file",
+                        "value": {}
+                    },
+                    "segment_count" :
+                    {
+                        "doc" : "Approximate number of segment files to split the wal across. Must be at least two.",
+                        "value": {}
+                    },
+                    "sync_policy" :
+                    {
+                        "doc" : "Maximum size of an individual segment file",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "none" :
+                                {
+                                    "doc" : "Disables the wal",
+                                    "value": {}
+                                },
+                                "background" :
+                                {
+                                    "doc" : "Wal entries are periodically written instead of immediately after each operation",
+                                    "value": {}
+                                },
+                                "flush" :
+                                {
+                                    "doc" : "Protects entries in the event of a database crash",
+                                    "value": {}
+                                },
+                                "fsync" :
+                                {
+                                    "doc" : "Protects entries in the event of an OS crash",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "flush_frequency" :
+                    {
+                        "doc" : "Specifies how frequently wal entries are written with background sync. This is a global setting and can only be used with the system {options.table_names} specifier '*'.",
+                        "value": {}
+                    },
+                    "checksum" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.checksum} each entry will be checked against a protective checksum.",
+                        "value":
+                        {
+                            "default": "true",
+                            "valid_choices" : { "true" : { "doc" : "", "value" : {} }, "false" : { "doc" : "", "value" : {} } }
+                        }
+                    },
+                    "override_non_default" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.override_non_default} tables with unique wal settings will be overridden when applying a system level change.",
+                        "value":
+                        {
+                            "default": "false",
+                            "valid_choices" : { "true" : { "doc" : "", "value" : {} }, "false" : { "doc" : "", "value" : {} } }
+                        }
+                    },
+                    "restore_system_settings" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.restore_system_settings} tables with unique wal settings will be reverted to the current global settings. Cannot be used in conjunction with any other option.",
+                        "value":
+                        {
+                            "default": "false",
+                            "valid_choices" : { "true" : { "doc" : "", "value" : {} }, "false" : { "doc" : "", "value" : {} } }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "endpoint": "/drop/container/registry",
+    "type": "record",
+    "name": "drop_container_registry_request",
+    "desc_name": "Drop a container registry",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Drop a container registry",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "registry_name",
+            "type": "string",
+            "doc": "Name of the registry to be dropped",
+            "value":{}
+
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {}
+            }
+        }
+    ]
+}

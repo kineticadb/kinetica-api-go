@@ -1,0 +1,33 @@
+{
+    "endpoint": "/admin/verifydb",
+    "type": "record", 
+    "name": "admin_verify_db_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "verified_ok",
+            "type": "boolean",
+            "doc": "True if no errors were found, false otherwise.",
+            "value": { "default": "false" }
+        },
+        {
+            "name": "error_list",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of errors found while validating the database internal state.",
+            "value": { "default": [] }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

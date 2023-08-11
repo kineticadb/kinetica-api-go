@@ -1,0 +1,45 @@
+{
+    "endpoint": "/show/system/timing", 
+    "type": "record", 
+    "name": "show_system_timing_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "endpoints", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "List of recently called endpoints, most recent first.", 
+            "value": {}
+        }, 
+        {
+            "name": "time_in_ms", 
+            "type": {
+                "type": "array", 
+                "items": "float"
+            }, 
+            "doc": "List of time (in ms) of the recent requests.", 
+            "value": {}
+        }, 
+        {
+            "name": "jobIds", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "List of the internal job ids for the recent requests.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

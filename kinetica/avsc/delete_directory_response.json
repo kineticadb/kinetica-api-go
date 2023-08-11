@@ -1,0 +1,24 @@
+{
+    "endpoint": "/delete/directory",
+    "type": "record",
+    "name": "delete_directory_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "directory_name",
+            "type": "string",
+            "doc": "Value of @{input directory_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+    "endpoint": "/admin/backup/begin",
+    "type": "record",
+    "name": "admin_backup_begin_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

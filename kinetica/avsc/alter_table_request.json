@@ -1,0 +1,391 @@
+{
+    "endpoint": "/alter/table",
+    "type": "record",
+    "name": "alter_table_request",
+    "desc_name": "Alter Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Modify various properties of a table or view",
+    "doc": "Apply various modifications to a table or view.  The
+available modifications include the following:
+
+Manage a table's columns--a column can be added, removed, or have its
+{type and properties}@{link /concepts/types/} modified, including
+whether it is {compressed}@{link /concepts/compression/} or not.
+
+External tables cannot be modified except for their refresh method.
+
+Create or delete an {index}@{link /concepts/indexes/#column-index} on a
+particular column. This can speed up certain operations when using expressions
+containing equality or relational operators on indexed columns. This only
+applies to tables.
+
+Create or delete a {foreign key}@{link /concepts/tables/#foreign-key}
+on a particular column.
+
+Manage a
+{range-partitioned}@{link /concepts/tables/#partitioning-by-range} or a
+{manual list-partitioned}@{link /concepts/tables/#partitioning-by-list-manual}
+table's partitions.
+
+Set (or reset) the {tier strategy}@{link /rm/concepts/#tier-strategies}
+of a table or view.
+
+Refresh and manage the refresh mode of a
+{materialized view}@{link /concepts/materialized_views/} or an
+{external table}@{link /concepts/external_tables/}.
+
+Set the {time-to-live (TTL)}@{link /concepts/ttl/}. This can be applied
+to tables or views. 
+
+Set the global access mode (i.e. locking) for a table. This setting trumps any
+role-based access controls that may be in place; e.g., a user with write access
+to a table marked read-only will not be able to insert records into it. The mode
+can be set to read-only, write-only, read/write, and no access.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Table on which the operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table or view.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Modification operation to be applied",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "allow_homogeneous_tables" :
+                    {
+                        "doc" : "No longer supported; action will be ignored.",
+                        "value" : {}
+                    },
+                    "create_index" :
+                    {
+                        "doc" : "Creates either a {column (attribute) index}@{link /concepts/indexes/#column-index} or {chunk skip index}@{link /concepts/indexes/#chunk-skip-index}, depending on the specified {index_type}@{key of input options}, on the column name specified in @{input value}. If this column already has the specified index, an error will be returned.",
+                        "value" : {}
+                    },
+                    "delete_index" :
+                    {
+                        "doc" : "Deletes either a {column (attribute) index}@{link /concepts/indexes/#column-index} or {chunk skip index}@{link /concepts/indexes/#chunk-skip-index}, depending on the specified {index_type}@{key of input options}, on the column name specified in @{input value}. If this column does not have the specified index, an error will be returned.",
+                        "value" : {}
+                    },
+                    "move_to_collection" :
+                    {
+                        "doc" : "[DEPRECATED--please use {move_to_schema}@{choice of input action} and use @{endpoint /create/schema} to create the schema if non-existent]  Moves a table or view into a schema named @{input value}.  If the schema provided is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "move_to_schema" :
+                    {
+                        "doc" : "Moves a table or view into a schema named @{input value}.  If the schema provided is non-existent, an error will be thrown. If @{input value} is empty, then the table or view will be placed in the user's default schema.",
+                        "value" : {}
+                    },
+                    "protected" :
+                    {
+                        "doc" : "No longer used.  Previously set whether the given @{input table_name} should be protected or not. The @{input value} would have been either 'true' or 'false'.",
+                        "value" : {}
+                    },
+                    "rename_table" :
+                    {
+                        "doc" : "Renames a table or view within its current schema to @{input value}. Has the same naming restrictions as {tables}@{link /concepts/tables/}.",
+                        "value" : {}
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {time-to-live}@{link /concepts/ttl/} in minutes of the table or view specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "memory_ttl" :
+                    {
+                        "doc" : "No longer used.",
+                        "value" :
+                        {
+                           "internal_option": true
+                        }
+                    },
+                    "add_column" :
+                    {
+                        "doc" : "Adds the column specified in @{input value} to the table specified in @{input table_name}.  Use {column_type}@{key of input options} and {column_properties}@{key of input options} in @{input options} to set the column's type and properties, respectively.",
+                        "value" : {}
+                    },
+                    "change_column" :
+                    {
+                        "doc" : "Changes type and properties of the column specified in @{input value}.  Use {column_type}@{key of input options} and {column_properties}@{key of input options} in @{input options} to set the column's type and properties, respectively. Note that primary key and/or shard key columns cannot be changed. All unchanging column properties must be listed for the change to take place, e.g., to add dictionary encoding to an existing 'char4' column, both 'char4' and 'dict' must be specified in the @{input options} map.",
+                        "value" : {}
+                    },
+                    "set_column_compression" :
+                    {
+                        "doc" : "Modifies the {compression}@{link /concepts/compression/} setting on the column specified in @{input value} to the compression type specified in {compression_type}@{key of input options}. ",
+                        "value" : {}
+                    },
+                    "delete_column" :
+                    {
+                        "doc" : "Deletes the column specified in @{input value} from the table specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "create_foreign_key" :
+                    {
+                        "doc" : "Creates a {foreign key}@{link /concepts/tables/#foreign-key} specified in @{input value} using the format '(source_column_name [, ...]) references target_table_name(primary_key_column_name [, ...]) [as foreign_key_name]'.",
+                        "value" : {}
+                    },
+                    "delete_foreign_key" :
+                    {
+                        "doc" : "Deletes a {foreign key}@{link /concepts/tables/#foreign-key}.  The @{input value} should be the foreign_key_name specified when creating the key or the complete string used to define it.",
+                        "value" : {}
+                    },
+                    "add_partition" :
+                    {
+                        "doc" : "Adds the partition specified in @{input value}, to either a {range-partitioned}@{link /concepts/tables/#partitioning-by-range} or {manual list-partitioned}@{link /concepts/tables/#partitioning-by-list-manual} table.",
+                        "value" : {}
+                    },
+                    "remove_partition" :
+                    {
+                        "doc" : "Removes the partition specified in @{input value} (and relocates all of its data to the default partition) from either a {range-partitioned}@{link /concepts/tables/#partitioning-by-range} or {manual list-partitioned}@{link /concepts/tables/#partitioning-by-list-manual} table.",
+                        "value" : {}
+                    },
+                    "delete_partition" :
+                    {
+                        "doc" : "Deletes the partition specified in @{input value} (and all of its data) from either a {range-partitioned}@{link /concepts/tables/#partitioning-by-range} or {manual list-partitioned}@{link /concepts/tables/#partitioning-by-list-manual} table.",
+                        "value" : {}
+                    },
+                    "set_global_access_mode" :
+                    {
+                        "doc" : "Sets the global access mode (i.e. locking) for the table specified in @{input table_name}. Specify the access mode in @{input value}. Valid modes are 'no_access', 'read_only', 'write_only' and 'read_write'.",
+                        "value" : {}
+                    },
+                    "refresh" :
+                    {
+                        "doc" : "For a {materialized view}@{link /concepts/materialized_views/}, replays all the table creation commands required to create the view.  For an {external table}@{link /concepts/external_tables/}, reloads all data in the table from its associated source files or {data source}@{link /concepts/data_sources/}.",
+                        "value" : {}
+                    },
+                    "set_refresh_method" :
+                    {
+                        "doc" : "For a {materialized view}@{link /concepts/materialized_views/}, sets the method by which the view is refreshed to the method specified in @{input value} - one of 'manual', 'periodic', or 'on_change'.  For an {external table}@{link /concepts/external_tables/}, sets the method by which the table is refreshed to the method specified in @{input value} - either 'manual' or 'on_start'.",
+                        "value" : {}
+                    },
+                    "set_refresh_start_time" :
+                    {
+                        "doc" : "Sets the time to start periodic refreshes of this {materialized view}@{link /concepts/materialized_views/} to the datetime string specified in @{input value} with format 'YYYY-MM-DD HH:MM:SS'.  Subsequent refreshes occur at the specified time + N * the refresh period.",
+                        "value" : {}
+                    },
+                    "set_refresh_period" :
+                    {
+                        "doc" : "Sets the time interval in seconds at which to refresh this {materialized view}@{link /concepts/materialized_views/} to the value specified in @{input value}.  Also, sets the refresh method to periodic if not already set.",
+                        "value" : {}
+                    },
+                    "set_refresh_execute_as" :
+                    {
+                        "doc" : "Sets the user name to refresh this {materialized view}@{link /concepts/materialized_views/} to the value specified in @{input value}.",
+                        "value" : {}
+                    },
+                    "remove_text_search_attributes" :
+                    {
+                        "doc" : "Removes {text search}@{link /concepts/full_text_search/} attribute from all columns.",
+                        "value" : {}
+                    },
+                    "set_strategy_definition" :
+                    {
+                        "doc" : "Sets the {tier strategy}@{link /rm/concepts/#tier-strategies} for the table and its columns to the one specified in @{input value}, replacing the existing tier strategy in its entirety.",
+                        "value" : {}
+                    },
+                    "cancel_datasource_subscription" :
+                    {
+                        "doc" : "Permanently unsubscribe a data source that is loading continuously as a stream. The data source can be kafka / S3 / Azure.",
+                        "value" : {}
+                    },
+                    "pause_datasource_subscription" :
+                    {
+                        "doc" : "Temporarily unsubscribe a data source that is loading continuously as a stream. The data source can be kafka / S3 / Azure.",
+                        "value" : {}
+                    } ,
+                    "resume_datasource_subscription" :
+                    {
+                        "doc" : "Resubscribe to a paused data source subscription. The data source can be kafka / S3 / Azure.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "value",
+            "type": "string",
+            "doc": "The value of the modification, depending on @{input action}.  For example, if @{input action} is {add_column}@{choice of input action}, this would be the column name; while the column's definition would be covered by the {column_type}@{key of input options}, {column_properties}@{key of input options}, {column_default_value}@{key of input options}, and {add_column_expression}@{key of input options} in @{input options}.  If @{input action} is {ttl}@{choice of input action}, it would be the number of minutes for the new TTL. If @{input action} is {refresh}@{choice of input action}, this field would be blank.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "valid_keys" :
+                {
+                    "action" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "column_name" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "table_name" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "column_default_value" :
+                    {
+                        "doc" : "When adding a column, set a default value for existing records.  For nullable columns, the default value will be null, regardless of data type.",
+                        "value" : {}
+                    },
+                    "column_properties" :
+                    {
+                        "doc" : "When adding or changing a column, set the column properties (strings, separated by a comma: data, store_only, text_search, char8, int8 etc).",
+                        "value" : {}
+                    },
+                    "column_type" :
+                    {
+                        "doc" : "When adding or changing a column, set the column type (strings, separated by a comma: int, double, string, null etc).",
+                        "value" : {}
+                    },
+                    "compression_type" :
+                    {
+                        "doc" : "When setting column compression ({set_column_compression}@{choice of input action} for @{input action}), compression type to use: {none}@{choice of input.key options.compression_type} (to use no compression) or a valid compression type.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "none" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "snappy" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "lz4" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "lz4hc" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "snappy"
+                        }
+                    },
+                    "copy_values_from_column" :
+                    {
+                        "doc" : "[DEPRECATED--please use {add_column_expression}@{key of input options} instead.]",
+                        "value" : {}
+                    },
+                    "rename_column" :
+                    {
+                        "doc" : "When changing a column, specify new column name.",
+                        "value" : {}
+                    },
+                    "validate_change_column" :
+                    {
+                        "doc" : "When changing a column, validate the change before applying it (or not).",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "Validate all values. A value too large (or too long) for the new type will prevent any change.",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "When a value is too large or long, it will be truncated.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "update_last_access_time" :
+                    {
+                        "doc" : "Indicates whether the {time-to-live}@{link /concepts/ttl/} (TTL) expiration countdown timer should be reset to the table's TTL.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "Reset the expiration countdown timer to the table's configured TTL.",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "Don't reset the timer; expiration countdown will continue from where it is, as if the table had not been accessed.",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "true"
+                        }
+                    },
+                    "add_column_expression" :
+                    {
+                        "doc" : "When adding a column, an optional expression to use for the new column's values. Any valid expression may be used, including one containing references to existing columns in the same table.",
+                        "value" : {}
+                    },
+                    "strategy_definition" :
+                    {
+                        "doc" : "Optional parameter for specifying the {tier strategy}@{link /rm/concepts/#tier-strategies} for the table and its columns when @{input action} is {set_strategy_definition}@{choice of input action}, replacing the existing tier strategy in its entirety.",
+                        "value" : {}
+                    },
+                    "index_type" :
+                    {
+                        "doc" : "Type of index to create, when @{input action} is {create_index}@{choice of input action}, or to delete, when @{input action} is {delete_index}@{choice of input action}.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "column" :
+                                {
+                                    "doc" : "Create or delete a {column (attribute) index}@{link /concepts/indexes/#column-index}.",
+                                    "value" : {}
+                                },
+                                "chunk_skip" :
+                                {
+                                    "doc" : "Create or delete a {chunk skip index}@{link /concepts/indexes/#chunk-skip-index}.",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "column"
+                        }
+                    },
+                    "clear_entry_on_unsubscribe" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+                },
+                "default" : {}
+            }
+        }
+    ]
+}

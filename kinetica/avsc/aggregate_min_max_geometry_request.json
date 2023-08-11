@@ -1,0 +1,42 @@
+{
+    "endpoint": "/aggregate/minmax/geometry", 
+    "type": "record", 
+    "name": "aggregate_min_max_geometry_request", 
+    "desc_name": "Aggregate Min/Max Geometry",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Calculate the min and max x- and y- coordinates of a geospatial geometry column in a dataset",
+    "doc": "Calculates and returns the minimum and maximum x- and y-coordinates
+of a particular geospatial geometry column in a table.", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of the table on which the operation will be performed. Must be an existing table, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "column_name", 
+            "type": "string", 
+            "doc": "Name of a geospatial geometry column on which the min-max will be calculated.", 
+            "value": {}
+        }, 
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            { 
+                "default" : {} 
+            }
+        }
+    ]
+}

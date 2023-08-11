@@ -1,0 +1,35 @@
+{
+    "endpoint": "/has/table", 
+    "type": "record", 
+    "name": "has_table_request", 
+    "desc_name": "Has Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Check for the existence of specified table",    
+    "doc": "Checks for the existence of a table with the given name.", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string",
+            "doc": "Name of the table to check for existence, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.", 
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

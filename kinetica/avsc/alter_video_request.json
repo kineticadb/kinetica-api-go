@@ -1,0 +1,39 @@
+{
+    "endpoint": "/alter/video",
+    "type": "record",
+    "name": "alter_video_request",
+    "desc_name": "Alter Video",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter a video.",
+    "doc": "Alters a video.",
+    "fields": [
+        {
+            "name": "path",
+            "type": "string",
+            "doc": "Fully-qualified {KiFS}@{link /tools/kifs/} path to the video to be altered.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" : {
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the video.",
+                        "value" : {}
+                    }
+                }
+            }
+        }
+    ]
+}

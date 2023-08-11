@@ -1,0 +1,24 @@
+{
+    "endpoint": "/clear/trigger", 
+    "type": "record", 
+    "name": "clear_trigger_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "trigger_id", 
+            "type": "string", 
+            "doc": "Value of @{input trigger_id}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

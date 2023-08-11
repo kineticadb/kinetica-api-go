@@ -1,0 +1,27 @@
+{
+    "endpoint": "/show/tables/bytype", 
+    "type": "record", 
+    "name": "show_tables_by_type_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "List of tables matching the input criteria.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

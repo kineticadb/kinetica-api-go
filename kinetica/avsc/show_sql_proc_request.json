@@ -1,0 +1,98 @@
+{
+    "endpoint": "/show/sql/proc",
+    "type": "record",
+    "name": "show_sql_proc_request",
+    "desc_name": "Show SQL Procedure",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show information about a SQL Procedure.",
+    "doc" : "Shows information about SQL procedures, including the full definition of each requested procedure.",
+    "fields": [
+        {
+            "name": "procedure_name",
+            "type": "string",
+            "doc": "Name of the procedure for which to retrieve the information. If blank, then information about all procedures is returned.",
+            "value": {
+              "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "no_error_if_not_exists" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.no_error_if_not_exists}, no error will be returned if the requested procedure does not exist.  If {false}@{choice of input.key options.no_error_if_not_exists}, an error will be returned if the requested procedure does not exist.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "case_insensitive" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value": 
+                         {
+                            "valid_choices": 
+                            {
+                                "true": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false",
+                            "internal_option": true
+                        }
+
+                    },
+                    "return_request_avro_json":
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value": 
+                        {
+                            "valid_choices": {
+                                "true": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

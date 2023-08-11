@@ -1,0 +1,74 @@
+{
+    "endpoint": "/show/container/registry",
+    "type": "record",
+    "name": "show_container_registry_response",
+    "desc_name": "Show a container registry",
+    "is_host_manager_endpoint": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Show a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "registry_name",
+            "type": "string",
+            "doc": "Name of the registry" ,
+            "value":{}
+
+        } ,
+        {
+            "name": "registry_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of registries",
+            "value": {}
+        },   
+        {
+            "name": "entity_ids",
+            "type": {
+                "type": "array",
+                "items": "int"
+            },
+            "doc": "List of entity identifiers. Entity ID is an identifier in KML API to locate ML objects. ",
+            "value": {}
+        },    
+       {
+            "name": "uri_list",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of URIs",
+            "value": {}
+        },     
+        {
+            "name": "credential_list",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of credentials",
+            "value": {}
+        },     
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "kml_response" :
+                    {
+                        "doc": "KML response",
+                        "value" : {}
+                    } 
+                }
+            }
+        }
+    ]
+}

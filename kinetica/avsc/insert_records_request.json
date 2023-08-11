@@ -1,0 +1,321 @@
+{
+    "endpoint": "/insert/records", 
+    "type": "record", 
+    "name": "insert_records_request", 
+    "desc_name": "Insert Records",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Add records to specified table",    
+    "doc": "Adds multiple records to the specified table. The operation is
+synchronous, meaning that a response will not be returned until all the records
+are fully inserted and available. The response payload provides the counts of
+the number of records actually inserted and/or updated, and can provide the
+unique identifier of each added record.
+
+The @{input options} parameter can be used to customize this function's
+behavior.
+
+The {update_on_existing_pk}@{key of input options} option specifies the record
+collision policy for inserting into a table with a
+{primary key}@{link /concepts/tables/#primary-keys}, but is ignored if
+no primary key exists.
+
+The {return_record_ids}@{key of input options} option indicates that the
+database should return the unique identifiers of inserted records.",
+    "fields": 
+    [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of table to which the records are to be added, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table.", 
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "list", 
+            "type": 
+            {
+                "type": "array", 
+                "items": "bytes"
+            }, 
+            "doc": "An array of binary-encoded data for the records to be added. All records must be of the same type as that of the table. Empty array if @{input list_encoding} is {json}@{choice of input list_encoding}.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type" : "data",
+                    "encoding" : "binary",
+                    "dimensionality" : 1,
+                    "homogeneous" : true
+                },
+                "managed": "zero_copy"
+            }
+        }, 
+        {
+            "name": "list_str", 
+            "type": 
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "An array of JSON encoded data for the records to be added. All records must be of the same type as that of the table. Empty array if @{input list_encoding} is {binary}@{choice of input list_encoding}.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type" : "data",
+                    "encoding" : "json",
+                    "dimensionality" : 1,
+                    "homogeneous" : true
+                },
+                "managed": "zero_copy"
+            }
+        }, 
+        {
+            "name": "list_encoding", 
+            "type": "string", 
+            "doc": "The encoding of the records to be inserted.", 
+            "value": 
+            { 
+                "default": "binary",
+                "semantics":
+                {
+                    "type" : "encoding"
+                },
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "dependent_input_params": 
+                {
+                    "doc": "An array of {binary}@{choice of input list_encoding} or {json}@{choice of input list_encoding} encoded data for the records to be added.",
+                    "json": "list_str",
+                    "binary": "list"
+                },
+                "special_default_value": "client encoding"
+            }
+        }, 
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "update_on_existing_pk" :
+                    {
+                        "doc"  : "Specifies the record collision policy for inserting into a table with a {primary key}@{link /concepts/tables/#primary-keys}.  If set to {true}@{choice of input.key options.update_on_existing_pk}, any existing table record with primary key values that match those of a record being inserted will be replaced by that new record.  If set to {false}@{choice of input.key options.update_on_existing_pk}, any existing table record with primary key values that match those of a record being inserted will remain unchanged and the new record discarded.  If the specified table does not have a primary key, then this option has no affect.",
+                        "value" : 
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "ignore_existing_pk" :
+                    {
+                        "doc"  : "Specifies the record collision policy for inserting into a table with a {primary key}@{link /concepts/tables/#primary-keys}.  If set to {true}@{choice of input.key options.ignore_existing_pk}, any record being inserted with primary key values that match those of an existing table record will be ignored with no error generated.  If the specified table does not have a primary key, then this option has no affect.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "return_record_ids" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.return_record_ids} then return the internal record id along for each inserted record.", 
+                        "value":
+                        { 
+                            "default" : "false", 
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        } 
+                    },
+                    "route_to_address" :
+                    {
+                        "doc": "Route all records to a specific rank/tom. Option not suitable for tables using primary/shard keys.  The format is 'rank#:tom#', e.g. '1:1' for rank 1 and TOM 1.", 
+                        "value":
+                        {
+                            "internal_option": true
+                        } 
+                    },
+                    "truncate_strings" :
+                    {
+                        "doc"  : "If set to {true}@{choice of input.key options.truncate_strings}, any strings which are too long for their target charN string columns will be truncated to fit.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "return_individual_errors" :
+                    {
+                        "doc"  : "If set to {true}@{choice of input.key options.return_individual_errors}, success will always be returned, and any errors found will be included in the info map.  The \"bad_record_indices\" entry is a comma-separated list of bad records (0-based).  And if so, there will also be an \"error_N\" entry for each record with an error, where N is the index (0-based).",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "allow_partial_batch" :
+                    {
+                        "doc"  : "If set to {true}@{choice of input.key options.allow_partial_batch}, all correct records will be inserted and incorrect records will be rejected and reported.  Otherwise, the entire batch will be rejected if any records are incorrect.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "dry_run" :
+                    {
+                        "doc"  : "If set to {true}@{choice of input.key options.dry_run}, no data will be saved and any errors will be returned.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "allow_external_table_insert" :
+                    {
+                       "doc" : "<DEVELOPER>",
+                       "value" :
+                       {
+                           "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "true":  { "doc":"", "value" : {}},
+                                "false": { "doc":"", "value" : {}}
+                            }
+                       }
+                    },
+                    "is_projection" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "is_multipart" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

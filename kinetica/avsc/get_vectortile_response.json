@@ -1,0 +1,24 @@
+{
+    "endpoint" : "/get/vectortile",
+    "type" : "record",
+    "name" : "get_vectortile_response",
+    "doc"  : "",
+    "fields" : [
+        { 
+            "name" : "encoded_data",
+            "type" : "string",
+            "doc"  : "Encoded vector tile data.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

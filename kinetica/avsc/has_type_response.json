@@ -1,0 +1,47 @@
+{
+    "endpoint": "/has/type", 
+    "type": "record", 
+    "name": "has_type_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "type_id", 
+            "type": "string",
+            "doc": "Value of @{input type_id}.", 
+            "value": {}
+        },
+        {
+            "name": "type_exists", 
+            "type": "boolean",
+            "doc": "Indicates whether the type exists or not.", 
+            "value": 
+            {
+                "valid_choices" :
+                {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "type" : "boolean",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "type" : "boolean",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

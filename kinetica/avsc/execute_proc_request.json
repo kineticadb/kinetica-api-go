@@ -1,0 +1,152 @@
+{
+    "endpoint": "/execute/proc",
+    "type": "record",
+    "name": "execute_proc_request",
+    "desc_name": "Execute Proc",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Execute a proc",
+    "doc": "Executes a proc. This endpoint is asynchronous and does not wait for
+the proc to complete before returning.
+
+If the proc being executed is distributed, @{input input_table_names} &
+@{input input_column_names} may be passed to the proc to use for reading data,
+and @{input output_table_names} may be passed to the proc to use for writing
+data.
+
+If the proc being executed is non-distributed, these table parameters will be
+ignored.
+",
+    "fields": [
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to execute. Must be the name of a currently existing proc.",
+            "value": {}
+        },
+        {
+            "name": "params",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "A map containing named parameters to pass to the proc. Each key/value pair specifies the name of a parameter and its value.",
+            "value": {
+                "default": {}
+            }
+        },
+        {
+            "name": "bin_params",
+            "type": {
+                "type": "map",
+                "values": "bytes"
+            },
+            "doc": "A map containing named binary parameters to pass to the proc. Each key/value pair specifies the name of a parameter and its value.",
+            "value": {
+                "default": {}
+            }
+        },
+        {
+            "name": "input_table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Names of the tables containing data to be passed to the
+proc. Each name specified must be the name of a currently existing table, in
+[schema_name.]table_name format, using standard
+{name resolution rules}@{link /concepts/tables/#table-name-resolution}.
+If no table names are specified, no data will be passed to the proc.  This
+parameter is ignored if the proc has a non-distributed execution mode.",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "input_column_names",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "Map of table names from @{input input_table_names} to lists
+of names of columns from those tables that will be passed to the proc. Each
+column name specified must be the name of an existing column in the
+corresponding table. If a table name from @{input input_table_names} is not
+included, all columns from that table will be passed to the proc.  This
+parameter is ignored if the proc has a non-distributed execution mode.",
+            "value": {
+                "default": {}
+            }
+        },
+        {
+            "name": "output_table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Names of the tables to which output data from the proc will
+be written, each in [schema_name.]table_name format, using standard
+{name resolution rules}@{link /concepts/tables/#table-name-resolution}
+and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.
+If a specified table does not exist, it will automatically be created with the
+same schema as the corresponding table (by order) from
+@{input input_table_names}, excluding any primary and shard keys. If a specified
+table is a non-persistent result table, it must not have primary or shard keys.
+If no table names are specified, no output data can be returned from the proc.
+This parameter is ignored if the proc has a non-distributed execution mode.",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "cache_input": {
+                        "doc": "A comma-delimited list of table names from @{input input_table_names} from which input data will be cached for use in subsequent calls to @{endpoint /execute/proc} with the {use_cached_input}@{key of input options} option. Cached input data will be retained until the proc status is cleared with the {clear_complete}@{endpoint /show/proc/status} option of @{endpoint /show/proc/status} and all proc instances using the cached data have completed.",
+                        "value": {
+                            "default": ""
+                        }
+                    },
+                    "use_cached_input": {
+                        "doc": "A comma-delimited list of run IDs (as returned from prior calls to @{endpoint /execute/proc}) of running or completed proc instances from which input data cached using the {cache_input}@{key of input options} option will be used. Cached input data will not be used for any tables specified in @{input input_table_names}, but data from all other tables cached for the specified run IDs will be passed to the proc. If the same table was cached for multiple specified run IDs, the cached data from the first run ID specified in the list that includes that table will be used.",
+                        "value": {
+                            "default": ""
+                        }
+                    },
+                    "run_tag": {
+                        "doc": "A string that, if not empty, can be used in subsequent calls to @{endpoint /show/proc/status} or @{endpoint /kill/proc} to identify the proc instance.",
+                        "value": {
+                            "default": ""
+                        }
+                    },
+                    "max_output_lines": {
+                        "doc": "The maximum number of lines of output from stdout and stderr to return via @{endpoint /show/proc/status}. If the number of lines output exceeds the maximum, earlier lines are discarded.",
+                        "value": {
+                            "default": "100"
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

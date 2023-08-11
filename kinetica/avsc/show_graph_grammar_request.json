@@ -1,0 +1,25 @@
+{
+    "endpoint": "/show/graph/grammar",
+    "name": "show_graph_grammar_request",
+    "desc_name": "Show Graph Grammar",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "generate" : "NO_DOCS",
+    "doc": "Request to retrieve the graph component grammar for graph end-points",
+    "short_doc": "Retrieves the graph components grammar and options",
+    "fields": [
+        {
+            "name": "options",
+            "doc": "Additional parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {}
+            }
+        }
+    ]
+}

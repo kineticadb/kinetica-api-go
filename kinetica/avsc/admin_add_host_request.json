@@ -1,0 +1,89 @@
+{
+    "endpoint": "/admin/add/host",
+    "type": "record",
+    "name": "admin_add_host_request",
+    "desc_name": "Administration: Add Host",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "short_doc": "Adds a host to the cluster.",
+    "doc": "Adds a host to an existing cluster.",
+    "fields": [
+        {
+            "name": "host_address",
+            "type": "string",
+            "doc": "IP address of the host that will be added to the cluster. This host must have installed the same version of Kinetica as the cluster to which it is being added.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "dry_run":
+                    {
+                        "doc": "If set to {true}@{choice of input.key options.dry_run}, only validation checks will be performed. No host is added.",
+                        "value": {
+                            "valid_choices": {
+                                "true": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "accepts_failover":
+                    {
+                        "doc": "If set to {true}@{choice of input.key options.accepts_failover}, the host will accept processes (ranks, graph server, etc.) in the event of a failover on another node in the cluster. See {Cluster Resilience}@{link /n_plus_1/} for more information.",
+                        "value": {
+                            "valid_choices": {
+                                "true": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "public_address":
+                    {
+                        "doc": "The publicly-accessible IP address for the host being added, typically specified for clients using multi-head operations. This setting is required if any other host(s) in the cluster specify a public address.",
+                        "value" : {}
+                    },
+                    "host_manager_public_url":
+                    {
+                        "doc": "The publicly-accessible full path URL to the host manager on the host being added, e.g., 'http://172.123.45.67:9300'. The default host manager port can be found in the {list of ports}@{link /install/shared/ports/} used by Kinetica.",
+                        "value" : {}
+                    },
+                    "ram_limit":
+                    {
+                        "doc": "The desired RAM limit for the host being added, i.e. the sum of RAM usage for all processes on the host will not be able to exceed this value. Supported units: K (thousand), KB (kilobytes), M (million), MB (megabytes), G (billion), GB (gigabytes); if no unit is provided, the value is assumed to be in bytes. For example, if {ram_limit}@{key of input options} is set to 10M, the resulting RAM limit is 10 million bytes. Set {ram_limit}@{key of input options} to -1 to have no RAM limit.",
+                        "value" : {}
+                    },
+                    "gpus":
+                    {
+                        "doc": "Comma-delimited list of GPU indices (starting at 1) that are eligible for running worker processes. If left blank, all GPUs on the host being added will be eligible.",
+                        "value": {}
+                    }
+                }
+            }
+        }
+    ]
+}

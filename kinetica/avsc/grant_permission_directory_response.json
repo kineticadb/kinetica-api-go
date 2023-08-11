@@ -1,0 +1,36 @@
+{
+    "endpoint": "/grant/permission/directory",
+    "type": "record",
+    "name": "grant_permission_directory_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Value of @{input permission}.",
+            "value": {}
+        },
+        {
+            "name": "directory_name",
+            "type": "string",
+            "doc": "Value of @{input directory_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

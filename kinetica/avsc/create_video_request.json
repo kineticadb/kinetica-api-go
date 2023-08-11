@@ -1,0 +1,161 @@
+{
+    "endpoint": "/create/video",
+    "type": "record",
+    "name": "create_video_request",
+    "desc_name": "Create Video",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Create a video.",
+    "doc": "Create a job to generate a sequence of raster images that visualize data over a specified time.",
+    "fields": [
+        {
+            "name": "attribute",
+            "type": "string",
+            "doc": "The animated attribute to map to the video's frames. Must be present in the LAYERS specified for the visualization. This is often a time-related field but may be any numeric type.",
+            "value": {}
+        },
+        {
+            "name": "begin",
+            "type": "string",
+            "doc": "The start point for the video. Accepts an expression evaluable over the @{input attribute}.",
+            "value": {}
+        },
+        {
+            "name": "duration_seconds",
+            "type": "double",
+            "doc": "Seconds of video to produce",
+            "value": {}
+        },
+        {
+            "name": "end",
+            "type": "string",
+            "doc": "The end point for the video. Accepts an expression evaluable over the @{input attribute}.",
+            "value": {}
+        },
+        {
+            "name": "frames_per_second",
+            "type": "double",
+            "doc": "The presentation frame rate of the encoded video in frames per second.",
+            "value": {}
+        },
+        {
+            "name": "style",
+            "type": "string",
+            "doc": "The name of the visualize schema used for the @{input style} field.",
+            "value": {
+                "valid_choices" : {
+                    "chart":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "raster":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "classbreak":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "contour":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "heatmap":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "labels":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "path",
+            "type": "string",
+            "doc": "Fully qualified KIFS path.  Write access is required. A file must not exist at that path.",
+            "value": {}
+        },
+        {
+            "name": "style_parameters",
+            "type": "string",
+            "doc" : "A string containing the JSON-encoded visualize request.  Must correspond to the type specified in the @{input style} field.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {},
+                "valid_keys" : {
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link ../../concepts/ttl.html} of the video.",
+                        "value" : {}
+                    },
+                    "window" : 
+                    {
+                        "doc" : "Specified using the data-type corresponding to the @{input attribute}. For a window of size W, a video frame rendered for time t will visualize data in the interval [t-W,t]. The minimum window size is the interval between successive frames.  The minimum value is the default.  If a value less than the minimum value is specified, it is replaced with the minimum window size.  Larger values will make changes throughout the video appear more smooth while smaller values will capture fast variations in the data.",
+                        "value": {}
+                    },
+                    "no_error_if_exists":
+                    {
+                        "doc" : "If {true}@{choice of input.key options.no_error_if_exists}, does not return an error if the video already exists",
+                        "value" : 
+                        {
+                            "valid_choices" : 
+                            {
+                                "false" : 
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                },
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "replace_if_exists":
+                    {
+                        "doc" : "If {true}@{choice of input.key options.replace_if_exists}, deletes any existing video with the same path before creation of a new video.",
+                        "value" : 
+                        {
+                            "valid_choices" : 
+                            {
+                                "false" : 
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                },
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

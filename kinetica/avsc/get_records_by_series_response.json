@@ -1,0 +1,102 @@
+{
+    "endpoint": "/get/records/byseries", 
+    "type": "record", 
+    "name": "get_records_by_series_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "The table name (one per series/track) of the returned series/tracks.", 
+            "value": {}
+        },
+        {
+            "name": "type_names", 
+            "type":
+	    {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "The type IDs (one per series/track) of the returned series/tracks.", 
+            "value":
+	    {
+		"semantics":
+		{
+		    "type": "type_id",
+		    "dimensionality": 1
+		}
+	    }
+        },
+        {
+            "name": "type_schemas", 
+            "type":
+	    {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "The type schemas (one per series/track) of the returned series/tracks.", 
+            "value": {}
+        }, 
+        {
+            "name": "list_records_binary", 
+            "type":
+	    {
+                "type": "array", 
+                "items":
+		{
+                    "type": "array", 
+                    "items": "bytes"
+                }
+            }, 
+            "doc": "If the encoding parameter of the request was 'binary' then this list-of-lists contains the binary encoded records for each object (inner list) in each series/track (outer list). Otherwise, empty list-of-lists.", 
+            "value":
+	    {
+		"semantics":
+		{
+		    "type": "data",
+		    "encoding": "binary",
+		    "homogeneous": false,
+		    "dimensionality": 2
+		},
+        "managed": "zero_copy"
+	    }
+        }, 
+        {
+            "name": "list_records_json", 
+            "type":
+	    {
+                "type": "array", 
+                "items":
+		{
+                    "type": "array", 
+                    "items": "string"
+                }
+            }, 
+            "doc": "If the encoding parameter of the request was 'json' then this list-of-lists contains the json encoded records for each object (inner list) in each series/track (outer list). Otherwise, empty list-of-lists.", 
+            "value":
+	    {
+		"semantics":
+		{
+		    "type": "data",
+		    "encoding": "json",
+		    "homogeneous": false,
+		    "dimensionality": 2
+		},
+        "managed": "zero_copy"
+	    }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

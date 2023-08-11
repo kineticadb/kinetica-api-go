@@ -1,0 +1,35 @@
+{
+    "endpoint": "/solve/graph",
+    "name": "solve_graph_response",
+    "desc_name": "Solve Graph",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a successful solution on all servers."
+        },
+        {
+            "name": "result_per_destination_node",
+            "type": {
+                "type": "array",
+                "items": "float"
+            },
+            "value": {},
+            "doc": "Cost or Pagerank (based on solver type) for each destination node requested. Only populated if {export_solve_results}@{key of input options} is set to {true}@{choice of input.key options.export_solve_results}."
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

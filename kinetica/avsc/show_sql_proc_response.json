@@ -1,0 +1,101 @@
+{
+    "endpoint": "/show/sql/proc",
+    "type": "record",
+    "name": "show_sql_proc_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "procedure_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A list of the names of the requested procedures.",
+            "value": {}
+        },
+        {
+            "name": "procedure_definitions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A list of the definitions for the requested procedures.", 
+            "value": {}
+        },
+        {
+            "name": "additional_info",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Additional information about the respective tables in the requested procedures.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "@INNER_STRUCTURE":
+                    {
+                        "doc": "",
+                        "value":
+                        {
+                            "default": {},
+                            "valid_keys" :
+                            {
+				"execute_start_time" :
+			        {
+				    "doc" : "The initial date/time that periodic execution began.",
+		                    "value":
+			            {
+					   "default": ""
+			            }
+				},
+				"execute_interval" :
+				{
+				    "doc" : "The periodic execution interval in seconds.",
+				    "value":
+			            {
+				        "default": ""
+			            } 
+				},
+                                "request_avro_json" :
+                                {
+                                    "doc" : "The JSON representation of request creating this procedure.",
+			            "value" :
+			            {
+				        "internal_option": true
+				    }
+                                },
+                                "execute_as":
+                                {
+                                    "doc" : "The periodic execution impersonate user.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                }
+
+			   } 
+		         }
+		       }
+		   }
+           }
+        },  
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {}
+      }
+    ]
+}
+

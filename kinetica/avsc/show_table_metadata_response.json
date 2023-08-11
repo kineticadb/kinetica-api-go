@@ -1,0 +1,39 @@
+{
+    "endpoint": "/show/table/metadata", 
+    "type": "record", 
+    "name": "show_table_metadata_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "Value of @{input table_names}.", 
+            "value": {}
+        }, 
+        {
+            "name": "metadata_maps", 
+            "type": {
+                "type": "array", 
+                "items": {
+                    "type": "map", 
+                    "values": "string"
+                }
+            }, 
+            "doc": "A list of maps which contain the metadata of the tables in the order the tables are listed in @{input table_names}. Each map has (metadata attribute name, metadata attribute value) pairs.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

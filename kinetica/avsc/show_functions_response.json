@@ -1,0 +1,121 @@
+{
+    "endpoint": "/show/functions", 
+    "type": "record", 
+    "name": "show_functions_response", 
+    "doc": "", 
+    "generate" : "NO_DOCS",
+    "fields": [
+        {
+            "name": "function_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of scalar function names.",
+            "value": {}
+        },
+        {
+            "name": "return_types",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of return types corresponding to @{output function_names}.",
+            "value": {}
+        },
+        {
+            "name": "parameters",
+            "type": {
+                "type": "array",
+                "items":
+                {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "List of Lists of parameter types corresponding to @{output function_names}.",
+            "value": {}
+        },
+        {
+            "name": "optional_parameter_count",
+            "type": {
+                "type": "array",
+                "items": "int"
+            },
+            "doc": "List of optional parameter counts corresponding to @{output function_names}.
+                    Negative numbers indicate optional parameters are at the beginning of the list.",
+            "value": {}
+        },
+        {
+            "name": "flags",
+            "type": {
+                "type": "array",
+                "items": "int"
+            },
+            "doc": "List of flags corresponding to @{output function_names}.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "scalar" : {"doc" : "Scalar Function - 1", "value" : {}},
+                    "aggregate" : {"doc" : "Aggregate Function - 2", "value" : {}},
+                    "sql" : {"doc" : "SQL Procedure - 4", "value" : {}},
+                    "udf" : {"doc" : "User Defined Function - 8", "value" : {}},
+                    "cast" : {"doc" : "Cast Function - 16", "value" : {}},
+                    "nondeterministic" : {"doc" : "Non-deterministic Function - 256", "value" : {}}
+                }
+            } 
+        },
+        {
+            "name": "type_schemas",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Type schemas of the respective functions in @{output function_names}.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "type_schema",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "properties",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values":
+                    {
+                        "type": "array",
+                        "items": "string"
+                    }
+                }
+            },
+            "doc": "Property maps of the respective function in @{output function_names}.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "properties",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

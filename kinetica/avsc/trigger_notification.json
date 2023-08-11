@@ -1,0 +1,18 @@
+{
+    "type" : "record",
+    "name" : "trigger_notification",
+    "fields" : [
+        { "name" : "trigger_id", "type" : "string", "doc": "",
+          "value": {}
+        },
+        { "name" : "set_id", "type" : "string", "doc": "",
+          "value": {}
+        },
+        { "name" : "object_id", "type" : "string", "doc": "",
+          "value": {}
+        },
+        { "name" : "object_data", "type" : "bytes", "doc": "",
+          "value": {}
+        }
+    ]
+}

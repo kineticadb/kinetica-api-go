@@ -1,0 +1,38 @@
+{
+    "endpoint": "/show/tables/bytype",
+    "type": "record",
+    "name": "show_tables_by_type_request",
+    "desc_name": "Show Tables by Type",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show table names of specified type",
+    "doc": "Gets names of the tables whose type matches the given criteria. Each table has a particular type. This type comprises the schema and properties of the table and sometimes a type label. This function allows a look up of the existing tables based on full or partial type information. The operation is synchronous.", 
+    "fields": [
+        {
+            "name": "type_id",
+            "type": "string",
+            "doc": "Type id returned by a call to @{endpoint /create/type}.",
+            "value": {}
+        },
+        {
+            "name": "label",
+            "type": "string",
+            "doc": "Optional user supplied label which can be used instead of the type_id to retrieve all tables with the given label.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {}
+            }
+        }
+    ]
+}

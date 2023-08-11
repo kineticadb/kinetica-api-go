@@ -1,0 +1,39 @@
+{
+    "type" : "record",
+    "name" : "gpudb_response",
+    "fields" : [
+        { "name" : "status", "type" : "string", "doc": "",
+          "value": {}
+        },
+        { "name" : "message", "type" : "string", "doc": "",
+          "value": {}
+        },
+        { "name" : "data_type", "type" : "string", "doc": "",
+          "value": {}
+        },
+        { "name" : "data", "type" : "bytes", "doc": "",
+          "value":
+          {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "binary",
+                    "homogeneous": true,
+                    "dimensionality": 0
+                }
+          }
+        },
+        { "name" : "data_str", "type" : "string", "doc": "",
+          "value":
+          {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "json",
+                    "homogeneous": true,
+                    "dimensionality": 0
+                }
+          }
+        }
+    ]
+}

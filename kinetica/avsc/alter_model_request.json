@@ -1,0 +1,58 @@
+{
+    "endpoint": "/alter/model",
+    "name": "alter_model_request",
+    "desc_name": "alter model",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "generate" : "NO_DOCS",     
+    "doc": "For internal use only: Alter an imported model.",
+    "short_doc": "Alter an existing model.",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Model on which the operation should be applied.",
+            "value": {}
+        },
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Operation to be applied",
+            "value": {
+                "valid_choices": {
+                    "container": {
+                        "doc": "Container that has the model implementation.",
+                        "value": {}
+                    },
+                    "registry": {
+                        "doc": "Registry that has the docker and credential information to pull the images.",
+                        "value": {}
+                    },
+                    "refresh":  {
+                         "doc": "Re-import the model using the new configuration",
+                         "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "value",
+            "type": "string",
+            "doc": "Action specific argument.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {}
+            }
+        }
+    ]
+}

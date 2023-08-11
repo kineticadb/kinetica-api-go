@@ -1,0 +1,72 @@
+{
+    "endpoint": "/create/deltatable",
+    "type": "record",
+    "name": "create_delta_table_request",
+    "desc_name": "Create Delta Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "generate" : "NO_DOCS",
+    "short_doc": "Create a table that has the changes to table_name since the last refresh",
+    "doc": "",
+    "fields": [
+        {
+            "name": "delta_table_name",
+            "type": "string",
+            "doc": "Name of the table to be created",
+            "value":
+            {
+                "is_new_table_name": true
+            }
+        },
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the input table whose changes will be forwared to the delta_table_name output",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

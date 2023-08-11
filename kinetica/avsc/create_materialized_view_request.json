@@ -1,0 +1,131 @@
+{
+    "endpoint": "/create/materializedview",
+    "type": "record",
+    "name": "create_materialized_view_request",
+    "desc_name": "Create Materialized View",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Begin the creation a materialized view",
+    "doc": "Initiates the process of creating a materialized view, reserving the
+view's name to prevent other views or tables from being created with that name.
+
+For materialized view details and examples, see
+{Materialized Views}@{link /concepts/materialized_views/}.
+
+The response contains @{output view_id}, which is used to tag each subsequent
+operation (projection, union, aggregation, filter, or join) that will compose
+the view.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to be created that is the top-level table of the materialized view, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.",
+            "value": 
+            {
+                "is_new_table_name": true
+            }
+        },
+        {
+            "name": "options", 
+            "doc": "Optional parameters.", 
+            "type":
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the materialized view as part of @{input table_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema which is to contain the newly created view. If the schema provided is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the table specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "persist" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.persist}, then the materialized view specified in @{input table_name} will be persisted and will not expire unless a {ttl}@{key of input options} is specified.   If {false}@{choice of input.key options.persist}, then the materialized view will be an in-memory table and will expire unless a {ttl}@{key of input options} is specified otherwise.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "refresh_method" :
+                    {
+                        "doc"  : "Method by which the join can be refreshed when the data in underlying member tables have changed.",
+                        "value" : {
+                            "default" : "manual",
+                            "valid_choices" :
+                            {
+                                "manual" :
+                                {
+                                    "doc": "Refresh only occurs when manually requested by calling @{endpoint /alter/table} with an 'action' of 'refresh'",
+                                    "value" : {}
+                                },
+                                "on_query" :
+                                {
+                                    "doc":  "Refresh any time the view is queried.",
+                                    "value" : {}
+                                },                                
+                                "on_change" :
+                                {
+                                    "doc": "If possible, incrementally refresh (refresh just those records added) whenever an insert, update, delete or refresh of input table is done.  A full refresh is done if an incremental refresh is not possible. ",
+                                    "value" : {}
+                                },
+
+                                "periodic" :
+                                {
+                                    "doc": "Refresh table periodically at rate specified by {refresh_period}@{key of input options}",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "refresh_period" :
+                    {
+                        "doc"  : "When {refresh_method}@{key of input options} is {periodic}@{choice of input.key options.refresh_method}, specifies the period in seconds at which refresh occurs",
+                        "value" : {} 
+                    },
+                    "refresh_start_time" :
+                    {
+                        "doc"  : "When {refresh_method}@{key of input options} is {periodic}@{choice of input.key options.refresh_method}, specifies the first time at which a refresh is to be done.  Value is a datetime string with format 'YYYY-MM-DD HH:MM:SS'.",
+                        "value" : {} 
+                    },
+                    "execute_as" :
+                    {
+                        "doc"  : "User name to use to run the refresh job",
+                        "value" : {}
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

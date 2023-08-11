@@ -1,0 +1,30 @@
+{
+    "endpoint": "/has/proc",
+    "type": "record",
+    "name": "has_proc_request",
+    "desc_name": "Has Proc",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Check for existence of specified proc",
+    "doc": "Checks the existence of a proc with the given name.",
+    "fields": [
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to check for existence.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {}
+            }
+        }
+    ]
+}

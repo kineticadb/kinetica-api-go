@@ -1,0 +1,24 @@
+{
+    "endpoint": "/insert/symbol", 
+    "type": "record", 
+    "name": "insert_symbol_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "symbol_id", 
+            "type": "string", 
+            "doc": "Value of @{input symbol_id}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

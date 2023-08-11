@@ -1,0 +1,34 @@
+{
+    "endpoint": "/show/system/properties", 
+    "type": "record", 
+    "name": "show_system_properties_request", 
+    "desc_name": "Show System Properties",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show the server configuration and version information",    
+    "doc": "Returns server configuration and version related information to the caller. The admin tool uses it to present server related information to the user.", 
+    "fields": [
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "properties" :
+                    {
+                        "doc"  : "A list of comma separated names of properties requested. If not specified, all properties will be returned.",
+                        "value" : {}
+                    }
+                }
+            }
+        }
+    ]
+}

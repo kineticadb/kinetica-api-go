@@ -1,0 +1,102 @@
+{
+    "endpoint": "/alter/graph",
+    "name": "alter_graph_request",
+    "desc_name": "alter Graph",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "generate" : "NO_DOC",     
+    "doc": "For internal use only: Graph server admin command.",
+    "short_doc": "Admin graph server commands.",
+    "fields": [
+        {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Graph on which the operation should be applied.\nIf empty then it will apply to all graphs.\nThis request can be sent from the graph server to the graph client, or from the client to the server depending on the type of operation.",
+            "value": {}
+        },
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Operation to be applied",
+            "value": {
+                "valid_choices": {
+                    "add_table_monitor": {
+                        "doc": "Add a table monitor to a graph. The table name is specified as the action argment.",
+                        "value": {}
+                    },
+                    "reset_client": {
+                        "doc": "Reset all current operations on the client side. Used when the graph server is restarted to recover from a failure.",
+                        "value": {}
+                    },
+                    "reset_server": {
+                        "doc": "Reset all current operations on the server side. This is also sent on (re)start.",
+                        "value": {}
+                    },                    
+                    "cancel_task": {
+                        "doc": "Cancel a specific task on the graph server.",
+                        "value": {}
+                    },
+                    "alter_logger": {
+                        "doc": "Change the server side log level; e.g., 'GraphServer.GraphSolver=DEBUG'",
+                        "value": {}
+                    },
+                    "delete_all": {
+                        "doc": "Delete all graphs, and remove any persistence info.",
+                        "value": {}
+                    },
+                    "status": {
+                        "doc": "Current status of the graph client (db side).",
+                        "value": {}
+                    },
+                    "collect_graphs": {
+                        "doc": "Get the create command for all persisted graphs.",
+                        "value": {}
+                    },
+                    "restore_graphs": {
+                        "doc": "Re-creates all graphs from persist info on rank0.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "action_arg",
+            "type": "string",
+            "doc": "Action specific argument.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {},
+                "valid_keys":
+                {
+                    "server_id": {
+                        "doc": "Indicates which graph server(s) to send the request to. Default is to send to get information about all the servers.",
+                        "value": {} 
+                    },
+                    "bypass_client_check": {
+                        "type": "boolean",
+                        "doc": "Set for non-user requests.",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

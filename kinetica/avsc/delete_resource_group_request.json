@@ -1,0 +1,33 @@
+{
+    "endpoint": "/delete/resourcegroup",
+    "type": "record",
+    "name": "delete_resource_group_request",
+    "desc_name": "Delete Resource Group",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Deletes a resource group",
+    "doc": "Deletes a resource group.",
+    "fields": [
+        {
+            "name" : "name",
+            "type" : "string",
+            "doc": "Name of the resource group to be deleted.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}
+

@@ -1,0 +1,73 @@
+{
+    "endpoint": "/import/model",
+    "type": "record",
+    "name": "import_model_request",
+    "desc_name": "Import a Model from container",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Import a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Name of the model to be imported" ,
+            "value":{}
+
+        },
+        {
+            "name": "registry_name",
+            "type": "string",
+            "doc": "Name of the registry that has the container" ,
+            "value":{}
+
+        },              
+        {
+            "name": "container",
+            "type": "string",
+            "doc": "Name of the container that has the model" ,
+            "value":{}
+
+        },       
+        {
+            "name": "run_function",
+            "type": "string",
+            "doc": "The absolute path to the run_function" ,
+            "value":{}
+
+        },     
+        {
+            "name": "model_type",
+            "type": "string",
+            "doc": "Type of the deployment" ,
+            "value":{}
+
+        }, 
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "memory_limit" :
+                    {
+                        "doc": "Maximum memory",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    } 
+                }
+            }
+        }
+    ]
+}

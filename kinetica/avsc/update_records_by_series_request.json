@@ -1,0 +1,66 @@
+{
+    "endpoint": "/update/records/byseries", 
+    "type": "record", 
+    "name": "update_records_by_series_request", 
+    "desc_name": "Update Records by Series",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc" : "Update a view to include all series/track information for contained series/track",    
+    "doc": "Updates the view specified by @{input table_name} to include full
+series (track) information from the @{input world_table_name} for the series
+(tracks) present in the @{input view_name}.", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of the view on which the update operation will be performed, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing view.", 
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "world_table_name", 
+            "type": "string", 
+            "doc": "Name of the table containing the complete series (track) information, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.", 
+            "value": {}
+        },
+        {
+            "name": "view_name", 
+            "type": "string", 
+            "doc": "Name of the view containing the series (tracks) which have to be updated, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.", 
+            "value": { "default" : "" }
+        },
+        {
+            "name": "reserved", 
+            "type": {
+                "type" : "array",
+                "items" : "string"
+            }, 
+            "doc": "", 
+            "value": { "default": [], "managed": true }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "refresh":
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value": { "internal_option": true }
+                    }
+                }
+            }
+        }
+    ]
+}

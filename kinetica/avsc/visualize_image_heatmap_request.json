@@ -1,0 +1,529 @@
+{
+    "endpoint" : "/visualize/image/heatmap",
+    "type" : "record",
+    "name" : "visualize_image_heatmap_request",
+    "desc_name": "Visualize Image Heatmap",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Generate rasterized heatmap image tiles",
+    "generate" : "NO_DOCS",
+    "doc"  : "For internal use only.  Generates rasterized heatmap image tiles for an area of interest using the given tables and the provided parameters.
+
+All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value).",
+    "fields" : [
+        {
+            "name" : "table_names",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "Name of the table containing the data for the various layers to be rendered.",
+            "value": {}
+        },
+        {
+            "name" : "x_column_name",
+            "type" : "string",
+            "doc"  : "Name of the column containing the x coordinates.",
+            "value": {}
+        },
+        {
+            "name" : "y_column_name",
+            "type" : "string",
+            "doc"  : "Name of the column containing the y coordinates.",
+            "value": {}
+        },
+        {
+            "name" : "value_column_name",
+            "type" : "string",
+            "doc"  : "",
+            "value": {}
+        },
+        {
+            "name" : "geometry_column_name",
+            "type" : "string",
+            "doc"  : "Name of the column containing geometry data.",
+            "value": {}
+        },
+        {
+            "name" : "min_x",
+            "type" : "double",
+            "doc"  : "Lower bound for the x values.",
+            "value": {}
+        },
+        {
+            "name" : "max_x",
+            "type" : "double",
+            "doc"  : "Upper bound for the x values.",
+            "value": {}
+        },
+        {
+            "name" : "min_y",
+            "type" : "double",
+            "doc"  : "Lower bound for the y values.",
+            "value": {}
+        },
+        {
+            "name" : "max_y",
+            "type" : "double",
+            "doc"  : "Upper bound for the y values.",
+            "value": {}
+        },
+        {
+            "name" : "width",
+            "type" : "int",
+            "doc"  : "Width of the generated image.",
+            "value": {}
+        },
+        {
+            "name" : "height",
+            "type" : "int",
+            "doc"  : "Height of the generated image.",
+            "value": {}
+        },
+        {
+            "name" : "projection",
+            "type" : "string",
+            "doc"  : "Spatial Reference System (i.e. EPSG Code).",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "EPSG:4326" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "PLATE_CARREE" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "900913" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:900913" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "102100" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:102100" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "3857" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:3857" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "WEB_MERCATOR" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default": "PLATE_CARREE"
+            }
+        },
+	{
+	    "name" : "style_options",
+	    "type" :
+            {
+                "type": "map",
+                "values": "string"
+            },
+	    "doc" : "Various style related options.",
+	    "value" :
+	    {
+		"valid_keys" :
+		{
+		    "colormap" :
+		    {
+			"doc"  : "Colormap for the heat map.",
+			"value":
+			{
+			    "default": "jet",
+			    "valid_choices" :
+			    {
+                              "jet": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "accent": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "afmhot": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "autumn": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "binary": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "blues": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "bone": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "brbg": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "brg": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "bugn": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "bupu": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "bwr": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "cmrmap": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "cool": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "coolwarm": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "copper": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "cubehelix": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "dark2": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "flag": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_earth": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_gray": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_heat": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_ncar": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_rainbow": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_stern": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gist_yarg": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gnbu": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gnuplot2": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gnuplot": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "gray": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "greens": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "greys": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "hot": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "hsv": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "inferno": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "magma": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "nipy_spectral": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "ocean": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "oranges": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "orrd": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "paired": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "pastel1": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "pastel2": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "pink": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "piyg": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "plasma": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "prgn": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "prism": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "pubu": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "pubugn": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "puor": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "purd": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "purples": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "rainbow": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "rdbu": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "rdgy": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "rdpu": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "rdylbu": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "rdylgn": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "reds": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "seismic": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "set1": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "set2": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "set3": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "spectral": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "spring": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "summer": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "terrain": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "viridis": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "winter": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "wistia": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "ylgn": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "ylgnbu": {
+                                "doc": "",
+                                  "value": {}
+                              },
+                              "ylorbr": {
+                                  "doc": "",
+                                  "value": {}
+                              },
+                              "ylorrd": {
+                                  "doc": "",
+                                  "value": {}
+                              }
+			    }
+			}
+		    },
+		    "blur_radius" :
+		    {
+			"value_type" : "int",
+			"doc"  : "Blurring radius for the heat map.",
+			"value":
+			{
+			    "min" : "1",
+			    "max" : "32",
+			    "default":"5"
+			}
+		    },
+		    "bg_color" :
+		    {
+			"value_type" : "long",
+			"doc"  : "Background color of the generated image.",
+			"value": {}
+		    },
+		    "gradient_start_color" :
+		    {
+			"value_type" : "long",
+			"doc"  : "User defined gradient start color for the heat map.",
+			"value":
+			{
+			    "default": "FFFFFF"
+			}
+		    },
+		    "gradient_end_color" :
+		    {
+			"value_type" : "long",
+			"doc"  : "User defined gradient end color for the heat map.",
+			"value":
+			{
+			    "default": "FF0000"
+			}
+		    }
+		}
+	    }
+	},
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {},
+		"valid_keys" :
+		{
+	            "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+		}
+            }
+        }
+    ]
+}

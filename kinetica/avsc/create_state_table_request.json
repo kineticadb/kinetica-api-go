@@ -1,0 +1,81 @@
+{
+    "endpoint": "/create/statetable",
+    "type": "record",
+    "name": "create_state_table_request",
+    "desc_name": "Create State",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "generate" : "NO_DOCS",
+    "short_doc": "Create a table that holds materialized view state",
+    "doc": "Creates a state table in a materialized view allowing a materialized view to maintain state between refreshes. The state table must be a materialized view member.  The state table can be part of a feedback loop including input_table_name. To facilitate such feedback loops the create_state_table can be called before the input_table_name is created but must be created after init_table_name is created.  During the initial call to create the state table init_table_name is copied to table_name, setting the initial state output of the table.   On refresh the create_state_table runs before the endpoint that creates the input_table_name and copies the input_table_name to table_name, setting the state to the version of the input_table from the last refresh.  A materialized view is not complete (ready to refresh and query) until both the root table of the view is created and all the input tables to the state tables have been created.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to be created",
+            "value":
+            {
+                "is_new_table_name": true
+            }
+        },
+        {
+            "name": "input_table_name",
+            "type": "string",
+            "doc": "Name of the input table to be copied to the output table on refresh",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "init_table_name",
+            "type": "string",
+            "doc": "Name of the initialization table to be copied to the output table during materialized view creation",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "endpoint": "/admin/alter/configuration",
+    "type" : "record",
+    "name" : "admin_alter_configuration_request",
+    "generate" : "NO_API",
+    "desc_name": "Administration: Alter Configuration",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "short_doc": "Update the system config file",
+    "doc": "Update the system config file.  Updates to the config file are only permitted when the system is stopped.",
+    "fields" : [
+        {
+            "name": "config_string",
+            "type": "string",
+            "doc": "updated contents of the config file.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "restart_httpd":
+                    {
+                        "type":"string",
+                        "doc" : "Regenerates httpd configuration files and restarts httpd on all hosts",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices":
+                            {
+                                "false" : {"doc": "", "value": {} },
+                                "true"  : {"doc": "", "value": {} }
+                            },
+                            "internal_option" : true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+

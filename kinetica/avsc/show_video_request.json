@@ -1,0 +1,35 @@
+{
+    "endpoint": "/show/video",
+    "type": "record",
+    "name": "show_video_request",
+    "desc_name": "Show Video",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Retrieve information about rendered videos.",
+    "doc": "Retrieves information about rendered videos.",
+    "fields": [
+        {
+            "name": "paths",
+            "type": {
+                "type": "array",
+                "items" : "string"
+            },
+            "doc": "The fully-qualified {KiFS}@{link /tools/kifs/} paths for the videos to show. If empty, shows all videos.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "endpoint": "/admin/clearauthcache", 
+    "type": "record", 
+    "name": "admin_clear_auth_cache_request", 
+    "desc_name": "Administration: Clear Auth Cache",
+    "short_doc": "",
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+            	"type" : "array",
+            	"items" : "string"
+            }, 
+            "doc": "", 
+            "value": { "default": [] }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

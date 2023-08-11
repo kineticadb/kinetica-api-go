@@ -1,0 +1,27 @@
+{
+    "endpoint": "/create/statetable",
+    "type": "record",
+    "name": "create_state_table_response",
+    "desc_name": "Create State",
+    "generate" : "NO_DOCS",
+    "doc" : "",
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {
+            }                     
+        }
+    ]
+}

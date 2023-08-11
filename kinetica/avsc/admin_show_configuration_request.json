@@ -1,0 +1,28 @@
+{
+    "endpoint": "/admin/show/configuration",
+    "type" : "record",
+    "name" : "admin_show_configuration_request",
+    "generate" : "NO_API",
+    "desc_name": "Administration: Show Configuration",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "short_doc": "Show the current system configuration file.",
+    "doc": "Show the current system configuration file.",
+    "fields" : [
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}
+

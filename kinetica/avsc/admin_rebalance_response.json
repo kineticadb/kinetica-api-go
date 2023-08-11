@@ -1,0 +1,19 @@
+{
+    "endpoint": "/admin/rebalance",
+    "type" : "record",
+    "name" : "admin_rebalance_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

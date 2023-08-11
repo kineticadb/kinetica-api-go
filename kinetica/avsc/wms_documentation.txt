@@ -1,0 +1,1087 @@
+.. From [gpudb-schemas/endpoint-schemas/wms_documentation.txt]:
+..
+.. This documentation serves to detail the /wms endpoint.  It, through code
+.. generation, supplies the content for the /wms endpoint in the REST API, as
+.. well as the Web Map Service under Functions.  The documentation under
+.. Geospatial Features > Geospatial Display is simply linked to
+.. Functions > Web Map Service, so the content will not have to be duplicated.
+..
+.. NOTE:  No targets can be defined here, as they would end up getting
+..        replicated in three places.  Any links to sections contained within
+..        will have to be URL links to the generated content pages with #Section
+..        appended.
+
+.. _`flights.csv`: http://s3.amazonaws.com/kinetica-ce-data/7.1/flights.csv.zip
+.. _`nyctaxi.csv`: http://s3.amazonaws.com/kinetica-ce-data/7.1/nyctaxi.csv.zip
+
+
+.. contents::
+   :local:
+   :backlinks: none
+
+Overview
+--------
+
+*Kinetica* provides a *Web Map Service* (*WMS*) for generating image tiles from
+the geospatial data contained in it.  The type of image tiles returned, the data
+used to generate the tiles, and the graphical styles in the tiles are specified
+in the query string of the *WMS* call.  These would typically be used as
+overlays on top of a map.  Examples of this can be seen in the demo that comes
+bundled with *Kinetica* at ``http://<host>:8080/gaiademo``.  Any table with x,y
+coordinates or *WKT* shapes can be used as the source for generating images.
+
+Note that the ``cb_raster`` and ``raster`` styles have a ``GEO_ATTR`` parameter
+that allows specifying the name of a geometry (WKT) column to use during
+rendering. This parameter is optional as *Kinetica* will automatically find
+a geometry column, but if there's multiple geometry columns and a specific
+column needs to be used, ``GEO_ATTR`` is necessary. If the specified
+``GEO_ATTR`` column exists and is a geometry-type column, *Kinetica* will
+continue with rendering. If the column does not exist or it is not a
+geometry-type column, *Kinetica* will try to process the column as point or
+track data instead.
+
+.. important:: If ``GEO_ATTR`` is not specified and there's more than one
+               geometry column, *Kinetica* will attempt to process the columns
+               as point or track data.
+
+The requested image is then returned in the *HTTP* response message body.
+
+As the *isochrones* mode utilizes some of the *contour* and *labels* modes'
+parameters as well as some of the 
+{{sc~doc~/api/rest/solve_graph_rest,/solve/graph}} endpoint's parameters, the
+same usage guidelines apply. Review `Contour`_, `Labels`_, and 
+{{sc~doc~/graph_solver/network_graph_solver,Solving a Graph}}
+for more information.
+
+
+Downloads
+---------
+
+The examples below use the following tables:
+
+* {{sc~download~/examples/csv/nyc_neighborhood.csv,nyc_neighborhood}}
+  (referenced in the examples as if it were in the caller's
+  {{sc~find~schema default,default schema}})
+* ``demo.flights`` (downloadable as `flights.csv`_)
+* ``demo.nyctaxi`` (downloadable as `nyctaxi.csv`_)
+
+Required Parameters
+-------------------
+
+The following parameters are required in all *WMS* calls:
+
++-----------------+-------------------------------+---------------------------------------------------------+
+| Name            | Description                   | Allowable Values                                        |
++=================+===============================+=========================================================+
+| ``REQUEST``     | WMS Request                   | * ``GetMap`` for getting an image                       |
+|                 |                               | * ``GetCapabilities`` is also supported                 |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``SRS``         | Spatial Reference System      | * *Plate Carree* projection codes: ``PLATE_CARREE``,    |
+|                 | (i.e. *EPSG* code)            |   ``EPSG:4326``                                         |
+|                 |                               | * *Web Mercator* projection codes: ``WEB_MERCATOR``,    |
+|                 |                               |   ``900913``, ``EPSG:900913``,                          |
+|                 |                               |   ``102100``, ``EPSG:102100``,                          |
+|                 |                               |   ``3857``, ``EPSG:3857``                               |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``LAYERS``      | The requested image layer(s)  | One or more comma-separated table names, each in        |
+|                 |                               | ``[schema_name.]table_name`` format, using standard     |
+|                 |                               | {{sc~find~table name resolution,name resolution rules}} |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``BBOX``        | Geographic bounding box as a  | Four comma-separated numerics                           |
+|                 | comma-separated list of:      |                                                         |
+|                 | min_longitude, min_latitude,  |                                                         |
+|                 | max_longitude, max_latitude   |                                                         |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``WIDTH``       | Image width, in pixels; best  | ``64`` - ``8192``                                       |
+|                 | performance if a power of 2   |                                                         |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``HEIGHT``      | Image height, in pixels; best | ``64`` - ``8192``                                       |
+|                 | performance if a power of 2   |                                                         |
++-----------------+-------------------------------+---------------------------------------------------------+
+
+
+Optional Parameters
+-------------------
+
+The following parameters are optional for *WMS* calls:
+
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| Name            | Description                                    | Allowable Values                                     | Default Value                            |
++=================+================================================+======================================================+==========================================+
+| ``VERSION``     | WMS Version--only *v1.1.1* is supported        | ``1.1.1``                                            | ``1.1.1``                                |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``STYLES``      | The mode of image requested                    | * ``raster``                                         | ``raster``                               |
+|                 |                                                | * ``cb_raster``                                      |                                          |
+|                 |                                                | * ``heatmap``                                        |                                          |
+|                 |                                                | * ``contour``                                        |                                          |
+|                 |                                                | * ``labels``                                         |                                          |
+|                 |                                                | * ``isochrones``                                     |                                          |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``FORMAT``      | Output image format--only PNG is supported     | ``image/png``                                        | ``image/png``                            |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``TRANSPARENT`` | Controls background transparency of the        | * ``TRUE`` for transparent background                | ``TRUE``                                 |
+|                 | generated image                                | * ``FALSE`` for opaque background                    |                                          |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``X_ATTR``      | Name of the column to be used as the longitude | Numeric column from ``LAYERS`` source table list;    | Column ``x``                             |
+|                 |                                                | must be of int, double, float, or long               |                                          |
+|                 |                                                | {{sc~doc~/concepts/types,column type}}               |                                          |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``Y_ATTR``      | Name of the column to be used as the latitude  | Numeric column from ``LAYERS`` source table list;    | Column ``y``                             |
+|                 |                                                | must be of int, double, float, or long               |                                          |
+|                 |                                                | {{sc~doc~/concepts/types,column type}}               |                                          |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``GEO_ATTR``    | The WKT attribute used to render the           | A WKT column name                                    |                                          |
+|                 | raster/cb_raster (particularly if you have     |                                                      |                                          |
+|                 | more than one WKT column in the table)         |                                                      |                                          |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+| ``SYMBOL_ATTR`` | The symbol attribute used to render symbols in | A string column containing symbol IDs                | Column ``SYMBOLCODE``                    |
+|                 | lieu of the default ``SYMBOLCODE`` column. See |                                                      |                                          |
+|                 | ``DOSYMBOLOGY``. Supports expressions, e.g.,   |                                                      |                                          |
+|                 | ``if()``, ``case()``, etc.                     |                                                      |                                          |
++-----------------+------------------------------------------------+------------------------------------------------------+------------------------------------------+
+
+Modes
+-----
+
+The following modes are supported, as specified by the ``STYLES`` parameter:
+
+* raster_
+* cb_raster_
+* heatmap_
+* contour_
+* labels_
+* isochrones_
+
+Descriptions of each mode along with the mode-specific parameters can be found
+below.
+
+RASTER
+******
+
+The *raster* mode is used to rasterize points, shapes, symbols, and/or tracks
+from one or more tables. Available parameters are:
+
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| Name                     | Description                                 | Allowable Values                                   | Default Value       |
++==========================+=============================================+====================================================+=====================+
+| ``ANTIALIASING``         | Set to ``TRUE`` to enable anti-aliasing,    | ``TRUE`` or ``FALSE``                              | ``FALSE``           |
+|                          | which will smoothen WKT LINESTRING and      |                                                    |                     |
+|                          | POLYGON outlines                            |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``DOPOINTS``             | Rasterize point data toggle                 | ``TRUE`` or ``FALSE``                              | ``TRUE``            |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``DOSHAPES``             | Rasterize shapes toggle                     | ``TRUE`` or ``FALSE``                              | ``TRUE``            |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``DOSYMBOLOGY``          | Rasterize symbols toggle. When set to       | ``TRUE`` or ``FALSE``                              | ``FALSE``           |
+|                          | ``TRUE``, Kinetica will automatically look  |                                                    |                     |
+|                          | for a ``SYMBOLCODE`` column in the specified|                                                    |                     |
+|                          | table that contains strings that match      |                                                    |                     |
+|                          | inserted symbols                            |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``DOTRACKS``             | Rasterize tracks                            | ``TRUE`` or ``FALSE``                              | ``TRUE``            |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``HASHLINEANGLES``       | Clockwise rotation angle from a             | Real numbers                                       | ``0``               |
+|                          | perpendicular hash line in degree           |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``HASHLINECOLORS``       | RBG color values in hex for the hash lines  | Hex color (or ``-1`` for same color as shapeline)  | ``SHAPELINECOLOR``  |
+|                          |                                             |                                                    | value               |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``HASHLINEINTERVALS``    | Distance between the center points of hash  | Positive integers                                  | ``20``              |
+|                          | lines in pixels                             |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``HASHLINELENS``         | Length of hash lines in pixels. Inputting a | Non-negative integers                              | ``0``               |
+|                          | ``0`` disables hash lines                   |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``HASHLINEWIDTHS``       | Width of hash lines in pixels               | Positive integers                                  | ``3``               |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``ORDER_LAYERS``         | Enables layers to be rendered in the order  | ``true`` or ``false``                              |                     |
+|                          | they were specified in                      |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``POINTCOLORS``          | Color of points                             | Hex color                                          | ``FF0000`` (red)    |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``POINTOFFSET_X``        | Horizontal offset for point location in     | Signed integers                                    | ``0``               |
+|                          | pixels                                      |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``POINTOFFSET_Y``        | Vertical offset for point location in       | Signed integers                                    | ``0``               |
+|                          | pixels                                      |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``POINTSHAPES``          | Shape of points                             | * ``none``                                         |                     |
+|                          |                                             | * ``circle``                                       |                     |
+|                          |                                             | * ``square``                                       |                     |
+|                          |                                             | * ``diamond``                                      |                     |
+|                          |                                             | * ``hollowcircle``                                 |                     |
+|                          |                                             | * ``hollowsquare``                                 |                     |
+|                          |                                             | * ``hollowdiamond``                                |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``POINTSIZES``           | Size of points                              | ``0`` - ``20``                                     | ``3``               |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``SHAPEFILLCOLORS``      | Fill color for closed shapes (i.e. polygons)| Hex color (or ``-1`` for no fill)                  | ``-1`` (no fill)    |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``SHAPELINECOLORS``      | Line colors for shapes                      | Hex color                                          | ``FFFF00`` (yellow) |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``SHAPELINEPATTERNLENS`` | Lengths of dashed-line patterns in number   | ``1`` - ``64``                                     | ``0``               |
+|                          | of bits                                     |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``SHAPELINEPATTERNS``    | Bitmaps representing dashed-line patterns;  | Unsigned 64-bit (hexadecimal) integers             | ``0``               |
+|                          | bits of ``1`` enable the pixels associated  |                                                    |                     |
+|                          | with them, but if all bits are ``0``,       |                                                    |                     |
+|                          | dashed-line drawing is disabled, i.e. solid |                                                    |                     |
+|                          | lines are drawn                             |                                                    |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``SHAPELINEWIDTHS``      | Line widths of shapes                       | ``0`` - ``20``                                     | ``3``               |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``SYMBOLROTATIONS``      | Angle in degree for clockwise symbol        | Numeric constants or expressions (including column |                     |
+|                          | rotation                                    | names)                                             |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKHEADCOLORS``      | Color of track head markers                 | Hex color                                          | ``FFFFFF`` (white)  |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKHEADSHAPES``      | Shape of track head markers                 | * ``none``                                         | ``circle``          |
+|                          |                                             | * ``circle``                                       |                     |
+|                          |                                             | * ``square``                                       |                     |
+|                          |                                             | * ``diamond``                                      |                     |
+|                          |                                             | * ``hollowcircle``                                 |                     |
+|                          |                                             | * ``hollowsquare``                                 |                     |
+|                          |                                             | * ``hollowdiamond``                                |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKHEADSIZES``       | Size of track head markers                  | ``0`` - ``20``                                     | ``10``              |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKLINECOLORS``      | Line colors for tracks                      | Hex color                                          | ``00FF00`` (green)  |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKLINEWIDTHS``      | Line widths of tracks                       | ``0`` - ``20`` (``0``: don't draw the track lines) | ``3``               |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKMARKERCOLORS``    | Color of track point markers                | Hex color                                          | ``0000FF`` (blue)   |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKMARKERSHAPES``    | Shape of track point markers                | * ``none``                                         | ``none``            |
+|                          |                                             | * ``circle``                                       |                     |
+|                          |                                             | * ``square``                                       |                     |
+|                          |                                             | * ``diamond``                                      |                     |
+|                          |                                             | * ``hollowcircle``                                 |                     |
+|                          |                                             | * ``hollowsquare``                                 |                     |
+|                          |                                             | * ``hollowdiamond``                                |                     |
+|                          |                                             | * ``SYMBOLCODE`` (to specify a symbol)             |                     |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+| ``TRACKMARKERSIZES``     | Size of track point markers                 | ``0`` - ``20``                                     | ``2``               |
++--------------------------+---------------------------------------------+----------------------------------------------------+---------------------+
+
+.. important:: The ``WORLDLAYERS`` parameter can be used if the table(s)
+               specified in the ``LAYERS`` parameter only have a subset of all
+               track points and the desired behavior is to render the entire
+               track. In this case the unique track ids existing in the
+               ``LAYERS`` table(s) will be identified, but the actual track
+               points will be pulled from the ``WORLDLAYERS`` table(s).
+
+Styling parameters must be specified for each table provided in the ``LAYERS``
+parameter. For instance, if ``LAYERS=LAYER1,LAYER2`` then to set different point
+colors for each layer the syntax would be: ``POINTCOLORS=FF0000,0000FF``. In
+this case points from ``LAYER1`` would be rendered as red while points from
+``LAYER2`` would be rendered as blue. If styling parameters are not provided for
+a layer, the default value is applied.
+
+All colors must be provided in hex notation in the format ``RRGGBB`` or
+``AARRGGBB`` (to specify the alpha value). For example, opaque red may be given
+as ``FF0000`` or ``FFFF0000``.
+
+To use symbols rather than points, the source table(s) must have a string *type* 
+column named ``SYMBOLCODE``, which contains the desired symbol's identifier. All 
+necessary symbols need to be added via the {{sc~find~insert_symbol_rest}}
+endpoint.  The IDs in the ``SYMBOLCODE`` column must match up with the IDs of the
+inserted symbols. To use a non-default column for symbols or to change a symbol 
+conditionally, use the ``SYMBOL_ATTR`` parameter. For example, you can change 
+the displayed symbol conditionally depending on a record's ``vendor_id`` using 
+the following ``SYMBOL_ATTR`` statement::
+
+  SYMBOL_ATTR=case(vendor_id,{'YCAB','NYC'},{'taxi_blue','taxi_green'},'taxi_black')
+
+.. note:: Labels (using the `labels`_ style) and WKT shapes cannot be rendered 
+          in the same *WMS* call.  Both can be shown on the same map by creating 
+          separate map layers, each with its own *WMS* call.
+
+For example, to generate a raster image from a table
+{{sc~download~/examples/csv/nyc_neighborhood.csv,nyc_neighborhood}} with the
+following characteristics:
+
+* *SRS* is ``EPSG:4326``
+* Bounding box *longitude* is from ``-74.1`` to ``-73.9`` and *latitude* is from
+  ``40.6`` to ``40.9``
+* Image size is ``1024`` x ``1024``
+* The geometry column used to render the raster image is ``geom``
+* The raster image will render shapes because ``DOSHAPES`` is set to ``TRUE``
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="71-79" >}}
+
+To generate a raster image from a table ``flights`` with the following
+characteristics:
+
+* *SRS* is ``EPSG:4326``
+* Bounding box *longitude* is from ``-180`` to ``180`` and *latitude* is from
+  ``-90`` to ``90``
+* Image size is ``512`` by ``512``
+* Track rendering is enabled
+* Track headers are diamond-shaped
+* Track marker color is set to ``006BBB``
+* Track markers are square-shaped
+* Track line color is set to ``80858E``
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="87-98" >}}
+
+To generate a raster image with the following characteristics using information 
+from a table ``nyctaxi`` and symbols generated from a taxi icon SVG file:
+
+.. important:: 
+
+   The ``SYMBOL_ATTR`` statement below references three symbols: ``taxi_green``, 
+   ``taxi_blue``, and ``taxi_default``. Symbols are created in Kinetica using
+   an SVG path or raw bytes reprsenting an SVG file via 
+   {{sc~doc~/api/rest/insert_symbol_rest}}. In this example, the symbols are 
+   created using an SVG path extracted from the 
+   {{sc~download~/examples/images/taxi.svg,taxi.svg}} file which is then placed
+   in the ``SVG_PATH`` variable. 
+
+   {{< literalinclude file="/examples/bash/wms_examples.sh" lines="106-109" >}}
+
+   {{< literalinclude file="/examples/bash/wms_examples.sh" lines="111-114" >}}
+
+   {{< literalinclude file="/examples/bash/wms_examples.sh" lines="116-119" >}}
+
+* *SRS* is ``PLATE_CARREE``
+* Bounding box *longitude* is from ``-73.99120`` to ``-73.99115`` and 
+  *latitude* is from ``40.750300`` to ``40.750350``
+* Image size is ``512`` by ``512``
+* The *x attribute* is set to the ``dropoff_longitude`` column value from the
+  source table
+* The *y attribute* is set to the ``dropoff_latitude`` column value from the
+  source table
+* Symbology rendering is enabled
+* The *symbol attribute* is set using a series of ``if`` statements:
+  
+  * If ``total_amount`` is less than or equal to 20 but greater than 10, set the
+    symbol to ``taxi_green``
+  * If ``total_amount`` is greater than 20, set the symbol to ``taxi_blue``
+  * If ``total_amount`` is less than 10, set the symbol to ``taxi_default``
+
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="122-132" >}}
+
+
+CB_RASTER
+*********
+
+The *class break raster* mode is for generating *class break* renderings. A
+class break rendering is the rasterization of the data from one or more tables
+with styling applied on a per-class basis.  Distinct values (for strings) or
+ranges (for numeric columns) must be provided in the ``CB_VALS`` parameter.
+
+.. important:: All ``RASTER`` mode parameters except ``SYMBOLROTATIONS`` and
+               ``ORDER_LAYERS`` can be used with the ``CB_RASTER`` mode in
+               addition to the parameters listed below
+
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| Name                   | Description                                 | Allowable Values                                   | Default Value |
++========================+=============================================+====================================================+===============+
+| ``CB_ATTR``            | Class break attribute *(Required)*          | Any column from the ``LAYERS`` source table list   |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_VALS``            | Values or ranges to apply for the class     | List of values or ranges separated by              |               |
+|                        | break *(Required)*                          | ``CB_DELIMITER`` (e.g., ``0:5,5:10,15:30``)        |               |
+|                        |                                             |                                                    |               |
+|                        |                                             | This specifies three ranges::                      |               |
+|                        |                                             |                                                    |               |
+|                        | **NOTE**: The starting value of the range   |   0  up to but not including 5                     |               |
+|                        | is inclusive and the end value is           |   5  up to but not including 10                    |               |
+|                        | exclusive                                   |   15 up to but not including 30                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_DELIMITER``       | A group of characters which separate        | Alpha-numeric or special characters                | ``,``         |
+|                        | values or ranges in ``CB_VALS``.            |                                                    |               |
+|                        | Default value is ``,``                      |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``ORDER_CLASSES``      | Enables classes to be rendered in the order | ``TRUE`` or ``FALSE``                              | ``FALSE``     |
+|                        | they were specified                         |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``USE_POINT_RENDERER`` | Set to ``TRUE`` to render points larger     | ``TRUE`` or ``FALSE``                              | ``FALSE``     |
+|                        | than 1 pixel; if ``FALSE``, all points will |                                                    |               |
+|                        | be 1 pixel.                                 |                                                    |               |
+|                        |                                             |                                                    |               |
+|                        | **NOTE**:  Only used when OpenGL rendering  |                                                    |               |
+|                        | is disabled                                 |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_POINTCOLOR_ATTR`` | Class break attribute applied to only the   | Any column from the ``LAYERS`` source table list   |               |
+|                        | point color. Overrides ``CB_ATTR``          |                                                    |               |
+|                        | when applied                                |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_POINTCOLOR_VALS`` | Values or ranges to apply for the           | List of values or ranges separated by              |               |
+|                        | ``CB_POINTCOLOR_ATTR`` class break          | ``CB_DELIMITER`` (e.g., ``0:5,5:10,15:30``)        |               |
+|                        |                                             |                                                    |               |
+|                        |                                             | This specifies three ranges::                      |               |
+|                        |                                             |                                                    |               |
+|                        | **NOTE**: The starting value of the range   |   0  up to but not including 5                     |               |
+|                        | is inclusive and the end value is           |   5  up to but not including 10                    |               |
+|                        | exclusive                                   |   15 up to but not including 30                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_POINTSIZE_ATTR``  | Class break attribute applied to only the   | Any column from the ``LAYERS`` source table list   |               |
+|                        | point size. Overrides ``CB_ATTR``           |                                                    |               |
+|                        | when applied                                |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_POINTSIZE_VALS``  | Values or ranges to apply for the           | List of values or ranges separated by              |               |
+|                        | ``CB_POINTSIZE_ATTR`` class break           | ``CB_DELIMITER`` (e.g., ``0:5,5:10,15:30``)        |               |
+|                        |                                             |                                                    |               |
+|                        |                                             | This specifies three ranges::                      |               |
+|                        |                                             |                                                    |               |
+|                        | **NOTE**: The starting value of the range   |   0  up to but not including 5                     |               |
+|                        | is inclusive and the end value is           |   5  up to but not including 10                    |               |
+|                        | exclusive                                   |   15 up to but not including 30                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_POINTSHAPE_ATTR`` | Class break attribute applied to only the   | Any column from the ``LAYERS`` source table list   |               |
+|                        | point shape. Overrides ``CB_ATTR``          |                                                    |               |
+|                        | when applied                                |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``CB_POINTSHAPE_VALS`` | Values or ranges to apply for the           | List of values or ranges separated by              |               |
+|                        | ``CB_POINTSHAPE_ATTR`` class break          | ``CB_DELIMITER`` (e.g., ``0:5,5:10,15:30``)        |               |
+|                        |                                             |                                                    |               |
+|                        |                                             | This specifies three ranges::                      |               |
+|                        |                                             |                                                    |               |
+|                        | **NOTE**: The starting value of the range   |   0  up to but not including 5                     |               |
+|                        | is inclusive and the end value is           |   5  up to but not including 10                    |               |
+|                        | exclusive                                   |   15 up to but not including 30                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+| ``ALPHA_BLENDING``     | Set to ``TRUE`` to enable alpha blending    | ``TRUE`` or ``FALSE``                              | ``FALSE``     |
+|                        | of semi-transparent colors for better       |                                                    |               |
+|                        | rendering of colors when ``ORDER_CLASSES``  |                                                    |               |
+|                        | is set to ``TRUE``. When enabled, alpha     |                                                    |               |
+|                        | blending may affect performance.            |                                                    |               |
++------------------------+---------------------------------------------+----------------------------------------------------+---------------+
+
+
+All of the ``RASTER``-mode styling parameters are valid for ``CB_RASTER``
+(except ``SYMBOLROTATIONS``); however, there must be styling parameters
+specified for each class.  Each entry in ``CB_VALS`` connotes an individual
+class to which styling is applied. If styling parameters are not provided for a
+class, the default value is applied.
+
+The per-style class break parameters (``CB_POINTCOLOR...``, ``CB_POINTSIZE...``,
+and ``CB_POINTSHAPE...``) can be used to override attribute color, size, or
+shapes if the given data falls into the given range, e.g., enlarge a point's
+size if its total sales amount was greater than some amount.
+
+The keyword ``<other>`` can be used as a value in ``CB_VALS`` instead of a
+class name to render all non-matching classes as specified by corresponding
+style options. The length of the style options must match the number of classes
+specified (including ``<other>``).
+
+For example, to generate a category-based class-break raster image from a table
+``nyctaxi`` with the following characteristics:
+
+* *SRS* is ``PLATE_CARREE``
+* Bounding box *longitude* is from ``-74.1`` to ``-73.9`` and *latitude* is from
+  ``40.6`` to ``40.9``
+* Image size is ``1024`` x ``1024``
+* X-axis position is extracted from the ``nyctaxi`` table's ``pickup_longitude``
+  column
+* Y-axis position is extracted from the ``nyctaxi`` table's ``pickup_latitude``
+  column
+* Passenger count is extracted from the ``nyctaxi`` table's ``passenger_count``
+  column
+* Classes are:
+
+  #. Between 1 and 2 passengers -- ``diamonds`` colored *yellow* (``999900``)
+  #. Between 3 and 5 passengers -- ``circles`` colored *orange* (``CC6600``)
+  #. Anything else (as designated by the ``<other>`` keyword) -- ``squares``
+     colored *red* (``FF0000``)
+
+* ``ORDER_CLASSES`` is enabled, so ``999900`` will be rendered first, ``CC6600``
+  will be rendered below that, and ``FF0000`` below that
+* Points have a size of ``2``
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="142-156" >}}
+
+
+HEATMAP
+*******
+
+The *heatmap* mode is used to generate a heat map image of one or more tables.
+Heatmaps are a visual representation of the information contained in the given
+tables.
+
+Available parameters are:
+
++--------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| Name                     | Description                                                    | Allowable Values                                          | Default Value      |
++==========================+================================================================+===========================================================+====================+
+| ``BLUR_RADIUS``          | Blurring radius for the heat map                               | ``1`` - ``32``                                            | ``5``              |
++--------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``COLORMAP``             | Colormap for the heat map                                      | * *Perceptually-Uniform* - ``viridis``, ``inferno``,      | ``jet``            |
+|                          |                                                                |   ``plasma``, ``magma``                                   |                    |
+|                          |                                                                | * *Sequential I* - ``Blues``, ``BuGn``, ``BuPu``,         |                    |
+|                          |                                                                |   ``GnBu``, ``Greens``, ``Greys``, ``Oranges``, ``OrRd``, |                    |
+|                          |                                                                |   ``PuBu``, ``PuBuGn``, ``PuRd``, ``Purples``, ``RdPu``,  |                    |
+|                          |                                                                |   ``Reds``, ``YlGn``, ``YlGnBu``, ``YlOrBr``, ``YlOrRd``  |                    |
+|                          |                                                                | * *Sequential II* - ``afmhot``, ``autumn``, ``bone``,     |                    |
+|                          |                                                                |   ``cool``, ``copper``, ``gist_heat``, ``gray``,          |                    |
+|                          |                                                                |   ``gist_gray``, ``gist_yarg``, ``binary``, ``hot``,      |                    |
+|                          |                                                                |   ``pink``, ``spring``, ``summer``, ``winter``            |                    |
+|                          |                                                                | * *Diverging* - ``BrBG``, ``bwr``, ``coolwarm``,          |                    |
+|                          |                                                                |   ``PiYG``, ``PRGn``, ``PuOr``, ``RdBu``, ``RdGy``,       |                    |
+|                          |                                                                |   ``RdYlBu``, ``RdYlGn``, ``Spectral``, ``seismic``       |                    |
+|                          |                                                                | * *Qualitative* - ``Accent``, ``Dark2``, ``Paired``,      |                    |
+|                          |                                                                |   ``Pastel1``, ``Pastel2``, ``Set1``, ``Set2``, ``Set3``  |                    |
+|                          |                                                                | * *Misc* - ``gist_earth``, ``terrain``, ``ocean``,        |                    |
+|                          |                                                                |   ``gist_stern``, ``brg``, ``CMRmap``, ``cubehelix``,     |                    |
+|                          |                                                                |   ``gnuplot``, ``gnuplot2``, ``gist_ncar``, ``spectral``, |                    |
+|                          |                                                                |   ``nipy_spectral``, ``jet``, ``rainbow``,                |                    |
+|                          |                                                                |   ``gist_rainbow``, ``hsv``, ``flag``, ``prism``          |                    |
++--------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``GRADIENT_START_COLOR`` | Gradient start color for the heat map                          | Hex color                                                 | ``000000`` (black) |
++--------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``GRADIENT_END_COLOR``   | Gradient end color for the heat map                            | Hex color                                                 | ``000000`` (black) |
++--------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``VAL_ATTR``             | Attribute to use to calculate the data points for the heat map | Column from ``LAYERS`` source table list; must be of int, | (none)             |
+|                          |                                                                | double, float, long, or decimal                           |                    |
+|                          |                                                                | {{sc~doc~/concepts/types,column type}}. Can invoke        |                    |
+|                          |                                                                | several "behaviors"; See below for more information.      |                    |
++--------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+
+For the Heatmap mode in particular, the ``BBOX`` parameter defines the
+geographic area while the ``WIDTH`` and ``HEIGHT`` parameters define the pixel
+grid resolution over which the heatmap will be calculated.
+
+If ``COLORMAP`` is specified, it will be used regardless of whether
+``GRADIENT_START_COLOR``/``GRADIENT_END_COLOR`` are specified.  If the given
+*colormap* is invalid, an error will be returned.  If ``COLORMAP`` is blank
+or unspecified, ``GRADIENT_START_COLOR``/``GRADIENT_END_COLOR`` are used, if
+specified.  If none of these is specified, the ``jet`` *colormap* will be used.
+
+``VAL_ATTR`` can be used to enable special behaviors. A description of the
+behavior as well as how to enable the behavior can be found below.
+
+* Count - the number of records at each pixel is used to generate the heatmap
+
+  * If no ``VAL_ATTR`` is specified or ``VAL_ATTR=``
+  * ``VAL_ATTR=count(column_name)``
+
+* Sum - the sum of column_name within each pixel is used to generate the
+  heatmap
+
+  * ``VAL_ATTR=column_name``
+  * ``VAL_ATTR=sum(column_name)``
+
+* Average - the average of column_name within each pixel is used to generate
+  the heatmap
+
+  * ``VAL_ATTR=avg(column_name)``
+  * ``VAL_ATTR=mean(column_name)``
+
+* Minimum - the minimum of column_name within each pixel is used to generate
+  the heatmap
+
+  * ``VAL_ATTR=min(column_name)``
+
+* Maximum - the maximum of column_name within each pixel is used to generate
+  the heatmap
+
+  * ``VAL_ATTR=max(column_name)``
+
+For example, to generate a heatmap image from a table ``nyctaxi`` with the
+following characteristics:
+
+* *SRS* is ``PLATE_CARREE``
+* Bounding box *longitude* is from ``-80`` to ``-70`` and *latitude* is from
+  ``35`` to ``45``
+* Image size is ``512`` x ``512``
+* X-axis position is extracted from the ``nyctaxi`` table's ``pickup_longitude``
+  column
+* Y-axis position is extracted from the ``nyctaxi`` table's ``pickup_latitude``
+  column
+* A blur radius of ``5``
+* A *plasma* colormap
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="165-175" >}}
+
+
+CONTOUR
+*******
+
+The *contour* mode is used to generate a contour plot image of one or more
+tables. A contour plot is a plane section of the three-dimensional graph of the
+function ``z = f(x, y)`` parallel to the ``x, y`` plane. Contour plots contain
+isolines, which show the location(s) where the data has the same ``z`` value.
+
+Available parameters are:
+
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| Name                              | Description                                                    | Allowable Values                                          | Default Value   |
++===================================+================================================================+===========================================================+=================+
+| ``COLORMAP``                      | Colormap for the contour or contour grid.                      | * *Perceptually-Uniform* - ``viridis``,                   | ``jet``         |
+|                                   |                                                                |   ``inferno``, ``plasma``, ``magma``                      |                 |
+|                                   |                                                                | * *Sequential I* - ``Blues``, ``BuGn``,                   |                 |
+|                                   |                                                                |   ``BuPu``, ``GnBu``, ``Greens``, ``Greys``,              |                 |
+|                                   |                                                                |   ``Oranges``, ``OrRd``, ``PuBu``, ``PuBuGn``,            |                 |
+|                                   |                                                                |   ``PuRd``, ``Purples``, ``RdPu``,  ``Reds``,             |                 |
+|                                   |                                                                |   ``YlGn``, ``YlGnBu``, ``YlOrBr``, ``YlOrRd``            |                 |
+|                                   |                                                                | * *Sequential II* - ``afmhot``, ``autumn``,               |                 |
+|                                   |                                                                |   ``bone``, ``cool``, ``copper``, ``gist_heat``,          |                 |
+|                                   |                                                                |   ``gray``, ``gist_gray``, ``gist_yarg``,                 |                 |
+|                                   |                                                                |   ``binary``, ``hot``, ``pink``, ``spring``,              |                 |
+|                                   |                                                                |   ``summer``, ``winter``                                  |                 |
+|                                   |                                                                | * *Diverging* - ``BrBG``, ``bwr``,                        |                 |
+|                                   |                                                                |   ``coolwarm``, ``PiYG``, ``PRGn``, ``PuOr``,             |                 |
+|                                   |                                                                |   ``RdBu``, ``RdGy``, ``RdYlBu``, ``RdYlGn``,             |                 |
+|                                   |                                                                |   ``Spectral``, ``seismic``                               |                 |
+|                                   |                                                                | * *Qualitative* - ``Accent``, ``Dark2``,                  |                 |
+|                                   |                                                                |   ``Paired``, ``Pastel1``, ``Pastel2``,                   |                 |
+|                                   |                                                                |   ``Set1``, ``Set2``, ``Set3``                            |                 |
+|                                   |                                                                | * *Misc* - ``gist_earth``, ``terrain``,                   |                 |
+|                                   |                                                                |   ``ocean``, ``gist_stern``, ``brg``,                     |                 |
+|                                   |                                                                |   ``CMRmap``, ``cubehelix``, ``gnuplot``,                 |                 |
+|                                   |                                                                |   ``gnuplot2``, ``gist_ncar``, ``spectral``,              |                 |
+|                                   |                                                                |   ``nipy_spectral``, ``jet``, ``rainbow``,                |                 |
+|                                   |                                                                |   ``gist_rainbow``, ``hsv``, ``flag``, ``prism``          |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``COLOR``                         | Isoline color to be used when flooded contours are enabled;    | Hex notation in the format ``RRGGBB`` or ``AARRGGBB``, in |  ``FF000000``   |
+|                                   | otherwise isolines will follow the colormap                    | which case the alpha value is used for the transparency   |                 |
+|                                   |                                                                | of the flooded contours. The line itself is always opaque.|                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``BG_COLOR``                      | Background color                                               | Hex notation in the format ``RRGGBB`` or ``AARRGGBB``     | ``00000000``    |
+|                                   |                                                                | (to specify the alpha value)                              | (transparent)   |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``TEXT_COLOR``                    | Color of labels text                                           | Hex notation in the format ``RRGGBB`` or ``AARRGGBB``     | ``FF000000``    |
+|                                   |                                                                | (to specify the alpha value)                              |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``MIN_LEVEL``                     | Minimum isoline value to be shown.                             | Number                                                    | ``-1``          |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``MAX_LEVEL``                     | Maximum isoline value to be shown.                             | Number                                                    | ``-1``          |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``NUM_LEVELS``                    | Number of equally-separated isolines to be shown.              | ``10`` or greater                                         | ``10``          |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``ADJUST_LEVEL``                  | Recompute the minimum and maximum levels based on the current  | Number                                                    | ``1``           |
+|                                   | data in the viewport. Setting this will ignore the values      |                                                           |                 |
+|                                   | of ``MIN_LEVEL`` and ``MAX_LEVEL``.                            |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``VAL_ATTR``                      | Attribute to use to calculate the isolines.                    | Column from ``LAYERS`` source table list; must be of int, | ``z``           |
+|                                   |                                                                | double, float, long, or decimal                           |                 |
+|                                   |                                                                | {{sc~doc~/concepts/types,column type}}. Can invoke        |                 |
+|                                   |                                                                | several "behaviors"; See below for more information.      |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``SEARCH_RADIUS``                 | Neighborhood of influence of sample data (in percent of the    | Number                                                    | ``1``           |
+|                                   | image/grid). See below for more information.                   |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``GRIDDING_METHOD``               | Methods to produce a regularly-spaced, rectangular array of    | * ``INV_DST_POW`` -- *Inverse Distance to a Power*; a     | ``INV_DST_POW`` |
+|                                   | values from potentially irregularly-spaced XY-val data.        |   weighted average interpolator that can either be an     |                 |
+|                                   | See below for more information.                                |   exact or a smoothing interpolator                       |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``SMOOTHING_FACTOR``              | Amount of smoothing of the contribution of neighboring points. | Number between ``0`` and ``1``                            | ``0.01``        |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``MAX_SEARCH_CELLS``              | Maximum number of cells to use once the ``SEARCH_RADIUS`` has  | Number                                                    | ``100``         |
+|                                   | been converted from percentage to cells. The higher the        |                                                           |                 |
+|                                   | number, the higher the quality of the contour plot.            |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``RENDER_OUTPUT_GRID``            | Show the grid used to build the contour plot, which is         | ``0`` (false) or ``1`` (true)                             | ``0``           |
+|                                   | equivalent to generating a flooded-contour.                    |                                                           |                 |
+|                                   | This affects the labels by clipping the area around them.      |                                                           |                 |
+|                                   | The opacity of the flooded-contours is specified in ``COLOR``. |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``GRID_SIZE``                     | Number of subdivisions along the x axis when building the      | Number                                                    | ``100``         |
+|                                   | grid. The y axis will be set according to the aspect ratio.    |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``ADJUST_GRID``                   | Allows the grid size and search radius to be automatically     | ``0`` (false) or ``1`` (true)                             | ``0``           |
+|                                   | varied based on the current data in the viewport.              |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``ADJUST_GRID_NEIGH``             | Used to estimate the clustering of the data (k-means) when     | Number between ``0`` and ``1``                            | ``1``           |
+|                                   | ``ADJUST_GRID`` is set to ``1``. Clustering estimation is      |                                                           |                 |
+|                                   | capped by ``MAX_SEARCH_CELLS``.                                |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``ADJUST_GRID_SIZE``              | Size of the sampling grid used to compute the fill and         | Number                                                    | ``20``          |
+|                                   | clustering ratios when ``ADJUST_GRID`` is set to ``1``.        |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``MIN_GRID_SIZE``                 | Lower limit (in cells) of the grid size when                   | Number                                                    | ``10``          |
+|                                   | ``ADJUST_GRID`` is set to ``1``                                |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``MAX_GRID_SIZE``                 | Upper limit (in cells) of the grid size when                   | Number                                                    | ``500``         |
+|                                   | ``ADJUST_GRID`` is set to ``1``                                |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``ADD_LABELS``                    | Add label contour lines with the value of their level.         | ``true`` or ``false``                                     | ``false``       |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``LABELS_FONT_SIZE``              | Size of the font to use for labels.                            | Number between ``4`` and ``48``                           | ``12``          |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``LABELS_FONT_FAMILY``            | Name of the font to use for labels. The font must be on the    | Any font codes available on all database servers          | ``Sans``        |
+|                                   | system.                                                        |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``LABELS_SEARCH_WINDOW``          | When ``ADD_LABELS`` is set to ``true``, a search window is used| Number between ``1`` and ``8``                            | ``4``           |
+|                                   | to rate the local quality of each isoline. Smooth, continuous, |                                                           |                 |
+|                                   | long stretches with relatively flat angles are favored.        |                                                           |                 |
+|                                   | This setting is multiplied by the font size to set the         |                                                           |                 |
+|                                   | final window size.                                             |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``LABELS_INTRALEVEL_SEPARATION``  | When ``ADD_LABELS`` is set to ``true``, labels are             | Number between ``1`` and ``8``                            | ``4``           |
+|                                   | automatically separated to avoid overlap. This setting         |                                                           |                 |
+|                                   | specifies the distance to use when separating labels of        |                                                           |                 |
+|                                   | different values (in multiples of the font size).              |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``LABELS_INTERLEVEL_SEPARATION``  | When ``ADD_LABELS`` is set to ``true``, more than one label can| Number between ``0`` and ``50``                           | ``25``          |
+|                                   | placed on the same isoline. This setting specifies the         |                                                           |                 |
+|                                   | distance to use when separating labels of the same value       |                                                           |                 |
+|                                   | (in percent of the total window size).                         |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+| ``LABELS_MAX_ANGLE``              | Maximum angle, in degrees, from the vertical to use            | Number between ``0`` and ``90``                           | ``60``          |
+|                                   | when displaying labels.                                        |                                                           |                 |
++-----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+-----------------+
+
+To be able to construct a contour plot, we first need to grid the data in
+a regularly-spaced XY array. This is achieved using the ``GRIDDING_METHOD``
+parameter, which is the most influential parameter of the contour plot. The
+``GRIDDING_METHOD`` determines how the data is interpolated/extrapolated
+and will also impact the speed at which the plot can be generated.  The only
+method supported at this time is ``INV_DST_POW`` (*Inverse Distance to a Power*).
+
+The ``SEARCH_RADIUS`` heavily influences both the quality and speed of the
+contour plot. It is method dependent and should be adjusted based on the
+quantity and quality of the input data.
+
+Once the grid is obtained, a marching squares algorithm is used to obtain
+the isolines. The grid can be visualized by setting ``RENDER_OUTPUT_GRID``
+to ``1`` (true).
+
+Additionally, we can set ``ADJUST_GRID`` to ``1`` (true) if the density of the
+data in the current viewport is so low that the resulting grid is not filled
+properly when using the user-specified grid size and search radius. This
+option will automatically adapt the grid size and/or search radius to get a
+better interpolation of the data by first running a coarse gridding pass, then
+collecting data about density and sparsity, and finally choosing the latter
+value accordingly before re-running the contour lines generation.
+
+Finally, labels can be added to the isolines by setting ``ADD_LABELS`` to 
+``true``. Label font size, font family, angle, and separation are the main 
+parameters to control how the labels are displayed.
+
+For example, to generate a contour plot image from a table with the
+following characteristics:
+
+.. note::
+
+   The contour plot image for this example is generated from an aggregate
+   groupby result table ``contour_source``. This result table aggregates dropoff
+   points and counts of points from the ``nyctaxi`` table.
+
+   {{< literalinclude file="/examples/bash/wms_examples.sh" lines="183-186" >}}
+
+* *SRS* is ``PLATE_CARREE``
+* Bounding box *longitude* is from ``-74.1`` to ``-73.9`` and *latitude* is from
+  ``40.6`` to ``40.9``
+* Image size is ``512`` x ``512``
+* X-axis position is extracted from the ``contour_source`` table's
+  ``dropoff_longitude`` column
+* Y-axis position is extracted from the ``contour_source`` table's
+  ``dropoff_latitude`` column
+* Number of individually-separated isolines is set to ``150``
+* Number of isolines is automatically adjusted based on the viewport
+* Z value for the contour plot isolines is extracted from the ``contour_source``
+  table's ``dropoff_point_count`` column
+* Search radius for the isolines is 15% of the grid
+* Grid size is manually set to ``50``
+* Labels are added; labels of different values are separated by a space worth
+  ``5`` times the font size (default font size is ``12``)
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="189-207" >}}
+
+
+LABELS
+******
+
+The *labels* mode is used to show labels on the map rather than points.
+Available parameters are:
+
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| Name                    | Description                                                    | Allowable Values                                   | Default Value  |
++=========================+================================================================+====================================================+================+
+| ``LABEL_LAYER``         | Name of table to render *(Required)*                           | Valid table, in ``[schema_name.]table_name``       |                |
+|                         |                                                                | format, using standard name                        |                |
+|                         |                                                                | {{sc~find~table name resolution,resolution rules}} |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_X_ATTR``        | Name of column containing label's position on the x-axis       | Numeric column from ``LABEL_LAYER`` source table   | Column ``x``   |
+|                         |                                                                | list; must be of int, double, float, or long       |                |
+|                         |                                                                | {{sc~doc~/concepts/types,column type}}             |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_Y_ATTR``        | Name of column containing label's position on the y-axis       | Numeric column from ``LABEL_LAYER`` source table   | Column ``y``   |
+|                         |                                                                | list; must be of int, double, float, or long       |                |
+|                         |                                                                | {{sc~doc~/concepts/types,column type}}             |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_TEXT_STRING``   | Text of label to render                                        | All printable characters                           | no text        |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_FONT``          | Font in the format of Name Style(s) Size                       | Any font codes available on all database servers   | default server |
+|                         | (e.g. ``Arial Bold 8``)                                        |                                                    | font           |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_TEXT_COLOR``    | Text color                                                     | Hex color (with or without alpha values) or        | ``FF000000``   |
+|                         |                                                                | ``-1`` (full transparency)                         |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_TEXT_SCALE``    | Text scaling factor                                            | Number                                             | ``1``          |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_TEXT_ANGLE``    | Number of degrees clockwise to rotate the label                | Number                                             | ``0``          |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_DRAW_BOX``      | Draw a box around the label                                    | ``0`` (false) or ``1`` (true)                      | ``0``          |
+|                         |                                                                |                                                    |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_DRAW_LEADER``   | Draw a leader line from each label to its x,y point specified  | ``0`` (false) or ``1`` (true)                      | ``0``          |
+|                         | by ``LABEL_LEADER_X_ATTR`` & ``LABEL_LEADER_Y_ATTR`` columns   |                                                    |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_LINE_WIDTH``    | Width of line for box & leader line                            | Number                                             | ``1``          |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_LINE_COLOR``    | Color of line for box & leader line                            | Hex color (with or without alpha values) or        | ``FF000000``   |
+|                         |                                                                | ``-1`` (full transparency)                         |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_FILL_COLOR``    | Color of fill for box                                          | Hex color (with or without alpha values) or        |                |
+|                         |                                                                | ``-1`` (full transparency)                         | ``FF000000``   |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_LEADER_X_ATTR`` | Name of column containing leader line's terminating position   | Numeric column from ``LABEL_LAYER`` source table   | N/A            |
+|                         | on the x-axis (the end opposite the label)                     | list; must be of int, double, float, or long       |                |
+|                         |                                                                | {{sc~doc~/concepts/types,column type}}             |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_LEADER_Y_ATTR`` | Name of column containing leader line's terminating position   | Numeric column from ``LABEL_LAYER`` source table   | N/A            |
+|                         | on the y-axis (the end opposite the label)                     | list; must be of int, double, float, or long       |                |
+|                         |                                                                | {{sc~doc~/concepts/types,column type}}             |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_FILTER``        | Boolean expression used to filter which labels are included    |                                                    | N/A            |
+|                         | from ``LABEL_LAYER``                                           |                                                    |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_X_OFFSET``      | Horizontally offset the label rendering from the actual        | Number                                             | N/A            |
+|                         | coordinate using the given value                               |                                                    |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+| ``LABEL_Y_OFFSET``      | Vertically offset the label rendering from the actual          | Number                                             | N/A            |
+|                         | coordinate using the given value                               |                                                    |                |
++-------------------------+----------------------------------------------------------------+----------------------------------------------------+----------------+
+
+.. important:: When using the *labels* mode, ``LABEL_LAYER`` is required.
+
+All ``LABELS`` parameters can use expressions. To read more about the different
+types of expressions, see {{sc~doc~/concepts/expressions,expressions}}.
+Strings inside expressions must be enclosed in single or double quotes.
+Expressions inside the ``LABEL_TEXT_COLOR``, ``LABEL_LINE_COLOR``, and
+``LABEL_FILL_COLOR`` parameters must resolve to 6 or 8 hex digits or the color
+won't work. Note that if the expression resolves to 6 hex digits, an alpha
+value of ``FF`` is automatically added.
+
+To use labels, the requested *TrueType* fonts must be loaded on all servers in
+the *Kinetica* cluster, in the {{sc~file~/usr/share/fonts}} directory.
+*Kinetica* must be restarted to see any new fonts placed in this directory.
+
+Labels and shapes cannot be rendered in the same *WMS* call.  Both can be shown
+on the same map by creating separate map layers, each with its own *WMS* call.
+When making the *WMS* call for the labels to be generated, the ``LAYERS``
+parameter (geospatial source table containing the shapes) can be left blank.
+
+``LABEL_DRAW_BOX`` and ``LABEL_DRAW_LEADER`` will only take values that
+are castable to boolean values (e.g., ``1`` and ``0``). "TRUE" and "FALSE"
+are not valid.
+
+All colors must be provided in hex notation in the format ``RRGGBB`` or
+``AARRGGBB`` (to specify the alpha value). For example, partially transparent
+red may be given as ``B3FF0000``.
+
+Parameters other than the following can be either literals of the appropriate
+parameter type or column names containing values of the appropriate type:
+
+* ``LABEL_LAYER``
+* ``LABEL_X_ATTR``
+* ``LABEL_Y_ATTR``
+* ``LABEL_LEADER_X_ATTR``
+* ``LABEL_LEADER_Y_ATTR``
+
+For example, to generate a label image overlay from a table ``nyctaxi`` with the
+following characteristics:
+
+* *SRS* is ``EPSG:4326``
+* Bounding box *longitude* is from ``-74.1`` to ``-73.9`` and *latitude* is from
+  ``40.6`` to ``40.9``
+* Image size is ``512`` x ``512``
+* X-axis position is extracted from the ``nyctaxi`` table's
+  ``dropoff_longitude`` column
+* Y-axis position is extracted from the ``nyctaxi`` table's ``dropoff_latitude``
+  column
+* Label text is ``dropoff``, is  *white* (``FFFFFF``), scaled to 40% smaller
+  (``0.6`` x) than normal, rotated ``15`` degrees clockwise
+* A *blue-filled* (``B3006BBB``) box is drawn around each label
+* Labels are only drawn for dropoff points where the passenger count was
+  greater than 5
+
+{{< literalinclude file="/examples/bash/wms_examples.sh" lines="216-231" >}}
+
+
+ISOCHRONES
+**********
+
+The *isochrones* mode is used to generate an image containing isolines for
+travel results using an existing 
+{{sc~doc~/graph_solver/network_graph_solver,graph}}. Isolines represent curves
+of equal cost, with cost typically referring to the time or distance assigned as
+the weights of the underlying graph.
+
+Available parameters are:
+
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| Name                             | Description                                                    | Allowable Values                                          | Default Value      |
++==================================+================================================================+===========================================================+====================+
+| ``ADD_LABELS``                   | Add labels to isolines with the value of their level.          | ``true`` or ``false``                                     | ``false``          |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``BG_COLOR``                     | Background color of the generated image.                       | Hex notation in the format ``RRGGBB`` or ``AARRGGBB``     | ``00000000``       |
+|                                  |                                                                | (to specify the alpha value)                              | (transparent)      |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``COLOR``                        | Isoline color to be used when flooded contours are enabled;    | Hex notation in the format ``RRGGBB`` or ``AARRGGBB``, in |  ``FF000000``      |
+|                                  | otherwise, isolines will follow the colormap.                  | which case the alpha value is used for the transparency   |                    |
+|                                  |                                                                | of the flooded contours. The line itself is always opaque.|                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``COLORMAP``                     | Colormap for the isochrones                                    | * *Perceptually-Uniform* - ``viridis``, ``inferno``,      | ``jet``            |
+|                                  |                                                                |   ``plasma``, ``magma``                                   |                    |
+|                                  |                                                                | * *Sequential I* - ``Blues``, ``BuGn``, ``BuPu``,         |                    |
+|                                  |                                                                |   ``GnBu``, ``Greens``, ``Greys``, ``Oranges``, ``OrRd``, |                    |
+|                                  |                                                                |   ``PuBu``, ``PuBuGn``, ``PuRd``, ``Purples``, ``RdPu``,  |                    |
+|                                  |                                                                |   ``Reds``, ``YlGn``, ``YlGnBu``, ``YlOrBr``, ``YlOrRd``  |                    |
+|                                  |                                                                | * *Sequential II* - ``afmhot``, ``autumn``, ``bone``,     |                    |
+|                                  |                                                                |   ``cool``, ``copper``, ``gist_heat``, ``gray``,          |                    |
+|                                  |                                                                |   ``gist_gray``, ``gist_yarg``, ``binary``, ``hot``,      |                    |
+|                                  |                                                                |   ``pink``, ``spring``, ``summer``, ``winter``            |                    |
+|                                  |                                                                | * *Diverging* - ``BrBG``, ``bwr``, ``coolwarm``,          |                    |
+|                                  |                                                                |   ``PiYG``, ``PRGn``, ``PuOr``, ``RdBu``, ``RdGy``,       |                    |
+|                                  |                                                                |   ``RdYlBu``, ``RdYlGn``, ``Spectral``, ``seismic``       |                    |
+|                                  |                                                                | * *Qualitative* - ``Accent``, ``Dark2``, ``Paired``,      |                    |
+|                                  |                                                                |   ``Pastel1``, ``Pastel2``, ``Set1``, ``Set2``, ``Set3``  |                    |
+|                                  |                                                                | * *Misc* - ``gist_earth``, ``terrain``, ``ocean``,        |                    |
+|                                  |                                                                |   ``gist_stern``, ``brg``, ``CMRmap``, ``cubehelix``,     |                    |
+|                                  |                                                                |   ``gnuplot``, ``gnuplot2``, ``gist_ncar``, ``spectral``, |                    |
+|                                  |                                                                |   ``nipy_spectral``, ``jet``, ``rainbow``,                |                    |
+|                                  |                                                                |   ``gist_rainbow``, ``hsv``, ``flag``, ``prism``          |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``COLOR_ISOLINES``               | Color each isoline according to the colormap; otherwise, use   | ``true`` or ``false``                                     | ``true``           |
+|                                  | the foreground color.                                          |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``CONCAVITY_LEVEL``              | Factor to qualify the concavity of the isochrone curves. The   | Values (inclusive) between ``0`` and ``1``                | ``0.5``            |
+|                                  | lower the value, the more convex (with ``0`` being completely  |                                                           |                    |
+|                                  | convex and ``1`` being the most concave).                      |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``DATA_MAX_X``                   | Upper bound for the ``x`` values. If not provided, it will be  | Number                                                    |                    |
+|                                  | computed from the bounds of the input data.                    |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``DATA_MAX_Y``                   | Upper bound for the ``y`` values. If not provided, it will be  | Number                                                    |                    |
+|                                  | computed from the bounds of the input data.                    |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``DATA_MIN_X``                   | Lower bound for the ``x`` values. If not provided, it will be  | Number                                                    |                    |
+|                                  | computed from the bounds of the input data.                    |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``DATA_MIN_Y``                   | Lower bound for the ``y`` values. If not provided, it will be  | Number                                                    |                    |
+|                                  | computed from the bounds of the input data.                    |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``GENERATE_IMAGE``               | Generates a PNG image of the isochrones in the response.       | ``true`` or ``false``                                     | ``true``           |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``GRAPH_NAME``                   | Name of the graph on which the isochrone is to be computed.    | A valid graph name                                        |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``GRID_SIZE``                    | When interpolating the graph solution to generate the          | Positive integers                                         | ``100``            |
+|                                  | isochrone, ``GRID_SIZE`` represents by the number of           |                                                           |                    |
+|                                  | subdivisions along the x axis when building the grid (the y    |                                                           |                    |
+|                                  | is computed using the aspect ratio of the output image).       |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``HEIGHT``                       | Height of the generated image (if applicable). If not          | Number                                                    | ``-1``             |
+|                                  | provided, the aspect ratio multiplied by ``WIDTH`` is used.    |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``IS_REPLICATED``                | Replicate the ``SOLVE_TABLE``.                                 | ``true`` or ``false``                                     | ``true``           |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LABELS_FONT_FAMILY``           | When ``ADD_LABELS`` is set to ``true``, name of the font to    | Any font codes available on all database servers          | ``Sans``           |
+|                                  | use for labels. The font must be on the system.                |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LABELS_FONT_SIZE``             | When ``ADD_LABELS`` is set to ``true``, size of the font to    | Number between ``4`` and ``48``                           | ``12``             |
+|                                  | use for labels.                                                |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LABELS_INTRALEVEL_SEPARATION`` | When ``ADD_LABELS`` is set to ``true``, labels are             | Number between ``1`` and ``8``                            | ``4``              |
+|                                  | automatically separated to avoid overlap. This setting         |                                                           |                    |
+|                                  | specifies the distance to use when separating labels of        |                                                           |                    |
+|                                  | different values (in multiples of the font size).              |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LABELS_INTERLEVEL_SEPARATION`` | When ``ADD_LABELS`` is set to ``true``, more than one label can| Number between ``0`` and ``50``                           | ``25``             |
+|                                  | placed on the same isoline. This setting specifies the         |                                                           |                    |
+|                                  | distance to use when separating labels of the same value       |                                                           |                    |
+|                                  | (in percent of the total window size).                         |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LABELS_MAX_ANGLE``             | When ``ADD_LABELS`` is set to ``true``, maximum angle, in      | Number between ``0`` and ``90``                           | ``60``             |
+|                                  | degrees, from the vertical to use when displaying labels.      |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LABELS_SEARCH_WINDOW``         | When ``ADD_LABELS`` is set to ``true``, a search window is used| Number between ``1`` and ``8``                            | ``4``              |
+|                                  | to rate the local quality of each isoline. Smooth, continuous, |                                                           |                    |
+|                                  | long stretches with relatively flat angles are favored.        |                                                           |                    |
+|                                  | This setting is multiplied by the font size to set the         |                                                           |                    |
+|                                  | final window size.                                             |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LEVELS_TABLE``                 | Name of the table to output the isochrones, containing levels  | A valid table name, in ``[schema_name.]table_name``       |                    |
+|                                  | and their corresponding WKT geometry. If no value is provided, | format, using standard                                    |                    |
+|                                  | the table is not generated.                                    | {{sc~find~table name resolution,name resolution rules}}   |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``LINE_SIZE``                    | The width of the contour lines in pixels.                      | Number between ``0`` and ``20``                           | ``3``              |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``MAX_SOLUTION_RADIUS``          | Extent of the search around ``SOURCE_NODE``. Set to ``-1.0``   | Number                                                    | ``-1.0``           |
+|                                  | for unrestricted search.                                       |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``NUM_LEVELS``                   | Number of equally-separated isochrones to compute.             | Positive integer                                          | ``1``              |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``PROJECTION``                   | Spatial Reference System (i.e. *EPSG* code)                    | * *Plate Carree* projection codes: ``PLATE_CARREE``,      |                    |
+|                                  |                                                                |   ``EPSG:4326``                                           |                    |
+|                                  |                                                                | * *Web Mercator* projection codes: ``WEB_MERCATOR``,      |                    |
+|                                  |                                                                |   ``900913``, ``EPSG:900913``, ``102100``,                |                    |
+|                                  |                                                                |   ``EPSG:102100``, ``3857``, ``EPSG:3857``                |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``REMOVE_PREVIOUS_RESTRICTIONS`` | Ignore the restrictions applied to the graph during the        | ``true`` or ``false``                                     | ``false``          |
+|                                  | creation stage and only use the restrictions specified in      |                                                           |                    |
+|                                  | this request.                                                  |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``RESTRICTIONS``                 | Additional restrictions to apply to the nodes/edges of an      | Valid restrictions                                        |                    |
+|                                  | existing graph. Restrictions must be specified using           |                                                           |                    |
+|                                  | {{sc~find~identifiers,identifiers}}; identifiers are grouped   |                                                           |                    |
+|                                  | as {{sc~find~id-combos,combinations}}. Identifiers can be used |                                                           |                    |
+|                                  | with existing column names, e.g.,                              |                                                           |                    |
+|                                  | 'table.column AS RESTRICTIONS_EDGE_ID', expressions, e.g.,     |                                                           |                    |
+|                                  | 'column/2 AS RESTRICTIONS_VALUECOMPARED', or raw values, e.g., |                                                           |                    |
+|                                  | '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If using raw     |                                                           |                    |
+|                                  | values in an identifier combination, the number of values      |                                                           |                    |
+|                                  | specified must match across the combination. If                |                                                           |                    |
+|                                  | ``REMOVE_PREVIOUS_RESTRICTIONS`` is set to ``true`` any        |                                                           |                    |
+|                                  | provided restrictions will replace the existing restrictions.  |                                                           |                    |
+|                                  | If ``REMOVE_PREVIOUS_RESTRICTIONS`` is set to ``false``, any   |                                                           |                    |
+|                                  | provided restrictions will be added (in the case of            |                                                           |                    |
+|                                  | 'RESTRICTIONS_VALUECOMPARED') to or replaced (in the case of   |                                                           |                    |
+|                                  | 'RESTRICTIONS_ONOFFCOMPARED')                                  |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``RESTRICTION_THRESHOLD_VALUE``  | Value-based restriction comparison. Any node or edge with a    |                                                           |                    |
+|                                  | 'RESTRICTIONS_VALUECOMPARED' value greater than their          |                                                           |                    |
+|                                  | ``RESTRICTION_THRESHOLD_VALUE`` will not be included in the    |                                                           |                    |
+|                                  | solution.                                                      |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``SEARCH_RADIUS``                | When interpolating the graph solution to generate the          | Positive integer                                          | ``20``             |
+|                                  | isochrone, the ``SEARCH_RADIUS`` is the neighborhood of        |                                                           |                    |
+|                                  | influence of sample data (in percent of the image/grid).       |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``SOLVE_DIRECTION``              | Specify the direction of the isochrones solution: either       | ``from_source`` or ``to_source``                          |                    |
+|                                  | toward the ``SOURCE_NODE`` or leading away from it.            |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``SOLVE_TABLE``                  | Name of the table to host intermediate solve results           | A valid table name, in ``[schema_name.]table_name``       | ``""``             |
+|                                  | containing the position and cost for each vertex in the        | format, using standard                                    |                    |
+|                                  | underlying graph.                                              | {{sc~find~table name resolution,name resolution rules}}   |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``SOURCE_NODE``                  | Starting vertex on the underlying graph from/to which the      |                                                           |                    |
+|                                  | isochrones are created.                                        |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``TEXT_COLOR``                   | When ``ADD_LABELS`` is set to ``true``, color for the labels.  | Hex notation in the format ``RRGGBB`` or ``AARRGGBB``     | ``FF000000``       |
+|                                  |                                                                | (to specify the alpha values) or ``-1`` (full             |                    |
+|                                  |                                                                | transparency)                                             |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``UNIFORM_WEIGHTS``              | When specified, assigns the given value to all the edges in    |                                                           |                    |
+|                                  | the graph. Note that weights provided in ``WEIGHTS_ON_EDGES``  |                                                           |                    |
+|                                  | will override this value.                                      |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``WEIGHTS_ON_EDGES``             | Additional weights to apply to the edges of an existing graph. | Valid weights                                             |                    |
+|                                  | Weights must be specified using                                |                                                           |                    |
+|                                  | {{sc~find~identifiers,identifiers}}; identifiers are grouped   |                                                           |                    |
+|                                  | as {{sc~find~id-combos,combinations}}. Identifiers can be used |                                                           |                    |
+|                                  | with existing column names, e.g.,                              |                                                           |                    |
+|                                  | 'table.column AS WEIGHTS_EDGE_ID', expressions, e.g.,          |                                                           |                    |
+|                                  | 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED', or raw values,     |                                                           |                    |
+|                                  | e.g., '{4, 15, 2} AS WEIGHTS_VALUESPECIFIED'.  Any provided    |                                                           |                    |
+|                                  | weights will be added (in the case of                          |                                                           |                    |
+|                                  | 'WEIGHTS_VALUESPECIFIED') to or multiplied with (in the case   |                                                           |                    |
+|                                  | of 'WEIGHTS_FACTORSPECIFIED') the existing weight(s). If using |                                                           |                    |
+|                                  | raw values in an identifier combination, the number of values  |                                                           |                    |
+|                                  | specified must match across the combination.                   |                                                           |                    |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+
+| ``WIDTH``                        | Width of the generated image (if applicable).                  | Positive integer                                          | ``512``            |
++----------------------------------+----------------------------------------------------------------+-----------------------------------------------------------+--------------------+

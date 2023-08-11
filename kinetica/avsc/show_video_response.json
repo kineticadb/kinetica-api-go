@@ -1,0 +1,120 @@
+{
+    "endpoint": "/show/video",
+    "name": "show_video_response",
+    "desc_name": "Create Video",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name" : "creation_times",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "Creation time for each video as an ISO-8601 datetime.",
+            "value": {}
+        },
+        {
+            "name": "elapsed_render_time_seconds",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc" : "The elapsed time spent rendering each video in seconds.",
+            "value": {}
+        },
+        {
+            "name": "job_ids",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "The job id of the rendering process, for each video that is still being rendered.",
+            "value": {}
+        },
+        {
+            "name": "paths",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc":  "KIFS path to each video.",
+            "value": {}
+        },
+        {
+            "name": "rendered_bytes",
+            "type":
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "The number of bytes emitted by the encoder for each video.",
+            "value" : {}
+        },
+        {
+            "name": "rendered_frames",
+            "type":
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "The number of frames rendered for each video.",
+            "value" : {}
+        },
+        {
+            "name" : "rendered_percents",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc"  : "Percent completion of each video's rendering process (0-100)",
+            "value": {}
+        },
+        {
+            "name": "requests",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "JSON-string reflecting each video's creation parameters.",
+            "value": {}
+        },
+        {
+            "name" : "status",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "The status of the last rendered frame for each video.  Either OK or Error with a message indicating the nature of the error.",
+            "value": {}
+        },
+        {
+            "name" : "ttls",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc" : "The remaining {TTL}@{link /concepts/ttl/}, in minutes, before the respective video expires (-1 if it will never expire).",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,97 @@
+{
+    "endpoint": "/filter/byarea",
+    "type": "record",
+    "name": "filter_by_area_request",
+    "desc_name": "Filter by Area",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Filter a dataset for records falling within a 2-D polygon's boundary",
+    "doc": "Calculates which objects from a table are within a named area of
+interest (NAI/polygon). The operation is synchronous, meaning that a response
+will not be returned until all the matching objects are fully available. The
+response payload provides the count of the resulting set. A new resultant set
+(view) which satisfies the input NAI restriction specification is created with
+the name @{input view_name} passed in as part of the input.",
+
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to filter, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  This may be the name of a table or a view (when chaining queries).",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "view_name",
+            "type": "string",
+            "doc": "If provided, then this will be the name of the view containing the results, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Must not be an already existing table or view.",
+            "value":
+            {
+                "is_output_table_name": true,
+                "default" : ""
+            }
+        },
+        {
+            "name": "x_column_name",
+            "type": "string",
+            "doc": "Name of the column containing the x values to be filtered.",
+            "value": {}
+        },
+        {
+            "name": "x_vector",
+            "type": {
+                "type": "array",
+                "items": "double"
+            },
+            "doc": "List of x coordinates of the vertices of the polygon representing the area to be filtered.",
+            "value": {}
+        },
+        {
+            "name": "y_column_name",
+            "type": "string",
+            "doc": "Name of the column containing the y values to be filtered.",
+            "value": {}
+        },
+        {
+            "name": "y_vector",
+            "type": {
+                "type": "array",
+                "items": "double"
+            },
+            "doc": "List of y coordinates of the vertices of the polygon representing the area to be filtered.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+            	"type" : "map",
+            	"values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the view as part of @{input view_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the newly created view. If the schema provided is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

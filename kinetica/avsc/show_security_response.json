@@ -1,0 +1,90 @@
+{
+    "endpoint": "/show/security",
+    "type": "record",
+    "name": "show_security_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "types",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Map of user/role name to the type of that user/role.",
+            "value":
+            {
+                "valid_values":
+                {
+                    "internal_user":
+                    {
+                        "doc": "A user whose credentials are managed by the database system.",
+                        "value": {}
+                    },
+                    "external_user":
+                    {
+                        "doc": "A user whose credentials are managed by an external LDAP.",
+                        "value": {}
+                    },
+                    "role":
+                    {
+                        "doc": "A role.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "roles",
+            "type":
+            {
+                "type": "map",
+                "values":
+                {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "Map of user/role name to a list of names of roles of which that user/role is a member.",
+            "value": {}
+        },
+        {
+            "name": "permissions",
+            "type":
+            {
+                "type": "map",
+                "values":
+                {
+                    "type": "array",
+                    "items":
+                    {
+                        "type": "map",
+                        "values": "string"
+                    }
+                }
+            },
+            "doc": "Map of user/role name to a list of permissions directly granted to that user/role.",
+            "value": {}
+        },
+        {
+            "name": "resource_groups",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Map of user name to resource group name.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

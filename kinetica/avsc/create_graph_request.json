@@ -1,0 +1,455 @@
+{
+    "endpoint": "/create/graph",
+    "name": "create_graph_request",
+    "desc_name": "Create Graph",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "Creates a new graph network using given nodes, edges, weights, and
+restrictions.
+    
+IMPORTANT: It's highly recommended that you review the
+{Network Graphs & Solvers}@{link /graph_solver/network_graph_solver/}
+concepts documentation, the
+{Graph REST Tutorial}@{link /guides/graph_rest_guide/},
+and/or some {graph examples}@{link /guide-tags/graph/} before
+using this endpoint.",
+    "short_doc": "Create a new graph network.",
+    "fields": [
+        {
+          "name": "graph_name",
+          "type": "string",
+          "doc": "Name of the graph resource to generate.",
+          "value": {}
+        },
+        {
+          "name": "directed_graph",
+          "type": "boolean",
+          "doc": "If set to {true}@{choice of input directed_graph}, the graph will be directed. If set to {false}@{choice of input directed_graph}, the graph will not be directed. Consult {Directed Graphs}@{link /graph_solver/network_graph_solver/#directed-graphs} for more details.",
+          "value": {
+	            "default": "true",
+              "valid_choices" :
+              {
+                  "true" :
+                  {
+                      "doc" : "",
+                      "value" : {}
+                  },
+                  "false" :
+                  {
+                      "doc" : "",
+                      "value" : {}
+                  }
+              }
+          }
+        },
+        {
+            "name": "nodes",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Nodes represent fundamental topological units of a graph.
+Nodes must be specified using
+{identifiers}@{link /graph_solver/network_graph_solver/#identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#id-combos}.
+Identifiers can be used with existing column names, e.g.,
+'table.column AS NODE_ID', expressions, e.g.,
+'ST_MAKEPOINT(column1, column2) AS NODE_WKTPOINT', or constant values, e.g.,
+'{9, 10, 11} AS NODE_ID'.
+If using constant values in an identifier combination, the number of values
+specified must match across the combination.",
+            "value": {}
+        },
+        {
+            "name": "edges",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Edges represent the required fundamental topological unit of
+a graph that typically connect nodes. Edges must be specified using
+{identifiers}@{link /graph_solver/network_graph_solver/#identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#id-combos}.
+Identifiers can be used with existing column names, e.g.,
+'table.column AS EDGE_ID', expressions, e.g.,
+'SUBSTR(column, 1, 6) AS EDGE_NODE1_NAME', or constant values, e.g.,
+\"{'family', 'coworker'} AS EDGE_LABEL\".
+If using constant values in an identifier combination, the number of values
+specified must match across the combination.",
+            "value": {}
+        },
+        {
+            "name": "weights",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Weights represent a method of informing the graph solver of
+the cost of including a given edge in a solution. Weights must be specified
+using
+{identifiers}@{link /graph_solver/network_graph_solver/#identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#id-combos}.
+Identifiers can be used with existing column names, e.g.,
+'table.column AS WEIGHTS_EDGE_ID', expressions, e.g.,
+'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED', or constant values, e.g.,
+'{4, 15} AS WEIGHTS_VALUESPECIFIED'.
+If using constant values in an identifier combination, the number of values specified
+must match across the combination.",
+            "value": {}
+        },
+        {
+            "name": "restrictions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Restrictions represent a method of informing the graph
+solver which edges and/or nodes should be ignored for the solution. Restrictions
+must be specified using
+{identifiers}@{link /graph_solver/network_graph_solver/#identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#id-combos}.
+Identifiers can be used with existing column names, e.g.,
+'table.column AS RESTRICTIONS_EDGE_ID', expressions, e.g.,
+'column/2 AS RESTRICTIONS_VALUECOMPARED', or constant values, e.g.,
+'{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'.
+If using constant values in an identifier combination, the number of values
+specified must match across the combination.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "restriction_threshold_value": {
+                        "type": "float",
+                        "doc": "Value-based restriction comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED value greater than the {restriction_threshold_value}@{key of input options} will not be included in the graph.",
+                        "value": {}
+                    },
+                    "merge_tolerance": {
+                        "type": "float",
+                        "doc": "If node geospatial positions are input (e.g., WKTPOINT, X, Y), determines the minimum separation allowed between unique nodes. If nodes are within the tolerance of each other, they will be merged as a single node.",
+                        "value": {
+                            "default": "1.0E-4"
+                        }
+                    },
+                    "min_x": {
+                        "type": "double",
+                        "doc": "Minimum x (longitude) value for spatial graph associations.",
+                        "value": {
+                            "default": "-180.0"
+                        }
+                    },
+                    "max_x": {
+                        "type": "double",
+                        "doc": "Maximum x (longitude) value for spatial graph associations.",
+                        "value": {
+                            "default": "180.0"
+                        }
+                    },
+                    "min_y": {
+                        "type": "double",
+                        "doc": "Minimum y (latitude) value for spatial graph associations.",
+                        "value": {
+                            "default": "-90.0"
+                        }
+                    },
+                    "max_y": {
+                        "type": "double",
+                        "doc": "Maximum y (latitude) value for spatial graph associations.",
+                        "value": {
+                            "default": "90.0"
+                        }
+                    },
+                    "recreate": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.recreate} and the graph (using @{input graph_name}) already exists, the graph is deleted and recreated.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "modify": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.modify}, {recreate}@{key of input options} is set to {true}@{choice of input.key options.recreate}, and the graph (specified using @{input graph_name}) already exists, the graph is updated with the given components.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "export_create_results": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.export_create_results}, returns the graph topology in the response as arrays.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "enable_graph_draw": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.enable_graph_draw}, adds a 'EDGE_WKTLINE' column identifier to the specified {graph_table}@{key of input options} so the graph can be viewed via WMS; for social and non-geospatial graphs, the 'EDGE_WKTLINE' column identifier will be populated with spatial coordinates derived from a flattening layout algorithm so the graph can still be viewed.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "save_persist": {
+                        "type": "boolean",
+                        "doc" : "If set to {true}@{choice of input.key options.save_persist}, the graph will be saved in the persist directory (see the {config reference}@{link /config/#config-main-persistence} for more information). If set to {false}@{choice of input.key options.save_persist}, the graph will be removed when the graph server is shutdown.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "sync_db": {
+                        "type": "boolean",
+                        "doc" : "If set to {true}@{choice of input.key options.sync_db} and {save_persist}@{key of input options} is set to {true}@{choice of input.key options.save_persist}, the graph will be fully reconstructed upon a database restart and be updated to align with any source table(s) updates made since the creation of the graph. If dynamic graph updates upon table inserts are desired, use {add_table_monitor}@{key of input options} instead.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "add_table_monitor": {
+                        "type": "boolean",
+                        "doc" : "Adds a table monitor to every table used in the creation of the graph; this table monitor will trigger the graph to update dynamically upon inserts to the source table(s). Note that upon database restart, if {save_persist}@{key of input options} is also set to {true}@{choice of input.key options.save_persist}, the graph will be fully reconstructed and the table monitors will be reattached. For more details on table monitors, see @{endpoint /create/tablemonitor}.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "graph_table": {
+                        "type" : "string",
+                        "doc"  : "If specified, the created graph is also created as a table with the given name, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  The table will have the following identifier columns: 'EDGE_ID', 'EDGE_NODE1_ID', 'EDGE_NODE2_ID'. If left blank, no table is created.",
+                        "value": {
+                            "default":""
+                        }
+                    },
+                    "remove_label_only": {
+                        "type": "boolean",
+                        "doc"  : "When RESTRICTIONS on labeled entities requested, if set to true this will NOT delete the entity but only the label associated with the entity. Otherwise (default), it'll delete the label AND the entity.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }                        
+                    },
+                    "add_turns": {
+                        "type": "boolean",
+                        "doc" : "Adds dummy 'pillowed' edges around intersection nodes where there are more than three edges so that additional weight penalties can be imposed by the solve endpoints. (increases the total number of edges).",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "turn_angle": {
+                        "type": "float",
+                        "doc": "Value in degrees modifies the thresholds for attributing right, left, sharp turns, and intersections. It is the vertical deviation angle from the incoming edge to the intersection node. The larger the value, the larger the threshold for sharp turns and intersections; the smaller the value, the larger the threshold for right and left turns; 0 < turn_angle < 90",
+                        "value": {
+                            "default": "60"
+                        }
+                    },
+                    "is_partitioned": {
+                        "type": "boolean",
+                        "internal_option": true,
+                        "doc": "",
+                        "value": {
+                            "default": "false",
+                            "valid_choices": {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "server_id": {
+                        "doc": "Indicates which graph server(s) to send the request to. Default is to send to the server with the most available memory.",
+                        "value": {} 
+                    },
+                    "use_rtree": {
+                        "doc": "Use an range tree structure to accelerate and improve the accuracy of snapping, especially to edges.",
+                        "type": "boolean",
+                        "value": {
+                            "default": "false",
+                            "valid_choices": {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "keep_derived_table": {
+                        "type": "boolean",
+                        "doc": "",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "server_call": {
+                        "type": "boolean",
+                        "doc": "Flag this as originating from the graph server",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "sql_request_avro_json": {
+                        "type": "string",
+                        "internal_option": true,
+                        "doc": "",
+                        "value": {
+                            "default":""
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "bypass_client_check": {
+                        "type": "boolean",
+                        "doc": "Set for non-user requests.",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

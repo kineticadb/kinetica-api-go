@@ -1,0 +1,20 @@
+{
+    "endpoint": "/admin/alter/host",
+    "type": "record",
+    "name": "admin_alter_host_response",
+    "desc_name": "Admin Alter Hosts Response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

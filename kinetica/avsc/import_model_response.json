@@ -1,0 +1,46 @@
+{
+    "endpoint": "/import/model",
+    "type": "record",
+    "name": "import_model_response",
+    "desc_name": "Import a Model from container",
+    "is_host_manager_endpoint": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Import a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Name of the model to be imported" ,
+            "value":{}
+
+        },
+        {
+            "name": "entity_id",
+            "type": "int",
+            "doc": "Entity ID of the model imported. It is an identifier in KML API to locate an ML object.",
+            "value":{}
+
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "kml_response" :
+                    {
+                        "doc": "KML response",
+                        "value" : {}
+                    } 
+                }
+            }
+        }
+
+    ]
+}

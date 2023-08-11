@@ -1,0 +1,30 @@
+{
+    "endpoint": "/revoke/permission/system",
+    "type": "record",
+    "name": "revoke_permission_system_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Value of @{input permission}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

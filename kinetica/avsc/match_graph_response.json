@@ -1,0 +1,32 @@
+{
+    "endpoint": "/match/graph",
+    "name": "match_graph_response",
+    "desc_name": "Match  Graph",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a successful solution."
+        },
+        {
+            "name": "match_score",
+            "type": "float",
+            "value": {},
+            "doc": "The mean square error calculation representing the map matching score. Values closer to zero are better."
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

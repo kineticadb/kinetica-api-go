@@ -1,0 +1,24 @@
+{
+    "endpoint": "/admin/shutdown", 
+    "type": "record", 
+    "name": "admin_shutdown_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "exit_status", 
+            "type": "string", 
+            "doc": "'OK' upon (right before) successful exit.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

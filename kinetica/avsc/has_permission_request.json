@@ -1,0 +1,169 @@
+{
+    "endpoint": "/has/permission", 
+    "type": "record", 
+    "name": "has_permission_request", 
+    "desc_name": "Has Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Check if user has specified permission on the specified object",    
+    "doc": "Checks if the specified user has the specified permission on the specified object.", 
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user for which the permission is being checked. Must be an existing user. If blank, will use the current user.",
+            "value": { "default": "" }
+        },
+        {
+            "name": "target",
+            "type": "string",
+            "doc": "Name of object to check for the requested permission.  It is recommended to use a fully-qualified name when possible.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to check for.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "connect" :
+                    {
+                        "doc": "[DEPRECATED--please use {connect_datasource}@{choice of input permission} or {connect_datasink}@{choice of input permission}] Connect access on the given data source.",
+                        "value" : {}
+                    },
+                    "connect_datasink" :
+                    {
+                        "doc" : "Connect access on the given data sink.",
+                        "value" : {}
+                    },
+                    "connect_datasource" :
+                    {
+                        "doc" : "Connect access on the given data source.",
+                        "value" : {}
+                    },
+                    "credential_admin" :
+                    {
+                        "doc" : "Full read/write and administrative access on the credential.",
+                        "value" : {}
+                    },
+                    "credential_read" :
+                    {
+                        "doc" : "Ability to read and use the credential.",
+                        "value" : {}
+                    },
+                    "directory_read" :
+                    {
+                        "doc" : "For files in the directory, access to list files, download files, or use files in server side functions",
+                        "value" : {}
+                    },
+                    "directory_write" :
+                    {
+                        "doc" : "Access to upload files to, or delete files from, the directory. A user with write access automatically has read access",
+                        
+                        "value" : {}
+                    },
+                    "proc_execute" :
+                    {
+                        "doc" : "Execute access to the UDF.",
+                        "value" : {}
+                    },
+                    "role" :
+                    {
+                        "doc" : "User is a member of this role (including indirectly).",
+                        "value" : {}
+                    },
+                    "sql_proc_execute" :
+                    {
+                        "doc" : "Execute access to the SQL proc.",
+                        "value" : {}
+                    },
+                    "system_admin" :
+                    {
+                        "doc" : "Full access to all data and system functions.",
+                        "value" : {}
+                    },
+                    "system_read" :
+                    {
+                        "doc" : "Read-only access to all tables.",
+                        "value" : {}
+                    },
+                    "system_user_admin" :
+                    {
+                        "doc": "Access to administer users and roles that do not have system_admin permission.",
+                        "value" : {}
+                    },
+                    "system_write" :
+                    {
+                        "doc" : "Read and write access to all tables.",
+                        "value" : {}
+                    },
+                    "table_admin" :
+                    {
+                        "doc" : "Full read/write and administrative access to the table.",
+                        "value" : {}
+                    },
+                    "table_delete" :
+                    {
+                        "doc" : "Delete access to the table.",
+                        "value" : {}
+                    },
+                    "table_insert" :
+                    {
+                        "doc" : "Insert access to the table.",
+                        "value" : {}
+                    },
+                    "table_read" :
+                    {
+                        "doc" : "Read access to the table.",
+                        "value" : {}
+                    },
+                    "table_update" :
+                    {
+                        "doc" : "Update access to the table.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "no_error_if_not_exists" :
+                    {
+                        "doc"  : "If {false}@{choice of input.key options.no_error_if_not_exists} will return an error if the provided @{input target} does not exist or is blank. If {true}@{choice of input.key options.no_error_if_not_exists} then it will return {false}@{choice of output has_permission} for @{output has_permission}.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

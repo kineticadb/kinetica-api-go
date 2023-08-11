@@ -1,0 +1,123 @@
+{
+    "endpoint": "/aggregate/statistics/byrange", 
+    "type": "record", 
+    "name": "aggregate_statistics_by_range_request", 
+    "desc_name": "Aggregate Statistics by Range",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Divide a dataset into bins and calculate statistics of the values",
+    "doc": "Divides the given set into bins and calculates statistics of the
+values of a value-column in each bin.  The bins are based on the values of a
+given binning-column.  The statistics that may be requested are mean, stdv
+(standard deviation), variance, skew, kurtosis, sum, min, max, first, last and
+weighted average. In addition to the requested statistics the count of total
+samples in each bin is returned. This counts vector is just the histogram of the
+column used to divide the set members into bins. The weighted average statistic
+requires a weight column to be specified in
+{weight_column_name}@{key of input options}. The weighted average is then
+defined as the sum of the products of the value column times the weight column
+divided by the sum of the weight column.
+
+There are two methods for binning the set members. In the first, which can be
+used for numeric valued binning-columns, a min, max and interval are specified.
+The number of bins, nbins, is the integer upper bound of (max-min)/interval.
+Values that fall in the range [min+n*interval,min+(n+1)*interval) are placed in
+the nth bin where n ranges from 0..nbin-2. The final bin is
+[min+(nbin-1)*interval,max]. In the second method,
+{bin_values}@{key of input options} specifies a list of binning column values.
+Binning-columns whose value matches the nth member of the
+{bin_values}@{key of input options} list are placed in the nth bin. When a list
+is provided, the binning-column must be of type string or int.
+
+NOTE:  The Kinetica instance being accessed must be running a CUDA (GPU-based)
+build to service this request.", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of the table on which the ranged-statistics operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "select_expression", 
+            "type": "string", 
+            "doc": "For a non-empty expression statistics are calculated for those records for which the expression is true.", 
+            "value": { "default": "" }
+        }, 
+        {
+            "name": "column_name", 
+            "type": "string", 
+            "doc": "Name of the binning-column used to divide the set samples into bins.", 
+            "value": {}
+        }, 
+        {
+            "name": "value_column_name", 
+            "type": "string", 
+            "doc": "Name of the value-column for which statistics are to be computed.", 
+            "value": {}
+        }, 
+        {
+            "name": "stats", 
+            "type": "string", 
+            "doc": "A string of comma separated list of the statistics to calculate, e.g. 'sum,mean'. Available statistics: mean, stdv (standard deviation), variance, skew, kurtosis, sum.", 
+            "value": {}
+        }, 
+        {
+            "name": "start", 
+            "type": "double", 
+            "doc": "The lower bound of the binning-column.", 
+            "value": {}
+        }, 
+        {
+            "name": "end", 
+            "type": "double", 
+            "doc": "The upper bound of the binning-column.", 
+            "value": {}
+        }, 
+        {
+            "name": "interval", 
+            "type": "double", 
+            "doc": "The interval of a bin. Set members fall into bin i if the binning-column falls in the range [start+interval*i, start+interval*(i+1)).", 
+            "value": {}
+        }, 
+        {
+            "name": "options", 
+            "type": {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Map of optional parameters:", 
+            "value": 
+            { 
+                "default": {},
+                "valid_keys" :
+                {
+                    "additional_column_names" :
+                    {
+                        "doc"  : "A list of comma separated value-column names over which statistics can be accumulated along with the primary value_column.",
+                        "value" : {}
+                    },
+                    "bin_values" :
+                    {
+                        "doc"  : "A list of comma separated binning-column values. Values that match the nth bin_values value are placed in the nth bin.",
+                        "value" : {}
+                    },
+                    "weight_column_name" :
+                    {
+                        "doc"  : "Name of the column used as weighting column for the weighted_average statistic.",
+                        "value" : {}
+                    },
+                    "order_column_name":
+                    {
+                        "doc" : "Name of the column used for candlestick charting techniques.",
+                        "value" : {}
+                    }
+                }
+            }
+        }
+    ]
+}

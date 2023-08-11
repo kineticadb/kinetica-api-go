@@ -1,0 +1,42 @@
+{
+    "endpoint": "/admin/show/shards",
+    "type" : "record", 
+    "name" : "admin_show_shards_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name" : "version",
+            "type" : "long",
+            "doc": "Current shard array version number.",
+            "value": { }
+        },
+        {
+            "name" : "rank",
+            "type" : {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc": "Array of ranks indexed by the shard number.",
+            "value": { }
+        },
+        {
+            "name" : "tom",
+            "type" : {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc": "Array of toms to which the corresponding shard belongs.",
+            "value": { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,68 @@
+{
+    "endpoint": "/alter/table", 
+    "type": "record", 
+    "name": "alter_table_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Table on which the operation was performed.", 
+            "value": {}
+        }, 
+        {
+            "name": "action", 
+            "type": "string", 
+            "doc": "Modification operation that was performed.", 
+            "value": {}
+        },
+        {
+            "name": "value", 
+            "type": "string", 
+            "doc": "The value of the modification that was performed.", 
+            "value": {}
+        },
+        {
+            "name": "type_id",
+            "type": "string",
+            "doc": "return the type_id (when changing a table, a new type may be created)",
+            "value": {}
+        },
+        {
+            "name": "type_definition",
+            "type": "string",
+            "doc": "return the type_definition  (when changing a table, a new type may be created)",
+            "value": {}
+        },
+        {
+            "name" : "properties",
+            "doc": "return the type properties  (when changing a table, a new type may be created)",
+            "type" :
+            {
+                "type" : "map",
+                "values" :
+                {
+                    "type" : "array",
+                    "items" : "string"
+                }
+            },
+            "value": {}
+        },
+        {
+            "name" : "label",
+            "doc": "return the type label  (when changing a table, a new type may be created)",
+            "type" : "string",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "endpoint": "/has/table", 
+    "type": "record", 
+    "name": "has_table_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string",
+            "doc": "Value of @{input table_name}", 
+            "value": {}
+        },
+        {
+            "name": "table_exists", 
+            "type": "boolean",
+            "doc": "Indicates whether the table exists or not.", 
+            "value": 
+            {
+                "valid_choices" :
+                {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "type" : "boolean",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "type" : "boolean",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

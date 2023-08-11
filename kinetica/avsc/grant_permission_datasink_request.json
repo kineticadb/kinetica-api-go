@@ -1,0 +1,54 @@
+{
+    "endpoint": "/grant/permission/datasink",
+    "type": "record",
+    "name": "grant_permission_datasink_request",
+    "desc_name": "Grant Data Sink Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Grant a data sink permission to a user or role",
+    "doc": "Grants a {data sink}@{link /concepts/data_sinks/} permission to a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role to which the permission will be granted. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to grant to the user or role",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "connect" :
+                    {
+                        "doc" : "Connect access on the given data sink",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "datasink_name",
+            "type": "string",
+            "doc": "Name of the data sink on which the permission will be granted. Must be an existing data sink, or an empty string to grant permission on all data sinks.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

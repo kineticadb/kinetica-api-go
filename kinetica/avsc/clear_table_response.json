@@ -1,0 +1,24 @@
+{
+    "endpoint": "/clear/table", 
+    "type": "record", 
+    "name": "clear_table_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name} for a given table, or 'ALL CLEARED' in case of clearing all tables.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,100 @@
+{
+    "endpoint" : "/visualize/image/chart",
+    "type" : "record",
+    "name" : "visualize_image_chart_response",
+    "doc"  : "The image is contained in the @{output image_data} field.",
+    "fields" : [
+        {
+            "name" : "min_x",
+            "type" : "double",
+            "doc"  : "Lower bound for the x column values as provided in @{input min_x} or calculated for non-numeric columns when plot_all option is used.",
+            "value": {}
+        },
+        {
+            "name" : "max_x",
+            "type" : "double",
+            "doc"  : "Upper bound for the x column values as provided in @{input max_x} or calculated for non-numeric columns when plot_all option is used.",
+            "value": {}
+        },
+        {
+            "name" : "min_y",
+            "type" : "double",
+            "doc"  : "Lower bound for the y column values as provided in @{input min_y} or calculated for non-numeric columns when plot_all option is used.",
+            "value": {}
+        },
+        {
+            "name" : "max_y",
+            "type" : "double",
+            "doc"  : "Upper bound for the y column values as provided in @{input max_y} or calculated for non-numeric columns when plot_all option is used.",
+            "value": {}
+        },
+        {
+            "name" : "width",
+            "type" : "int",
+            "doc"  : "Width of the image as provided in @{input width}.",
+            "value": {}
+        },
+        {
+            "name" : "height",
+            "type" : "int",
+            "doc"  : "Height of the image as provided in @{input height}.",
+            "value": {}
+        },
+        {
+            "name" : "bg_color",
+            "type" : "string",
+            "doc"  : "Background color of the image as provided in @{input bg_color}.",
+            "value": {}
+        },
+        {
+            "name" : "image_data",
+            "type" : "bytes",
+            "doc"  : "The generated image data.",
+            "value": {
+                "managed": true
+            }
+        },
+        {
+            "name" : "axes_info",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type" : "array",
+                    "items" : "string"
+                }
+            },
+            "doc" : "Information returned for drawing labels for the axes associated with non-numeric columns.",
+            "value" : {
+                "valid_keys" :{
+                    "sorted_x_values" : {
+                        "doc"  : "Sorted non-numeric x column value list for drawing x axis label.",
+                        "value": {}
+                    },
+                    "location_x" : {
+                        "doc"  : "X axis label positions of sorted_x_values in pixel coordinates.",
+                        "value": {}
+                    },
+                    "sorted_y_values" : {
+                        "doc"  : "Sorted non-numeric y column value list for drawing y axis label.",
+                        "value": {}
+                    },
+                    "location_y" : {
+                        "doc"  : "Y axis label positions of sorted_y_values in pixel coordinates.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

@@ -1,0 +1,53 @@
+{
+    "endpoint": "/admin/remove/host",
+    "type": "record",
+    "name": "admin_remove_host_request",
+    "desc_name": "Administration: Remove Host",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "short_doc": "Removes a host from the cluster.",
+    "doc": "Removes a host from an existing cluster. If the host to be removed has any ranks running on it, the ranks must be removed using @{endpoint /admin/remove/ranks} or manually switched over to a new host using @{endpoint /admin/switchover} prior to host removal. If the host to be removed has the graph server or SQL planner running on it, these must be manually switched over to a new host using @{endpoint /admin/switchover}.",
+    "fields": [
+        {
+            "name": "host",
+            "type": "string",
+            "doc": "Identifies the host this applies to. Can be the host address, or formatted as 'hostN' where N is the host number as specified in gpudb.conf",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "dry_run":
+                    {
+                        "doc": "If set to {true}@{choice of input.key options.dry_run}, only validation checks will be performed. No host is removed.",
+                        "value": {
+                            "valid_choices": {
+                                "true": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+
+                    }
+                }
+            }
+        }
+    ]
+}

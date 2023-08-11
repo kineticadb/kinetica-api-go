@@ -1,0 +1,238 @@
+{
+    "endpoint": "/admin/rebalance",
+    "type" : "record",
+    "name" : "admin_rebalance_request",
+    "desc_name": "Administration: Rebalance",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Rebalance data and/or shards across all nodes in a cluster",
+    "doc": "Rebalance the data in the cluster so that all nodes contain an equal
+number of records approximately and/or rebalance the shards to be equally
+distributed (as much as possible) across all the ranks.
+
+The database must be offline for this operation, see @{endpoint /admin/offline}
+
+* If @{endpoint /admin/rebalance} is invoked after a change is made to the
+  cluster, e.g., a host was added or removed,
+  {sharded data}@{link /concepts/tables/#sharding} will be
+  evenly redistributed across the cluster by number of shards per rank
+  while unsharded data will be redistributed across the cluster by data
+  size per rank
+* If @{endpoint /admin/rebalance} is invoked at some point when unsharded
+  data (a.k.a.
+  {randomly-sharded}@{link /concepts/tables/#random-sharding})
+  in the cluster is unevenly distributed over time, sharded data will
+  not move while unsharded data will be redistributed across the
+  cluster by data size per rank
+
+NOTE: Replicated data will not move as a result of this call
+
+This endpoint's processing time depends on the amount of data in the system,
+thus the API call may time out if run directly.  It is recommended to run this
+endpoint asynchronously via @{endpoint /create/job}.
+",
+    "fields" : [
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "rebalance_sharded_data" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.rebalance_sharded_data}, {sharded data}@{link /concepts/tables/#sharding} will be rebalanced approximately equally across the cluster. Note that for clusters with large amounts of sharded data, this data transfer could be time consuming and result in delayed query responses.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "true"
+                        }
+                    },
+                    "rebalance_unsharded_data" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.rebalance_unsharded_data}, unsharded data (a.k.a. {randomly-sharded}@{link /concepts/tables/#random-sharding}) will be rebalanced approximately equally across the cluster. Note that for clusters with large amounts of unsharded data, this data transfer could be time consuming and result in delayed query responses.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "true"
+                        }
+                    },
+                    "table_includes" :
+                    {
+                        "doc": "Comma-separated list of unsharded table names to rebalance. Not applicable to sharded tables because they are always rebalanced. Cannot be used simultaneously with {table_excludes}@{key of input options}. This parameter is ignored if {rebalance_unsharded_data}@{key of input options} is {false}@{choice of input.key options.rebalance_unsharded_data}.",
+                        "value" : {}
+                    },
+                    "table_excludes" :
+                    {
+                        "doc": "Comma-separated list of unsharded table names to not rebalance. Not applicable to sharded tables because they are always rebalanced. Cannot be used simultaneously with {table_includes}@{key of input options}. This parameter is ignored if {rebalance_unsharded_data}@{key of input options} is {false}@{choice of input.key options.rebalance_unsharded_data}.",
+                        "value" : {}
+                    },
+                    "aggressiveness" :
+                    {
+                        "doc" : "Influences how much data is moved at a time during rebalance.  A higher {aggressiveness}@{key of input options} will complete the rebalance faster.  A lower {aggressiveness}@{key of input options} will take longer but allow for better interleaving between the rebalance and other queries. Valid values are constants from 1 (lowest) to 10 (highest).",
+                        "value" : 
+                        {
+                            "default" : "10"
+                        }
+                    },
+                    "compact_after_rebalance" :
+                    {
+                        "doc" : "Perform compaction of deleted records once the rebalance completes to reclaim memory and disk space. Default is {true}@{choice of input.key options.compact_after_rebalance}, unless {repair_incorrectly_sharded_data}@{key of input options} is set to {true}@{choice of input.key options.repair_incorrectly_sharded_data}.",
+                        "value" : 
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                           {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                           }
+                        }
+                    },
+                    "compact_only" :
+                    {
+                        "doc" : "If set to {true}@{choice of input.key options.compact_only}, ignore rebalance options and attempt to perform compaction of deleted records to reclaim memory and disk space without rebalancing first.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "repair_incorrectly_sharded_data" :
+                    {
+                        "doc" : "Scans for any data sharded incorrectly and re-routes the data to the correct location. Only necessary if @{endpoint /admin/verifydb} reports an error in sharding alignment. This can be done as part of a typical rebalance after expanding the cluster or in a standalone fashion when it is believed that data is sharded incorrectly somewhere in the cluster. Compaction will not be performed by default when this is enabled. If this option is set to {true}@{choice of input.key options.repair_incorrectly_sharded_data}, the time necessary to rebalance and the memory used by the rebalance may increase.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+
+                    "ranks_with_data" :
+                    {
+                        "doc" : "The rank number(s) of the ranks that will hold data after the rebalance.  Applies to sharded and unsharded data.",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "randomize" :
+                    {
+                        "doc" : "Randomize data distribution for testing purposes. For sharded data, the shard keys will be randomized and the data will be rebalanced accordingly.  For non-sharded data, records will be distributed randomly across all toms.",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "random_seed":
+                    {
+                        "doc" : "Seed for random rebalance, type is an unsigned long.  Do not use the max value for an unsigned long, it will be treated as not set and your seed will be random",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        } 
+                    },
+                    "verify_inline" :
+                    {
+                        "doc" : "Perform verification checks, if possible, while rebalancing, e.g., verify that all data is located in the correct sharded location.",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "compaction_threshold" :
+                    {
+                        "doc" : "compaction threshold, see config file for definition",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "rollback_mode" :
+                    {
+                        "doc"  : "<DEVELOPER> A bitmask that tests rollback by simulating failures during rebalance. Supported options are 0 (disable rollback), 1 (enable rollback), 2 (insert failure), 4 (gather failure), 8 (rollback failure).",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "0"
+                        }
+                    },
+                    "tuning_flags" :
+                    {
+                        "doc"  : "Flags for tuning rebalance performance as we try to optimize it, value will be converted to long treated as a bitmask.
+                                  Supported options are 1 (sender grabs records from memory vice indexed if possible and nothing evicted), 
+                                                        2 (sender calls decode objects and sends data over using bulk insert request).",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "0"
+                        }
+                    }
+                }
+            }
+        }
+
+    ]
+}

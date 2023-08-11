@@ -1,0 +1,112 @@
+{
+    "endpoint": "/get/records",
+    "type": "record",
+    "name": "get_records_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Value of @{input table_name}.",
+            "value": {}
+        },
+        {
+            "name": "type_name",
+            "type": "string",
+            "doc": "",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "type_id",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "type_schema",
+            "type": "string",
+            "doc": "Avro schema of @{output records_binary} or @{output records_json}",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "type_schema",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "records_binary",
+            "type":
+            {
+                "type": "array",
+                "items": "bytes"
+            },
+            "doc": "If the @{input encoding} was 'binary', then this list contains the binary encoded records retrieved from the table, otherwise not populated.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "binary",
+                    "homogeneous": true,
+                    "dimensionality": 1
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "records_json",
+            "type":
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "If the @{input encoding} was 'json', then this list contains the JSON encoded records retrieved from the table. If the @{input encoding} was 'geojson' this list contains a single entry consisting of a GeoJSON FeatureCollection containing a feature per record. Otherwise not populated.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "json",
+                    "homogeneous": true,
+                    "dimensionality": 1
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "total_number_of_records",
+            "type": "long",
+            "doc":  "Total/Filtered number of records.",
+            "value": {}
+        },
+        {
+            "name": "has_more_records",
+            "type": "boolean",
+            "doc":  "Too many records. Returned a partial set.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": 
+            {
+                "valid_keys" :
+                {
+                    "data_rerouted" :
+                    {
+                        "doc" : "When present, indicates that data retrieved in a multi-head get was rerouted internally due to shard assignments changing. The value will be the shard array version used to re-route",
+                        "value": { "internal_option": "true" }
+                    }
+                }
+            }
+        }
+    ]
+}

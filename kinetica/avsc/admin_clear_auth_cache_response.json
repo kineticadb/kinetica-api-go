@@ -1,0 +1,14 @@
+{
+    "endpoint": "/admin/clearauthcache", 
+    "type": "record", 
+    "name": "admin_clear_auth_cache_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "status", 
+            "type": "string", 
+            "doc": "", 
+            "value": {}
+        }
+    ]
+}

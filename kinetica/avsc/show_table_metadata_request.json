@@ -1,0 +1,35 @@
+{
+    "endpoint": "/show/table/metadata", 
+    "type": "record", 
+    "name": "show_table_metadata_request", 
+    "desc_name": "Show Table Metadata",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show metadata for the specified table",    
+    "doc": "Retrieves the user provided metadata for the specified tables.", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "Names of tables whose metadata will be fetched, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  All provided tables must exist, or an error is returned.", 
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

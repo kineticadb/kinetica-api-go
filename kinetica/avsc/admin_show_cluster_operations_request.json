@@ -1,0 +1,36 @@
+{
+    "endpoint": "/admin/show/cluster/operations",
+    "type" : "record",
+    "name" : "admin_show_cluster_operations_request",
+    "desc_name": "Administration: Show Cluster Operations",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show cluster operations (add/remove ranks or rebalance) status",
+    "doc": "Requests the detailed status of the current operation (by default) or a prior cluster operation specified by @{input history_index}.",
+    "fields" :
+    [
+        {
+            "name" : "history_index",
+            "type" : "int",
+            "doc"  : "Indicates which cluster operation to retrieve.  Use 0 for the most recent.",
+            "value" :
+            {
+                "default" : 0
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,53 @@
+{
+    "endpoint": "/list/graph",
+    "name": "list_graph_response",
+    "desc_name": "List Graphs",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a successful listing."
+        },
+        {
+            "name": "graph_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "value": {},
+            "doc": "Name(s) of the graph(s)."
+        },
+        {
+            "name": "num_nodes",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "Total number of nodes in the graph."
+        },
+        {
+            "name": "num_edges",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "Total number of edges in the graph."
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

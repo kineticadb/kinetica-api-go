@@ -1,0 +1,80 @@
+{
+    "endpoint": "/show/datasink",
+    "type": "record",
+    "name": "show_datasink_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "datasink_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The data sink names.",
+            "value": {}
+        },
+        {
+            "name": "destination_types",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The destination type of the data sinks named in @{output datasink_names}.",
+            "value":{}
+        },
+        {
+            "name": "additional_info",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Additional information about the respective data sinks in @{output datasink_names}.",
+            "value": {
+                "valid_choices":
+                {
+                    "@INNER_STRUCTURE":
+                    {
+                        "doc": "",
+                        "value":
+                        {
+                            "default": {},
+                            "valid_keys":
+                            {
+                                "destination":
+                                {
+                                    "doc": "Destination for the output data in 'destination_type://path[:port]' format",
+                                    "value": {}
+                                },
+                                "kafka_topic_name":
+                                {
+                                    "doc": "Kafka topic if the data sink type is a Kafka broker",
+                                    "value": {}
+                                },
+                                "user_name":
+                                {
+                                    "doc": "Name of the remote system user",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

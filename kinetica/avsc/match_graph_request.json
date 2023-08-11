@@ -1,0 +1,400 @@
+{
+    "endpoint": "/match/graph",
+    "name": "match_graph_request",
+    "desc_name": "Match Graph",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "Matches a directed route implied by a given set of
+latitude/longitude points to an existing underlying road network graph using a
+given solution type.
+    
+IMPORTANT: It's highly recommended that you review the
+{Network Graphs & Solvers}@{link /graph_solver/network_graph_solver/}
+concepts documentation, the
+{Graph REST Tutorial}@{link /guides/graph_rest_guide/},
+and/or some
+{/match/graph examples}@{link /guide-tags/graph-match/}
+before using this endpoint.",
+    "short_doc": "Match sample points to a graph.",
+    "fields": [
+        {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Name of the underlying geospatial graph resource to match to using @{input sample_points}.",
+            "value": {}
+        },
+        {
+            "name": "sample_points",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Sample points used to match to an underlying geospatial
+graph. Sample points must be specified using
+{identifiers}@{link /graph_solver/network_graph_solver/#match-identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#match-combinations}.
+Identifiers can be used with: existing column names, e.g.,
+'table.column AS SAMPLE_X'; expressions, e.g.,
+'ST_MAKEPOINT(table.x, table.y) AS SAMPLE_WKTPOINT'; or constant values, e.g.,
+'{1, 2, 10} AS SAMPLE_TRIPID'.",
+            "value": {}
+        },
+        {
+            "name": "solve_method",
+            "type": "string",
+            "doc": "The type of solver to use for graph matching.",
+            "value":
+            {
+                "default": "markov_chain",
+                "valid_choices":
+                {
+                    "markov_chain":
+                    {
+                        "doc" : "Matches @{input sample_points} to the graph using the Hidden Markov Model (HMM)-based method, which conducts a range-tree closest-edge search to find the best combinations of possible road segments ({num_segments}@{key of input options}) for each sample point to create the best route. The route is secured one point at a time while looking ahead {chain_width}@{key of input options} number of points, so the prediction is corrected after each point. This solution type is the most accurate but also the most computationally intensive. Related options: {num_segments}@{key of input options} and {chain_width}@{key of input options}.",
+                        "value" : {}
+                    },
+                    "match_od_pairs":
+                    {
+                        "doc" : "Matches @{input sample_points} to find the most probable path between origin and destination pairs with cost constraints.",
+                        "value" : {}
+                    },
+                    "match_supply_demand":
+                    {
+                        "doc" : "Matches @{input sample_points} to optimize scheduling multiple supplies (trucks) with varying sizes to varying demand sites with varying capacities per depot. Related options: {partial_loading}@{key of input options} and {max_combinations}@{key of input options}.",
+                        "value" : {} 
+                    },
+                    "match_batch_solves":
+                    {
+                        "doc" : "Matches @{input sample_points} source and destination pairs for the shortest path solves in batch mode.",
+                        "value": {}
+                    },
+                    "match_loops":
+                    {
+                        "doc" : "Matches closed loops (Eulerian paths) originating and ending at each graph node within min and max hops (levels).",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "solution_table",
+            "type": "string",
+            "doc": "The name of the table used to store the results, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  This table contains a {track}@{link /geospatial/geo_objects/#geospatial-tracks} of geospatial points for the matched portion of the graph, a track ID, and a score value. Also outputs a details table containing a trip ID (that matches the track ID), the latitude/longitude pair, the timestamp the point was recorded at, and an edge ID corresponding to the matched road segment. Must not be an existing table of the same name.",
+            "value": {
+                "default" : ""
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Additional parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "gps_noise": {
+                        "type": "double",
+                        "doc": "GPS noise value (in meters) to remove redundant sample points. Use -1 to disable noise reduction. The default value accounts for 95% of point variation (+ or -5 meters).",
+                        "value": {
+                            "default": "5.0"
+                        }
+                    },
+                    "num_segments": {
+                        "type": "int",
+                        "doc": "Maximum number of potentially matching road segments for each sample point. For the {markov_chain}@{choice of input solve_method} solver, the default is 3.",
+                        "value": {
+                          "default": "3"
+                        }
+                    },
+                    "search_radius": {
+                        "type": "double",
+                        "doc": "Maximum search radius used when snapping sample points onto potentially matching surrounding segments. The default value corresponds to approximately 100 meters.",
+                        "value": {
+                            "default": "0.001"
+                        }
+                    },
+                    "chain_width": {
+                        "type": "int",
+                        "doc": "For the {markov_chain}@{choice of input solve_method} solver only. Length of the sample points lookahead window within the Markov kernel; the larger the number, the more accurate the solution.",
+                        "value": {
+                            "default": "9"
+                        }
+                    },
+                    "source": {
+                        "type": "string",
+                        "doc": "Optional WKT starting point from @{input sample_points} for the solver. The default behavior for the endpoint is to use time to determine the starting point.",
+                        "value": {
+                            "default": "POINT NULL"
+                        }
+                    },
+                    "destination": {
+                        "type": "string",
+                        "doc": "Optional WKT ending point from @{input sample_points} for the solver. The default behavior for the endpoint is to use time to determine the destination point.",
+                        "value": {
+                            "default": "POINT NULL"
+                        }
+                    },
+                    "partial_loading": {
+                        "type": "boolean",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. When false (non-default), trucks do not off-load at the demand (store) side if the remainder is less than the store's need",
+                        "value": {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "Partial off-loading at multiple store (demand) locations",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "No partial off-loading allowed if supply is less than the store's demand.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "max_combinations": {
+                         "type": "long",
+                         "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. This is the cutoff for the number of generated combinations for sequencing the demand locations - can increase this up to 2M",
+                         "value": {
+                             "default": "10000"
+                          } 
+                    },
+                    "left_turn_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as 'left turn' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "right_turn_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as' right turn' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "intersection_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as 'intersection' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "sharp_turn_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as 'sharp turn' or 'u-turn' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "aggregated_output" : {
+                        "type": "boolean",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. When it is true (default), each record in the output table shows a particular truck's scheduled cumulative round trip path (MULTILINESTRING) and the corresponding aggregated cost. Otherwise, each record shows a single scheduled truck route (LINESTRING) towards a particular demand location (store id) with its corresponding cost.", 
+                        "value": {"default" : "true"}
+                    },
+                    "output_tracks" : {
+                        "type": "boolean",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. When it is true (non-default), the output will be in tracks format for all the round trips of each truck in which the timestamps are populated directly from the edge weights starting from their originating depots.",
+                        "value": {"default" : "false"}
+                    },
+                    "max_trip_cost": {  
+                        "type": "float",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. If this constraint is greater than zero (default) then the trucks will skip travelling from one demand location to another if the cost between them is greater than this number (distance or time). Zero (default) value means no check is performed.",
+                        "value": {"default": "0.0"}
+                    },
+                    "filter_folding_paths" : {
+                        "type": "boolean",
+                        "doc": "For the {markov_chain}@{choice of input solve_method} solver only. When true (non-default), the paths per sequence combination is checked for folding over patterns and can significantly increase the execution time depending on the chain width and the number of gps samples.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "Filter out the folded paths.",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "Do not filter out the folded paths",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "unit_unloading_cost": {  
+                        "type": "float",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. The unit cost per load amount to be delivered. If this value is greater than zero (default) then the additional cost of this unit load multiplied by the total dropped load will be added over to the trip cost to the demand location.",
+                        "value": {"default": "0.0"}
+                    },
+                    "max_num_threads": {
+                        "type": "int",
+                        "doc": "For the {markov_chain}@{choice of input solve_method} solver only. If specified (greater than zero), the maximum number of threads will not be greater than the specified value. It can be lower due to the memory and the number cores available. Default value of zero allows the algorithm to set the maximal number of threads within these constraints.",
+                        "value": {
+                            "default": "0"
+                        }
+                    },
+                    "truck_service_limit": {
+                        "type" : "float",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. If specified (greater than zero), any truck's total service cost (distance or time) will be limited by the specified value including multiple rounds (if set).",
+                        "value" : {
+                            "default": "0.0"
+                        }
+                    },
+                    "enable_truck_reuse" : {
+                        "type" : "boolean",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. If specified (true), all trucks can be scheduled for second rounds from their originating depots.",
+                        "value" :{
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "Allows reusing trucks for scheduling again.",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "Trucks are scheduled only once from their depots.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "max_truck_stops": {
+                        "type": "int",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only. If specified (greater than zero), a truck can at most have this many stops (demand locations) in one round trip. Otherwise, it is unlimited. If 'enable_truck_reuse' is on, this condition will be applied separately at each round trip use of the same truck.",
+                        "value": {
+                            "default": "0"
+                        }
+                    },
+                    "server_id": {
+                        "type": "string",
+                        "doc": "Indicates which graph server(s) to send the request to. Default is to send to the server, amongst those containing the corresponding graph, that has the most computational bandwidth.",
+                        "value": {
+                            "default": ""
+                        }
+                    },
+                    "inverse_solve": {
+                        "type": "boolean",
+                        "doc": "For the {match_batch_solves}@{choice of input solve_method} solver only. Solves source-destination pairs using inverse shortest path solver.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "Solves using inverse shortest path solver.", "value": {} },
+                                "false": { "doc": "Solves using direct shortest path solver.", "value": {} }                               
+                            }
+                        }
+                    },
+                    "max_num_queries": {
+                        "type": "int",
+                        "doc": "Max number of nearest neighbor searches per call.",
+                        "value": {
+                            "internal_option": true
+                        }
+                    },
+                    "modify_weights": {
+                        "type": "boolean",
+                        "doc": "Adjust distance based on weights.",
+                        "value": {
+                            "internal_option": true
+                        }
+                    },
+                    "use_user_ids": {
+                        "type": "boolean",
+                        "doc": "Count as distinct edges with different user ids.",
+                        "value": {
+                            "internal_option": true
+                        }
+                    },
+                    "min_loop_level": {
+                        "type": "int",
+                        "doc": "For the {match_loops}@{choice of input solve_method} solver only. Finds closed loops around each node deducible not less than this minimal hop (level) deep.",
+                        "value": {
+                            "default": "0"
+                        }
+                    },
+                    "max_loop_level": {
+                        "type": "int",
+                        "doc": "For the {match_loops}@{choice of input solve_method} solver only. Finds closed loops around each node deducible not more than this maximal hop (level) deep.",
+                        "value": {
+                            "default": "5"
+                        }
+                    },
+                    "search_limit": {
+                        "type": "long",
+                        "doc": "For the {match_loops}@{choice of input solve_method} solver only. Searches within this limit of nodes per vertex to detect loops. The value zero means there is no limit.",
+                        "value": {
+                            "default": "10000"
+                        }
+                    },
+                    "output_batch_size": {
+                        "type": "long",
+                        "doc": "For the {match_loops}@{choice of input solve_method} solver only. Uses this value as the batch size of the number of loops in flushing(inserting) to the output table.",
+                        "value": {
+                            "default": "1000"
+                        }
+                    },
+                    "svg_width": {
+                        "type": "int",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only and applicable when 'output_tracks' option is turned on. Sets the image width of the svg content in .",
+                        "value": {
+                            "default": "1280",
+                            "internal_option": true
+                        }
+                    },
+                    "svg_height": {
+                        "type": "int",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only and applicable when 'output_tracks' option is turned on. Sets the image height of the svg content.",
+                        "value": {
+                            "default": "768",
+                            "internal_option": true
+                        }
+                    },
+                    "svg_speed": {
+                        "type": "int",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only and applicable when 'output_tracks' option is turned on. Sets the animation speed factor of the svg paths; time duration between two path nodes is divided by this value. The value of 1 corresponds to the real time simulations.",
+                        "value": {
+                            "default": "20",
+                            "internal_option": true
+                        }
+                    },
+                    "svg_basemap": {
+                        "type": "boolean",
+                        "doc": "For the {match_supply_demand}@{choice of input solve_method} solver only and applicable when 'output_tracks' option is turned on. Sets the basemap from a map provides for svg.",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "keep_derived_table": {
+                        "type": "boolean",
+                        "doc": "",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }                
+                }
+            }
+        }
+    ]
+}

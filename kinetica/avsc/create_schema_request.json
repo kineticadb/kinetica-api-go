@@ -1,0 +1,48 @@
+{
+    "endpoint": "/create/schema",
+    "type": "record",
+    "name": "create_schema_request",
+    "desc_name": "Create Schema",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a SQL-style schema.",
+    "doc": "Creates a SQL-style {schema}@{link /concepts/schemas/}. Schemas are containers for tables and views.  Multiple tables and views can be defined with the same name in different schemas.",
+    "fields": [
+        {
+            "name": "schema_name",
+            "type": "string",
+            "doc": "Name of the schema to be created.  Has the same naming restrictions as {tables}@{link /concepts/tables/}.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "no_error_if_exists" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.no_error_if_exists}, prevents an error from occurring if the schema already exists.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            },
+                            "default" : "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

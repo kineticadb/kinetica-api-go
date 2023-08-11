@@ -1,0 +1,68 @@
+{
+    "endpoint": "/show/files", 
+    "type": "record", 
+    "name": "show_files_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "file_names",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A listing of files in the paths specified",
+            "value" : {}
+        },
+        {
+            "name": "sizes",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "Size of each file, in bytes",
+            "value" : {}
+        },
+        {
+            "name": "users",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "User that created the file",
+            "value" : {}
+        },
+        {
+            "name": "creation_times",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "Creation time for each file, in milliseconds since epoch",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "valid_keys" :
+                {
+                    "multipart_uploads":
+                    {
+                        "doc":"JSON-encoded information about multipart uploads in progress",
+                        "value": {}
+                    }
+                }
+            }
+        }
+    ]
+}

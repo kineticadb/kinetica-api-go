@@ -1,0 +1,32 @@
+{
+    "endpoint": "/create/user/external",
+    "type": "record",
+    "name": "create_user_external_request",
+    "desc_name": "Create External User",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a new external user",
+    "doc": "Creates a new external user (a user whose credentials are managed by an external LDAP).",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user to be created. Must exactly match the user's name in the external LDAP, prefixed with a @. Must not be the same name as an existing user.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

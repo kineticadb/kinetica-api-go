@@ -1,0 +1,94 @@
+{
+    "endpoint": "/aggregate/unpivot", 
+    "type": "record", 
+    "name": "aggregate_unpivot_response", 
+    "doc": "", 
+    "fields": [ 
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Typically shows the result-table name if provided in the request (Ignore otherwise).", 
+            "value": {}
+        },
+        {
+            "name" : "response_schema_str", 
+            "type" : "string",
+            "doc"  : "Avro schema of @{output binary_encoded_response} or @{output json_encoded_response}.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "table_schema"
+                }
+            }
+        }, 
+        {
+            "name" : "binary_encoded_response", 
+            "type" : "bytes",
+            "doc"  : "Avro binary encoded response.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "binary",
+                    "homogeneous": true,
+                    "dimensionality": 0
+                },
+                "managed": "zero_copy"
+            }
+        }, 
+        {
+            "name" : "json_encoded_response", 
+            "type" : "string",
+            "doc"  : "Avro JSON encoded response.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "json",
+                    "homogeneous": true,
+                    "dimensionality": 0
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "total_number_of_records",
+            "type": "long",
+            "doc":  "Total/Filtered number of records.",
+            "value": {}
+        },
+        {
+            "name": "has_more_records",
+            "type": "boolean",
+            "doc":  "Too many records. Returned a partial set.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "qualified_result_table_name":
+                    {
+                        "doc" : "The fully qualified name of the table (i.e. including the schema) used to store the results.",
+                        "value" :
+                        {
+                            "is_qualified_output_table_name": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

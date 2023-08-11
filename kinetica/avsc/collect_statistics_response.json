@@ -1,0 +1,33 @@
+{
+    "endpoint": "/collect/statistics", 
+    "type": "record", 
+    "name": "collect_statistics_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },            
+            "doc": "Value of @{input column_names}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

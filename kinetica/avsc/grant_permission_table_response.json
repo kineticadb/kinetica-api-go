@@ -1,0 +1,42 @@
+{
+    "endpoint": "/grant/permission/table",
+    "type": "record",
+    "name": "grant_permission_table_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Value of @{input permission}.",
+            "value": {}
+        },
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Value of @{input table_name}.",
+            "value": {}
+        },
+        {
+            "name": "filter_expression",
+            "type": "string",
+            "doc": "Value of @{input filter_expression}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

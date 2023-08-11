@@ -1,0 +1,60 @@
+{
+    "endpoint": "/revoke/permission/directory",
+    "type": "record",
+    "name": "revoke_permission_directory_request",
+    "desc_name": "Revoke Directory Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Revoke a KiFS directory-level permission from a user or role",
+    "doc": "Revokes a {KiFS}@{link /tools/kifs/} directory-level permission from a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role from which the permission will be revoked. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to revoke from the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "directory_read" :
+                    {
+                        "doc" : "For files in the directory, access to list files, download files, or use files in server side functions",
+                        "value" : {}
+                    },
+                    "directory_write" :
+                    {
+                        "doc" : "Access to upload files to, or delete files from, the directory. A user or role with write access automatically has read acceess",
+
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "directory_name",
+            "type": "string",
+            "doc": "Name of the KiFS directory to which the permission revokes access",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

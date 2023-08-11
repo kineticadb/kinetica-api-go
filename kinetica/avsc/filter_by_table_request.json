@@ -1,0 +1,182 @@
+{
+    "endpoint": "/filter/bytable", 
+    "type": "record", 
+    "name": "filter_by_table_request", 
+    "desc_name": "Filter by Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Filter a dataset for records with column values matching another table's column values",
+    "doc": "Filters objects in one table based on objects in another table. The
+user must specify matching column types from the two tables (i.e. the target
+table from which objects will be filtered and the source table based on which
+the filter will be created); the column names need not be the same. If a
+@{input view_name} is specified, then the filtered objects will then be put in a
+newly created view. The operation is synchronous, meaning that a response will
+not be returned until all objects are fully available in the result view. The
+return value contains the count (i.e. the size) of the resulting view.", 
+    "fields":
+    [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of the table whose data will be filtered, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table.", 
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "view_name",
+            "type": "string", 
+            "doc": "If provided, then this will be the name of the view containing the results, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Must not be an already existing table or view.", 
+            "value":
+            {
+                "is_output_table_name": true,
+                "default" : ""
+            }
+        }, 
+        {
+            "name": "column_name", 
+            "type": "string", 
+            "doc": "Name of the column by whose value the data will be filtered from the table designated by @{input table_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "source_table_name", 
+            "type": "string", 
+            "doc": "Name of the table whose data will be compared against in the table called @{input table_name}, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table.", 
+            "value": {}
+        }, 
+        {
+            "name": "source_table_column_name", 
+            "type": "string", 
+            "doc": "Name of the column in the @{input source_table_name} whose values will be used as the filter for table @{input table_name}. Must be a geospatial geometry column if in 'spatial' mode; otherwise, Must match the type of the @{input column_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "options", 
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {                
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the view as part of @{input view_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the newly created view. If the schema is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "filter_mode" :
+                    {
+                        "doc"  : "String indicating the filter mode, either {in_table}@{choice of input.key options.filter_mode} or {not_in_table}@{choice of input.key options.filter_mode}.",
+                        "value" : 
+                        { 
+                            "default" : "in_table", 
+                            "valid_choices" :
+                            {
+                                "in_table" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "not_in_table" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "mode" :
+                    {
+                        "doc"  : "Mode - should be either {spatial}@{choice of input.key options.mode} or {normal}@{choice of input.key options.mode}.",
+                        "value" : 
+                        { 
+                            "default" : "normal", 
+                            "valid_choices" :
+                            {
+                                "normal" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "spatial" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "buffer" :
+                    {
+                        "doc"  : "Buffer size, in meters. Only relevant for {spatial}@{choice of input.key options.mode} mode.",
+                        "value" : {
+                            "default" : "0"
+                        }
+                    },
+                    "buffer_method" :
+                    {
+                        "doc" : "Method used to buffer polygons.  Only relevant for {spatial}@{choice of input.key options.mode} mode.",
+                        "value" :
+                        {
+                            "default" : "normal", 
+                            "valid_choices" :
+                            {
+                                "normal" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "geos" :
+                                {
+                                    "doc" : "Use geos 1 edge per corner algorithm",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "max_partition_size" :
+                    {
+                        "doc" : "Maximum number of points in a partition. Only relevant for {spatial}@{choice of input.key options.mode} mode.",
+                        "value" : {
+                            "default": "0"
+                        }
+                    },
+                    "max_partition_score" :
+                    {
+                        "doc" : "Maximum number of points * edges in a partition. Only relevant for {spatial}@{choice of input.key options.mode} mode.",
+                        "value" : {
+                            "default": "8000000"
+                        }
+                    },
+                    "x_column_name" :
+                    {
+                        "doc"  : "Name of column containing x value of point being filtered in {spatial}@{choice of input.key options.mode} mode.",
+                        "value" : {
+                            "default" : "x"
+                        }
+                    },
+                    "y_column_name" :
+                    {
+                        "doc"  : "Name of column containing y value of point being filtered in {spatial}@{choice of input.key options.mode} mode.",
+                        "value" : {
+                            "default" : "y"
+                        }
+                    },
+                    "refresh":
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value": { "internal_option": true }
+                    }
+                }
+            }
+        }
+    ]
+}

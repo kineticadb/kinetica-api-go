@@ -1,0 +1,35 @@
+{
+    "endpoint": "/show/triggers",
+    "type": "record",
+    "name": "show_triggers_request",
+    "desc_name": "Show Triggers",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show information for specified or all triggers",
+    "doc": "Retrieves information regarding the specified triggers or all existing triggers currently active.",
+    "fields": [
+        {
+            "name": "trigger_ids",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of IDs of the triggers whose information is to be retrieved. An empty list means information will be retrieved on all active triggers.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

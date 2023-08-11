@@ -1,0 +1,44 @@
+{
+    "endpoint" : "/visualize/image/classbreak",
+    "type" : "record",
+    "name" : "visualize_image_classbreak_response",
+    "doc"  : "The image is contained in the @{output image_data} field.",
+    "fields" : [
+        { 
+            "name" : "width",
+            "type" : "double",
+            "doc"  : "Width of the image as provided in @{input width}.",
+            "value": {}
+        },
+        { 
+            "name" : "height",
+            "type" : "double",
+            "doc"  : "Height of the image as provided in @{input height}.",
+            "value": {}
+        },
+        { 
+            "name" : "bg_color",
+            "type" : "long",
+            "doc"  : "Background color of the image as provided in @{input bg_color}.",
+            "value": {}
+        },
+        { 
+            "name" : "image_data",
+            "type" : "bytes",
+            "doc"  : "The generated image data.",
+            "value": {
+                "managed": true
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

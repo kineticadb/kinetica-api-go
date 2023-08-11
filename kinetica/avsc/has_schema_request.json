@@ -1,0 +1,32 @@
+{
+    "endpoint": "/has/schema", 
+    "type": "record", 
+    "name": "has_schema_request", 
+    "desc_name": "Has Schema",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Check for the existence of specified schema",    
+    "doc": "Checks for the existence of a schema with the given name.", 
+    "fields": [
+        {
+            "name": "schema_name", 
+            "type": "string",
+            "doc": "Name of the schema to check for existence, in root, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.", 
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

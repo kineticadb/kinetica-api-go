@@ -1,0 +1,26 @@
+{
+    "endpoint": "/show/system/status", 
+    "type": "record", 
+    "name": "show_system_status_request", 
+    "desc_name": "Show System Status",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show server configuration and health status",    
+    "doc": "Provides server configuration and health related status to the caller. The admin tool uses it to present server related information to the user.", 
+    "fields": [
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters, currently unused.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

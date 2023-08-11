@@ -1,0 +1,95 @@
+{
+    "endpoint": "/clear/table",
+    "type": "record",
+    "name": "clear_table_request",
+    "desc_name": "Clear Table",
+    "alt_func_name": "clear",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Delete a table",
+    "doc": "Clears (drops) one or all tables in the database cluster. The
+operation is synchronous meaning that the table will be cleared before the
+function returns. The response payload returns the status of the operation along
+with the name of the table that was cleared.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to be cleared, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}. Must be an existing table. Empty string clears all available tables, though this behavior is be prevented by default via gpudb.conf parameter 'disable_clear_all'.",
+            "value":
+            {
+                "is_input_table_name": true,
+                "default": ""
+            }
+        },
+        {
+            "name": "authorization",
+            "type": "string",
+            "doc": "No longer used. User can pass an empty string.",
+            "value": { "default": "" }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "no_error_if_not_exists" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.no_error_if_not_exists} and if the table specified in @{input table_name} does not exist no error is returned. If {false}@{choice of input.key options.no_error_if_not_exists} and if the table specified in @{input table_name} does not exist then an error is returned.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "cascade" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "keep_permissions" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "keep_view_metadata":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default": false
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

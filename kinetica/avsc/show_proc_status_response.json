@@ -1,0 +1,268 @@
+{
+    "endpoint": "/show/proc/status",
+    "type": "record",
+    "name": "show_proc_status_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "proc_names",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "The proc names corresponding to the returned run IDs.",
+            "value": {}
+        },
+        {
+            "name": "params",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "The string params passed to @{endpoint /execute/proc} for the returned run IDs.",
+            "value": {}
+        },
+        {
+            "name": "bin_params",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": "bytes"
+                }
+            },
+            "doc": "The binary params passed to @{endpoint /execute/proc} for the returned run IDs.",
+            "value": {}
+        },
+        {
+            "name": "input_table_names",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "The input table names passed to @{endpoint /execute/proc} for the returned run IDs.",
+            "value": {}
+        },
+        {
+            "name": "input_column_names",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": {
+                        "type": "array",
+                        "items": "string"
+                    }
+                }
+            },
+            "doc": "The input column names passed to @{endpoint /execute/proc} for the returned run IDs, supplemented with the column names for input tables not included in the input column name map.",
+            "value": {}
+        },
+        {
+            "name": "output_table_names",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "The output table names passed to @{endpoint /execute/proc} for the returned run IDs.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "The optional parameters passed to @{endpoint /execute/proc} for the returned run IDs.",
+            "value": {}
+        },
+        {
+            "name": "overall_statuses",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Overall statuses for the returned run IDs. Note that these are rollups and individual statuses may differ between data segments for the same run ID; see @{output statuses} and @{output messages} for statuses from individual data segments.",
+            "value": {
+                "valid_values": {
+                    "running": {
+                        "doc": "The proc instance is currently running.",
+                        "value": {}
+                    },
+                    "complete": {
+                       "doc": "The proc instance completed with no errors.",
+                       "value": {}
+                    },
+                    "killed": {
+                        "doc": "The proc instance was killed before completion.",
+                        "value": {}
+                    },
+                    "error": {
+                        "doc": "The proc instance failed with an error.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "statuses",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Statuses for the returned run IDs, grouped by data segment ID.",
+            "value": {
+                "valid_values": {
+                    "@INNER_STRUCTURE": {
+                        "doc": "",
+                        "value": {
+                            "valid_values": {
+                                "running": {
+                                    "doc": "The proc instance is currently running.",
+                                    "value": {}
+                                },
+                                "complete": {
+                                    "doc": "The proc instance completed with no errors.",
+                                    "value": {}
+                                },
+                                "killed": {
+                                    "doc": "The proc instance was killed before completion.",
+                                    "value": {}
+                                },
+                                "error": {
+                                    "doc": "The proc instance failed with an error.",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "messages",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Messages containing additional status information for the returned run IDs, grouped by data segment ID.",
+            "value": {}
+        },
+        {
+            "name": "results",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": {
+                        "type": "map",
+                        "values": "string"
+                    }
+                }
+            },
+            "doc": "String results for the returned run IDs, grouped by data segment ID.",
+            "value": {}
+        },
+        {
+            "name": "bin_results",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": {
+                        "type": "map",
+                        "values": "bytes"
+                    }
+                }
+            },
+            "doc": "Binary results for the returned run IDs, grouped by data segment ID.",
+            "value": {}
+        },
+        {
+            "name": "output",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": {
+                        "type": "map",
+                        "values": {
+                            "type": "array",
+                            "items": "string"
+                        }
+                    }
+                }
+            },
+            "doc": "Output lines for the returned run IDs, grouped by data segment ID.",
+            "value": {
+                "valid_values": {
+                    "@INNER_STRUCTURE": {
+                        "doc": "",
+                        "value": {
+                            "valid_values": {
+                                "@INNER_STRUCTURE": {
+                                    "doc": "",
+                                    "value": {
+                                        "valid_keys": {
+                                            "stdout": {
+                                                "doc": "Output lines from stdout.",
+                                                "value": {}
+                                            },
+                                            "stderr": {
+                                                "doc": "Output lines from stderr.",
+                                                "value": {}
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "timings",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "map",
+                    "values": {
+                        "type": "map",
+                        "values": "long"
+                    }
+                }
+            },
+            "doc": "Timing information for the returned run IDs, grouped by data segment ID.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

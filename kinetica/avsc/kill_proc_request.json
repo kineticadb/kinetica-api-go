@@ -1,0 +1,46 @@
+{
+    "endpoint": "/kill/proc",
+    "type": "record",
+    "name": "kill_proc_request",
+    "desc_name": "Kill Proc",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Kill a running proc instance",
+    "doc": "Kills a running proc instance.",
+    "fields": [
+        {
+            "name": "run_id",
+            "type": "string",
+            "doc": "The run ID of a running proc instance. If a proc with a matching run ID is not found or the proc instance has already completed, no procs will be killed. If not specified, all running proc instances will be killed.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "run_tag":
+                    {
+                        "doc": "If @{input run_id} is specified, kill the proc instance that has a matching run ID and a matching run tag that was provided to @{endpoint /execute/proc}. If @{input run_id} is not specified, kill the proc instance(s) where a matching run tag was provided to @{endpoint /execute/proc}.",
+                        "value":
+                        {
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

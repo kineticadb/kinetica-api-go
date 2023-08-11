@@ -1,0 +1,56 @@
+{
+    "endpoint": "/show/schema",
+    "type": "record",
+    "name": "show_schema_request",
+    "desc_name": "Show Schema",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show information about a single SQL-style schema or all schemas.",
+    "doc": "Retrieves information about a {schema}@{link /concepts/schemas/} (or all schemas), as specified in @{input schema_name}.",
+    "fields": [
+        {
+            "name": "schema_name",
+            "type": "string",
+            "doc": "Name of the schema for which to retrieve the information. If blank, then info for all schemas is returned.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "no_error_if_not_exists" :
+                    {
+                        "doc"  : "If {false}@{choice of input.key options.no_error_if_not_exists} will return an error if the provided @{input schema_name} does not exist. If {true}@{choice of input.key options.no_error_if_not_exists} then it will return an empty result if the provided @{input schema_name} does not exist.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

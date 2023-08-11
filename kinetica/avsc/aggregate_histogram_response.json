@@ -1,0 +1,39 @@
+{
+    "endpoint": "/aggregate/histogram", 
+    "type": "record", 
+    "name": "aggregate_histogram_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "counts", 
+            "type": {
+                "type": "array", 
+                "items": "double"
+            }, 
+            "doc": "The array of calculated values that represents the histogram data points.", 
+            "value": {}
+        }, 
+        {
+            "name": "start", 
+            "type": "double", 
+            "doc": "Value of @{input start}.", 
+            "value": {}
+        },
+        {
+            "name": "end", 
+            "type": "double", 
+            "doc": "Value of @{input end}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

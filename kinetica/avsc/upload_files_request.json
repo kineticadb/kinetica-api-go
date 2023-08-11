@@ -1,0 +1,173 @@
+{
+    "endpoint": "/upload/files", 
+    "type": "record", 
+    "name": "upload_files_request", 
+    "desc_name": "Upload Files",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Upload one or more files to KiFS",    
+    "doc": "Uploads one or more files to {KiFS}@{link /tools/kifs/}. There are
+two methods for uploading files: load files in their entirety, or load files in
+parts. The latter is recommeded for files of approximately 60 MB or larger.
+
+To upload files in their entirety, populate @{input file_names} with the file
+names to upload into on KiFS, and their respective byte content in
+@{input file_data}.
+
+Multiple steps are involved when uploading in multiple parts. Only one file at a
+time can be uploaded in this manner. A user-provided UUID is utilized to tie all
+the upload steps together for a given file.  To upload a file in multiple parts:
+
+1. Provide the file name in @{input file_names}, the UUID in
+   the {multipart_upload_uuid}@{key of input options} key in @{input options}, and
+   a {multipart_operation}@{key of input options} value of
+   {init}@{choice of input.key options.multipart_operation}.
+2. Upload one or more parts by providing the file name, the part data
+   in @{input file_data}, the UUID, a {multipart_operation}@{key of input options}
+   value of {upload_part}@{choice of input.key options.multipart_operation}, and
+   the part number in the {multipart_upload_part_number}@{key of input options}.
+   The part numbers must start at 1 and increase incrementally.
+   Parts may not be uploaded out of order.
+3. Complete the upload by providing the file name, the UUID, and a
+   {multipart_operation}@{key of input options} value of
+   {complete}@{choice of input.key options.multipart_operation}.
+
+Multipart uploads in progress may be canceled by providing the file name, the
+UUID, and a {multipart_operation}@{key of input options} value of
+{cancel}@{choice of input.key options.multipart_operation}.  If an new upload is
+initialized with a different UUID for an existing upload in progress, the
+pre-existing upload is automatically canceled in favor of the new upload.
+
+The multipart upload must be completed for the file to be usable in KiFS.
+Information about multipart uploads in progress is available in
+@{endpoint /show/files}.
+
+File data may be pre-encoded using base64 encoding. This should be indicated
+using the {file_encoding}@{key of input options} option, and is recommended when
+using JSON serialization.
+
+Each file path must reside in a top-level KiFS directory, i.e. one of the
+directories listed in @{endpoint /show/directories}. The user must have write
+permission on the directory. Nested directories are permitted in file name
+paths. Directories are deliniated with the directory separator of '/'.  For
+example, given the file path '/a/b/c/d.txt', 'a' must be a KiFS directory.
+
+These characters are allowed in file name paths: letters, numbers, spaces, the
+path delimiter of '/', and the characters: '.' '-' ':' '[' ']' '(' ')' '#' '='.
+",
+    "fields": 
+    [
+        {
+            "name": "file_names",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "An array of full file name paths to be used for the files
+uploaded to KiFS. File names may have any number of nested directories in their
+paths, but the top-level directory must be an existing KiFS directory. Each file
+must reside in or under a top-level directory. A full file name path cannot be
+larger than 1024 characters.",
+            "value" : {}
+        },
+        {
+            "name": "file_data",
+            "type": 
+            {
+                "type":"array",
+                "items": "bytes"
+            },
+            "doc": "File data for the files being uploaded, for the respective files in @{input file_names}.",
+            "value": { "managed":"zero_copy" }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "file_encoding" :
+                    {
+                        "doc" : "Encoding that has been applied to the uploaded
+file data. When using JSON serialization it is recommended to utilize
+{base64}@{choice of input.key options.file_encoding}. The caller is responsible
+for encoding the data provided in this payload",
+                        "value" : 
+                        {
+                            "default" : "none",
+                            "valid_choices" :
+                            {
+                                "base64" :
+                                {
+                                    "doc" : "Specifies that the file data being uploaded has been base64 encoded.",
+                                    "value" : {}
+                                },
+                                "none" :
+                                {
+                                    "doc" : "The uploaded file data has not been encoded.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "multipart_operation":
+                    {
+                        "doc": "Multipart upload operation to perform",
+                        "value":
+                        {
+                            "default":"none",
+                            "valid_choices":
+                            {
+                                "none": {"doc":"", "value":{}},
+                                "init": {"doc":"Initialize a multipart file upload", "value":{}},
+                                "upload_part": {"doc":"Upload one or more parts of the specified multipart file upload", "value":{}},
+                                "complete": {"doc":"Complete the specified multipart file upload", "value":{}},
+                                "cancel": {"doc":"Cancel the specified multipart file upload", "value":{}}
+                            }
+                        }
+                    },
+                    "multipart_upload_uuid":
+                    {
+                        "doc": "UUID to uniquely identify a multipart upload",
+                        "value": {}
+                    },
+                    "multipart_upload_part_number":
+                    {
+                        "doc": "Incremental part number for each part in a
+multipart upload. Part numbers start at 1, increment by 1, and must be uploaded
+sequentially",
+                        "value": {}
+                    },
+                    "ttl" :
+                    {
+                        "doc": "<FUTURE> Optionally specifies a TTL in hours for the file. A value of 0 means no TTL, not supported yet", 
+                        "value":
+                        { 
+                            "internal_option": true,
+                            "default" : "0"
+                        } 
+                    },
+
+                    "skip_writing" :
+                    {
+                        "doc":"<INTERNAL> For internal testing purposes e.g. testing metadata only, do not actually write out the backing physical files",
+                        "value":
+                        {
+                            "internal_option": true,
+                            "default" : "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

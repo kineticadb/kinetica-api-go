@@ -1,0 +1,293 @@
+{
+    "endpoint" : "/visualize/image/chart",
+    "type" : "record",
+    "name" : "visualize_image_chart_request",
+    "desc_name": "Visualize Image Chart",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Draw a chart from specified tables and return it as an image.",
+    "doc"  : "Scatter plot is the only plot type currently supported. A non-numeric column can be specified as x or y column and jitters can be added to them to avoid excessive overlapping. All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value).",
+    "fields" : [
+        {
+            "name" : "table_name",
+            "type" : "string",
+            "doc"  : "Name of the table containing the data to be drawn as a chart, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value": {}
+        },
+        {
+            "name" : "x_column_names",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "Names of the columns containing the data mapped to the x axis of a chart.",
+            "value": {}
+        },
+        {
+            "name" : "y_column_names",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "Names of the columns containing the data mapped to the y axis of a chart.",
+            "value": {}
+        },
+        {
+            "name" : "min_x",
+            "type" : "double",
+            "doc"  : "Lower bound for the x column values. For non-numeric x column, each x column item is mapped to an integral value starting from 0.",
+            "value": {}
+        },
+        {
+            "name" : "max_x",
+            "type" : "double",
+            "doc"  : "Upper bound for the x column values. For non-numeric x column, each x column item is mapped to an integral value starting from 0.",
+            "value": {}
+        },
+        {
+            "name" : "min_y",
+            "type" : "double",
+            "doc"  : "Lower bound for the y column values. For non-numeric y column, each y column item is mapped to an integral value starting from 0.",
+            "value": {}
+        },
+        {
+            "name" : "max_y",
+            "type" : "double",
+            "doc"  : "Upper bound for the y column values. For non-numeric y column, each y column item is mapped to an integral value starting from 0.",
+            "value": {}
+        },
+        {
+            "name" : "width",
+            "type" : "int",
+            "doc"  : "Width of the generated image in pixels.",
+            "value": {}
+        },
+        {
+            "name" : "height",
+            "type" : "int",
+            "doc"  : "Height of the generated image in pixels.",
+            "value": {}
+        },
+        {
+            "name" : "bg_color",
+            "type" : "string",
+            "doc"  : "Background color of the generated image.",
+            "value": {}
+        },
+        {
+            "name" : "style_options",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type" : "array",
+                    "items" : "string"
+                }
+            },
+            "doc" : "Rendering style options for a chart.",
+            "value" : {
+                "valid_keys" :{
+                    "pointcolor" : {
+                        "doc"  : "The color of points in the plot represented as a hexadecimal number.",
+                        "value": {
+                            "value_type" : "string",
+                            "default" : "0000FF"
+                        }
+                    },
+                    "pointsize" : {
+                        "doc"  : "The size of points in the plot represented as number of pixels.",
+                        "value": {
+                            "value_type" : "int",
+                            "min" : "0",
+                            "max" : "20",
+                            "default":"3"
+                        }
+                    },
+                    "pointshape" : {
+                        "doc"  : "The shape of points in the plot.",
+                        "value": {
+                            "default" : "square",
+                            "valid_choices" : {
+                                "none" : {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "circle" : {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "square" :{
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "diamond" : {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "hollowcircle" : {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "hollowsquare" : {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "hollowdiamond" : {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "cb_pointcolors" :{
+                        "doc"  : "Point color class break information consisting of three entries: class-break attribute, class-break values/ranges, and point color values. This option overrides the pointcolor option if both are provided. Class-break ranges are represented in the form of \"min:max\". Class-break values/ranges and point color values are separated by cb_delimiter, e.g. {\"price\", \"20:30;30:40;40:50\", \"0xFF0000;0x00FF00;0x0000FF\"}.",
+                        "value":{}
+                    },
+                    "cb_pointsizes" :{
+                        "doc"  : "Point size class break information consisting of three entries: class-break attribute, class-break values/ranges, and point size values. This option overrides the pointsize option if both are provided. Class-break ranges are represented in the form of \"min:max\". Class-break values/ranges and point size values are separated by cb_delimiter, e.g. {\"states\", \"NY;TX;CA\", \"3;5;7\"}.",
+                        "value":{}
+                    },
+                    "cb_pointshapes" :{
+                        "doc"  : "Point shape class break information consisting of three entries: class-break attribute, class-break values/ranges, and point shape names. This option overrides the pointshape option if both are provided. Class-break ranges are represented in the form of \"min:max\". Class-break values/ranges and point shape names are separated by cb_delimiter, e.g. {\"states\", \"NY;TX;CA\", \"circle;square;diamond\"}.",
+                        "value":{}
+                    },
+                    "cb_delimiter" :{
+                        "doc"  : "A character or string which separates per-class values in a class-break style option string.",
+                        "value":{
+                            "default": ";"
+                        }
+                    },
+                    "x_order_by" :{
+                        "doc"  : "An expression or aggregate expression by which non-numeric x column values are sorted, e.g. \"avg(price) descending\".",
+                        "value":{}
+                    },
+                    "y_order_by" :{
+                        "doc"  : "An expression or aggregate expression by which non-numeric y column values are sorted, e.g. \"avg(price)\", which defaults to \"avg(price) ascending\".",
+                        "value":{}
+                    },
+                    "scale_type_x" :{
+                        "doc"  : "Type of x axis scale.",
+                        "value": {
+                            "default" : "none",
+                            "valid_choices" : {
+                                "none" : {
+                                    "doc" : "No scale is applied to the x axis.",
+                                    "value" : {}
+                                },
+                                "log" : {
+                                    "doc" : "A base-10 log scale is applied to the x axis.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "scale_type_y" :{
+                        "doc"  : "Type of y axis scale.",
+                        "value": {
+                            "default" : "none",
+                            "valid_choices" : {
+                                "none" : {
+                                    "doc" : "No scale is applied to the y axis.",
+                                    "value" : {}
+                                },
+                                "log" : {
+                                    "doc" : "A base-10 log scale is applied to the y axis.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "min_max_scaled" : {
+                        "doc"  : "If this options is set to \"false\", this endpoint expects request's min/max values are not yet scaled. They will be scaled according to scale_type_x or scale_type_y for response. If this options is set to \"true\", this endpoint expects request's min/max values are already scaled according to scale_type_x/scale_type_y. Response's min/max values will be equal to request's min/max values.",
+                        "value": {
+                            "value_type" : "bool",
+                            "default": "false"
+                        }
+                    },
+                    "jitter_x" : {
+                        "doc"  : "Amplitude of horizontal jitter applied to non-numeric x column values.",
+                        "value": {
+                            "value_type" : "double",
+                            "min" : "0.0",
+                            "max" : "1.0",
+                            "default": "0.0"
+                        }
+                    },
+                    "jitter_y" : {
+                        "doc"  : "Amplitude of vertical jitter applied to non-numeric y column values.",
+                        "value": {
+                            "value_type" : "double",
+                            "min" : "0.0",
+                            "max" : "1.0",
+                            "default": "0.0"
+                        }
+                    },
+                    "plot_all" : {
+                        "doc"  : "If this options is set to \"true\", all non-numeric column values are plotted ignoring min_x, max_x, min_y and max_y parameters.",
+                        "value": {
+                            "value_type" : "bool",
+                            "default": "false"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    },
+                    "image_encoding" :
+                    {
+                        "doc" : "Encoding to be applied to the output image. When using JSON serialization it is recommended to specify this as {base64}@{choice of input.key options.image_encoding}.",
+                        "value" : 
+                        {
+                            "default" : "none",
+                            "valid_choices" :
+                            {
+                                "base64" :
+                                {
+                                    "doc" : "Apply base64 encoding to the output image.",
+                                    "value" : {}
+                                },
+                                "none" :
+                                {
+                                    "doc" : "Do not apply any additional encoding to the output image.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "jitter_type" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

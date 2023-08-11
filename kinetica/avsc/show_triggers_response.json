@@ -1,0 +1,30 @@
+{
+    "endpoint": "/show/triggers", 
+    "type": "record", 
+    "name": "show_triggers_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "trigger_map", 
+            "type": {
+                "type": "map", 
+                "values": {
+                    "type": "map", 
+                    "values": "string"
+                }
+            }, 
+            "doc": "This dictionary contains (key, value) pairs of (trigger ID, information map/dictionary) where the key is a Unicode string representing a Trigger ID. The value is another embedded dictionary containing (key, value) pairs where the keys consist of 'table_name', 'type' and the parameter names relating to the trigger type, e.g. *nai*, *min*, *max*. The values are unicode strings (numeric values are also converted to strings) representing the value of the respective parameter. If a trigger is associated with multiple tables, then the string value for *table_name* contains a comma separated list of table names.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

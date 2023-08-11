@@ -1,0 +1,48 @@
+{
+    "endpoint": "/alter/table/metadata", 
+    "type": "record", 
+    "name": "alter_table_metadata_request", 
+    "desc_name": "Alter Table Metadata",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter metadata for tables",
+    "doc": "Updates (adds or changes) metadata for tables. The metadata key and
+values must both be strings. This is an easy way to annotate whole tables rather
+than single records within tables.  Some examples of metadata are owner of the
+table, table creation timestamp etc.", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "Names of the tables whose metadata will be updated, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  All specified tables must exist, or an error will be returned.", 
+            "value": {}
+        }, 
+        {
+            "name": "metadata_map", 
+            "type":
+	    {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "A map which contains the metadata of the tables that are to be updated. Note that only one map is provided for all the tables; so the change will be applied to every table. If the provided map is empty, then all existing metadata for the table(s) will be cleared.", 
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

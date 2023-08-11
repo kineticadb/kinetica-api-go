@@ -1,0 +1,32 @@
+{
+    "endpoint": "/delete/user",
+    "type": "record",
+    "name": "delete_user_request",
+    "desc_name": "Delete User",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Delete an existing user",
+    "doc": "Deletes an existing user.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user to be deleted. Must be an existing user.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

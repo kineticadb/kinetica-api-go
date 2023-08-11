@@ -1,0 +1,24 @@
+{
+    "endpoint": "/delete/role",
+    "type": "record",
+    "name": "delete_role_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+{
+    "endpoint": "/update/records", 
+    "type": "record", 
+    "name": "update_records_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "count_updated", 
+            "type": "long", 
+            "doc": "Total number of records updated.", 
+            "value": {}
+        }, 
+        {
+            "name": "counts_updated", 
+            "type": {
+                "type": "array", 
+                "items": "long"
+            }, 
+            "doc": "Total number of records updated per predicate in @{input expressions}.", 
+            "value": {}
+        }, 
+        {
+            "name": "count_inserted", 
+            "type": "long", 
+            "doc": "Total number of records inserted (due to expressions not matching any existing records).", 
+            "value": {}
+        }, 
+        {
+            "name": "counts_inserted", 
+            "type": {
+                "type": "array", 
+                "items": "long"
+            }, 
+            "doc": "Total number of records inserted per predicate in @{input expressions} (will be either 0 or 1 for each expression).", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

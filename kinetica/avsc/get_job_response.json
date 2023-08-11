@@ -1,0 +1,130 @@
+{
+    "endpoint": "/get/job",
+    "type": "record", 
+    "name": "get_job_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "endpoint",
+            "type": "string",
+            "doc" : "The endpoint which is being executed asynchronously.  E.g. '/alter/table'.",
+            "value": {}
+        },
+        {
+            "name": "job_status",
+            "type": "string",
+            "doc" : "Status of the submitted job.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "RUNNING" :
+                    {
+                        "doc" : "The job is currently executing.",
+                        "value" : {}
+                    },
+                    "DONE" :
+                    {
+                        "doc" : "The job execution has successfully completed and the response is included in the @{output job_response} or @{output job_response_str} field",
+                        "value" : {}
+                    },
+                    "ERROR" :
+                    {
+                        "doc" : "The job was attempted, but an error was encountered.  The @{output status_map} contains the details of the error in error_message",
+                        "value" : {}
+                    },
+                    "CANCELLED" :
+                    {
+                        "doc" : "Job cancellation was requested while the execution was in progress.",
+                        "value" : {}
+                    }
+                }
+            } 
+        },
+        {
+            "name": "running",
+            "type": "boolean",
+            "doc": "True if the end point is still executing.",
+            "value": {}
+        },
+        {
+            "name": "progress",
+            "type": "int",
+            "doc": "Approximate percentage of the job completed.",
+            "value": {}
+        },
+        {
+            "name": "successful",
+            "type": "boolean",
+            "doc": "True if the job execution completed and no errors were encountered.",
+            "value": {}
+        },
+        {
+            "name": "response_encoding",
+            "type": "string",
+            "doc" : "The encoding of the job result (contained in @{output job_response} or @{output job_response_str}.",
+            "value": 
+            {
+                "valid_choices": 
+                {
+                    "binary":
+                    {
+                        "doc": "The job result is binary-encoded.  It is contained in @{output job_response}.",
+                        "value": {}
+                    },
+                    "json":
+                    {
+                        "doc": "The job result is json-encoded.  It is contained in @{output job_response_str}.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "job_response",
+            "type": "bytes",
+            "doc" : "The binary-encoded response of the job.  This field is populated only when the job has completed and @{output response_encoding} is {binary}@{choice of output response_encoding}",
+            "value":
+            {
+            } 
+        },
+        {
+            "name": "job_response_str",
+            "type": "string",
+            "doc" : "The json-encoded response of the job.  This field is populated only when the job has completed and @{output response_encoding} is {json}@{choice of output response_encoding}",
+            "value":
+            {
+            } 
+        },
+        {
+            "name": "status_map",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Map of various status strings for the executed job.",
+            "value":
+            {
+                "valid_keys":
+                {
+                    "error_message" :
+                    {
+                        "doc"   : "Explains what error occurred while running the job asynchronously.  This entry only exists when the job status is {ERROR}@{choice of output job_status}.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

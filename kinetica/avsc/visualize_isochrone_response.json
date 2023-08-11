@@ -1,0 +1,64 @@
+{
+    "endpoint" : "/visualize/isochrone",
+    "type" : "record",
+    "name" : "visualize_isochrone_response",
+    "doc"  : ".",
+    "fields" : [
+        { 
+            "name" : "width",
+            "type" : "int",
+            "doc"  : "Width of the image as provided in {width}@{key of input contour_options}.",
+            "value": {}
+        },
+        { 
+            "name" : "height",
+            "type" : "int",
+            "doc"  : "Height of the image as provided in {height}@{key of input contour_options}.",
+            "value": {}
+        },
+        { 
+            "name" : "bg_color",
+            "type" : "long",
+            "doc"  : "Background color of the image as provided in {bg_color}@{key of input style_options}.",
+            "value": {}
+        },
+        { 
+            "name" : "image_data",
+            "type" : "bytes",
+            "doc"  : "Generated contour image data.",
+            "value": {
+                "managed": true
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        },        
+        {
+            "name": "solve_info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        },        
+        {
+            "name": "contour_info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "endpoint": "/create/tablemonitor", 
+    "type": "record", 
+    "name": "create_table_monitor_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "topic_id", 
+            "type": "string", 
+            "doc": "The ZMQ topic ID to subscribe to for table events.",
+            "value": {}
+        },
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "type_schema", 
+            "type": "string", 
+            "doc": "JSON Avro schema of the table, for use in decoding published records.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "ttl":
+                    {
+                        "doc" : "For insert_table/delete_table events, the ttl of the table.",
+                        "value" : {}
+                    }
+                }
+            }
+        }
+    ]
+}

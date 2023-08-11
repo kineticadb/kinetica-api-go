@@ -1,0 +1,199 @@
+{
+    "endpoint": "/append/records",
+    "type": "record",
+    "name": "append_records_request",
+    "desc_name": "Append Records",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Append records from a source table to a target table based on the field map",
+    "doc": "Append (or insert) all records from a source table
+(specified by @{input source_table_name}) to a particular target table
+(specified by @{input table_name}). The field map
+(specified by @{input field_map}) holds the user specified map of target table
+column names with their mapped source column names.",
+    "fields":
+    [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "The table name for the records to be appended, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "source_table_name",
+            "type": "string",
+            "doc": "The source table name to get records from, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table name.",
+            "value": {}
+        },
+        {
+            "name": "field_map",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Contains the mapping of column names from the target table (specified by @{input table_name}) as the keys, and corresponding column names or expressions (e.g., 'col_name+1') from the source table (specified by @{input source_table_name}). Must be existing column names in source table and target table, and their types must be matched. For details on using expressions, see {Expressions}@{link /concepts/expressions/}.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "from_merge" :
+                    {
+                        "doc": "When called from @{endpoint /merge/records} function, some input validations can be skipped. Recommended to used this parameter only from @{endpoint /merge/records}.",
+                        "value" :
+                        {
+                            "internal_option":"true",
+                            "default":"false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "true",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "false",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "offset" :
+                    {
+                        "doc": "A positive integer indicating the number of initial results to skip from @{input source_table_name}. Default is 0. The minimum allowed value is 0. The maximum allowed value is MAX_INT.",
+                        "value" :
+                        {
+                            "default":"0"
+                        }
+                    },
+                    "limit" :
+                    {
+                        "doc": "A positive integer indicating the maximum number of results to be returned from @{input source_table_name}. Or END_OF_SET (-9999) to indicate that the max number of results should be returned.",
+                        "value" :
+                        {
+                            "default":"-9999"
+                        }
+                    },
+                    "expression" :
+                    {
+                        "doc": "Optional filter expression to apply to the @{input source_table_name}.",
+                        "value" :
+                        {
+                            "default":""
+                        }
+                    },
+                    "order_by" :
+                    {
+                        "doc": "Comma-separated list of the columns to be sorted by from source table (specified by @{input source_table_name}), e.g., 'timestamp asc, x desc'. The {order_by}@{key of input options} columns do not have to be present in @{input field_map}.",
+                        "value" :
+                        {
+                            "default":""
+                        }
+                    },
+                    "update_on_existing_pk" :
+                    {
+                        "doc"  : "Specifies the record collision policy for inserting the source table records (specified by @{input source_table_name}) into the target table (specified by @{input table_name}) table with a {primary key}@{link /concepts/tables/#primary-keys}.  If set to {true}@{choice of input.key options.update_on_existing_pk}, any existing target table record with primary key values that match those of a source table record being inserted will be replaced by that new record.  If set to {false}@{choice of input.key options.update_on_existing_pk}, any existing target table record with primary key values that match those of a source table record being inserted will remain unchanged and the new record discarded.  If the specified table does not have a primary key, then this option is ignored.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "truncate_strings" :
+                    {
+                        "doc"  : "If set to {true}@{choice of input.key options.truncate_strings}, it allows inserting longer strings into smaller charN string columns by truncating the longer strings to fit.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "create_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "no_count" :
+                    {
+                        "doc"  : "return a count of 0 for the join table for logging and for show_table. optimization needed for large overlapped equi-join stencils",
+                        "value" :
+                        {
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

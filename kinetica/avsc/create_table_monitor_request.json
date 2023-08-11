@@ -1,0 +1,115 @@
+{
+    "endpoint": "/create/tablemonitor", 
+    "type": "record", 
+    "name": "create_table_monitor_request", 
+    "desc_name": "Create Table Monitor",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Create a table monitor that will watch for and queue any records added",
+    "doc": "Creates a monitor that watches for a single table modification event
+type (insert, update, or delete) on a particular table (identified by
+@{input table_name}) and forwards event notifications to subscribers via ZMQ.
+After this call completes, subscribe to the returned @{output topic_id} on the
+ZMQ table monitor port (default 9002). Each time an operation of the given type
+on the table completes, a multipart message is published for that topic; the
+first part contains only the topic ID, and each subsequent part contains one
+binary-encoded Avro object that corresponds to the event and can be decoded
+using @{output type_schema}. The monitor will continue to run (regardless of
+whether or not there are any subscribers) until deactivated with
+@{endpoint /clear/tablemonitor}.
+
+For more information on table monitors, see
+{Table Monitors}@{link /concepts/table_monitors/}.", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of the table to monitor, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "event":
+                    {
+                        "doc": "Type of modification event on the target table to be monitored by this table monitor.",
+                        "value":
+                        {
+                            "valid_choices":
+                            {
+                                "insert":
+                                {
+                                    "doc": "Get notifications of new record insertions. The new row images are forwarded to the subscribers.",
+                                    "value": {}
+                                },
+                                "update":
+                                {
+                                    "doc": "Get notifications of update operations. The modified row count information is forwarded to the subscribers.",
+                                    "value": {}
+                                },
+                                "delete":
+                                {
+                                    "doc": "Get notifications of delete operations. The deleted row count information is forwarded to the subscribers.",
+                                    "value": {}
+                                }
+                            },
+                            "default": "insert"
+                        }
+                    },
+                    "monitor_id":
+                    {
+                        "doc": "ID to to use for this monitor instead of a randomly generated one",
+                        "value": {}
+                    },
+                    "datasink_name":
+                    {
+                        "doc": "Name of an existing {data sink}@{link /concepts/data_sinks/} to send change data notifications to",
+                        "value": {}
+                    },
+                    "destination":
+                    {
+                        "doc": "Destination for the output data in format 'destination_type://path[:port]'. Supported destination types are 'http', 'https' and 'kafka'.",
+                        "value": {}
+                    },
+                    "kafka_topic_name":
+                    {
+                        "doc": "Name of the Kafka topic to publish to if {destination}@{key of input options} in @{input options} is specified and is a Kafka broker",
+                        "value": {}
+                    },
+                    "increasing_column":
+                    {
+                        "doc": "Column on subscribed table that will increase for new records (e.g., TIMESTAMP).",
+                        "value": {}
+                    },
+                    "expression":
+                    {
+                        "doc": "Filter expression to limit records for notification",
+                        "value": {}
+                    },
+                    "create_change_detector_if_needed":
+                    {
+                        "doc"  : "for testing purposes only - allow creation of table monitor on a materialized view to not create a change_detector on that materialized view.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,252 @@
+{
+    "endpoint": "/get/records/bycolumn",
+    "type": "record",
+    "name": "get_records_by_column_request",
+    "desc_name": "Get Records by Column",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Retrieve the values of the given columns within a specified range.",
+    "doc": "For a given table, retrieves the values from the requested
+column(s). Maps of column name to the array of values as well as the column data
+type are returned. This endpoint supports pagination with the @{input offset}
+and @{input limit} parameters.
+
+{Window functions}@{link /concepts/window/}, which can perform
+operations like moving averages, are available through this endpoint as well as
+@{endpoint /create/projection}.
+
+When using pagination, if the table (or the underlying table in the case of a
+view) is modified (records are inserted, updated, or deleted) during a call to
+the endpoint, the records or values retrieved may differ between calls based on
+the type of the update, e.g., the contiguity across pages cannot be relied upon.
+
+If @{input table_name} is empty, selection is performed against a single-row
+virtual table.  This can be useful in executing temporal
+({NOW()}@{link /concepts/expressions/#date-time-functions}), identity
+({USER()}@{link /concepts/expressions/#user-security-functions}), or
+constant-based functions
+({GEODIST(-77.11, 38.88, -71.06, 42.36)}@{link /concepts/expressions/#scalar-functions}).
+
+The response is returned as a dynamic schema. For details see:
+{dynamic schemas documentation}@{link /api/#dynamic-schemas}.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table or view on which this operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  An empty table name retrieves one record from a single-row virtual table, where columns specified should be constants or constant expressions.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The list of column values to retrieve.",
+            "value": {}
+        },
+        {
+            "name": "offset",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the number of initial results to skip (this can be useful for paging through the results).",
+            "value" :
+            {
+                "default": 0,
+                "min" : "0",
+                "max" : "MAX_INT"
+            }
+        },
+        {
+            "name" : "limit",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the maximum number of results to be returned, or END_OF_SET (-9999) to indicate that the maximum number of results allowed by the server should be returned.  The number of records returned will never exceed the server's own limit, defined by the {max_get_records_size}@{link /config/#general} parameter in the server configuration.  Use @{output has_more_records} to see if more records exist in the result to be fetched, and @{input offset} & @{input limit} to request subsequent pages of results.",
+            "value" :
+            {
+                "default": -9999
+            }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records; either {binary}@{choice of input encoding} or {json}@{choice of input encoding}.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default" : "binary",
+                "semantics":
+                {
+                    "type": "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "expression" :
+                    {
+                        "doc"  : "Optional filter expression to apply to the table.",
+                        "value" : {}
+                    },
+                    "sort_by" :
+                    {
+                        "doc"  : "Optional column that the data should be sorted by. Used in conjunction with {sort_order}@{key of input options}. The {order_by}@{key of input options} option can be used in lieu of {sort_by}@{key of input options} / {sort_order}@{key of input options}.",
+                        "value" : {
+                            "default": ""
+                        }
+                    },
+                    "sort_order" :
+                    {
+                        "doc"  : "String indicating how the returned values should be sorted - {ascending}@{choice of input.key options.sort_order} or {descending}@{choice of input.key options.sort_order}. If {sort_order}@{key of input options} is provided, {sort_by}@{key of input options} has to be provided.",
+                        "value" :
+                        {
+                            "default" : "ascending",
+                            "valid_choices" :
+                            {
+                                "ascending" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "descending" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "order_by" :
+                    {
+                        "doc": "Comma-separated list of the columns to be sorted by as well as the sort direction, e.g., 'timestamp asc, x desc'.",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "from" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+            			{
+            			    "internal_option": true
+            			}
+                    },
+                    "aliases" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+            			{
+            			    "internal_option": true
+            			}
+                    },
+                    "convert_wkts_to_wkbs" :
+                    {
+                        "doc":"If {true}@{choice of input.key options.convert_wkts_to_wkbs}, then WKT string columns will be returned as WKB bytes.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "force_refresh" :
+                    {
+                        "doc" : "If the table is a view or join, forces a refresh",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "get_simplified_column_names" :
+                    {
+                        "doc" : "returns the simplified version of @{input column_names} expressions in the info field 'simplified_column_names' info map item.   Format is '{' <column_name>:<simplfied_column_name>+ '}' for each <column_name> in @{input column_names}",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "create_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "no_count" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

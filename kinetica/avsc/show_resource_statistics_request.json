@@ -1,0 +1,76 @@
+{
+    "endpoint": "/show/resource/statistics",
+    "type": "record",
+    "name": "show_resource_statistics_request",
+    "desc_name": "Show Resource Statistics",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show statistics for tier and resource groups",
+    "doc": "Requests various statistics for storage/memory tiers and resource groups.",
+    "fields":
+    [
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "rank":
+                    {
+                        "doc" : "Only show tier information for the given rank.",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "show_tiered_objects":
+                    {
+                        "doc" : "If {true}@{choice of input.key options.show_tiered_objects}, then show detailed stats on tiered objects.",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "valid_choices" :
+                            {
+                                "true":  { "doc":"", "value" : {}},
+                                "false": { "doc":"", "value" : {}}
+                            }
+                        }
+                    },
+                    "show_tiered_objects_offset":
+                    {
+                        "doc" : "Used to indicate the starting object in the tier to include.",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "table_names":
+                    {
+                        "doc" : "Comma-separated list of tables that, when specified, will cause per-tier statistics to be displayed for each table. Use '*' to show all tables.",
+                        "value" :
+                        {
+                            "internal_option" : true
+                        }
+                    },
+                    "table_object_limit":
+                    {
+                        "doc": "Maximum number of table-related objects to include when requesting table statistics.",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "default": "100"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

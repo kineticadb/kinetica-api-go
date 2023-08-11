@@ -1,0 +1,52 @@
+{
+    "endpoint": "/query/graph",
+    "name": "query_graph_response",
+    "desc_name": "Query Graph",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+       {
+            "name": "result",
+            "type": "boolean",
+            "doc": "Indicates a successful query.",
+            "value": {}
+        },
+        {
+            "name": "adjacency_list_int_array",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "The adjacency entity integer ID: either edge IDs per node requested (if using QUERY_EDGE_ID or QUERY_NODE1_ID and QUERY_NODE2_ID in the input) or two node IDs per edge requested (if using QUERY_NODE_ID in the input)."
+        },
+        {
+            "name": "adjacency_list_string_array",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "value": {},
+            "doc": "The adjacency entity string ID: either edge IDs per node requested (if using QUERY_EDGE_NAME or QUERY_NODE1_NAME and QUERY_NODE2_NAME in the input) or two node IDs per edge requested (if using QUERY_NODE_NAME in the input)."
+        },
+        {
+            "name": "adjacency_list_wkt_array",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "value": {},
+            "doc": "The adjacency entity WKTPOINT or WKTLINE ID: either edge IDs per node requested (if using QUERY_EDGE_WKTLINE or QUERY_NODE1_WKTPOINT and QUERY_NODE2_WKTPOINT in the input) or two node IDs per edge requested (if using QUERY_NODE_WKTPOINT in the input)."
+        },
+        {
+            "name" : "info",
+            "type" : {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

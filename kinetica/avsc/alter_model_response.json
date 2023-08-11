@@ -1,0 +1,39 @@
+{
+    "endpoint": "/alter/model",
+    "name": "alter_model_response",
+    "desc_name": "alter model",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "generate" : "NO_DOCS",
+    "doc": "",
+    "fields": [
+        {
+            "name": "model_name", 
+            "type": "string", 
+            "doc": "Model on which the operation was performed.", 
+            "value": {}
+        },
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Modification operation that was performed.", 
+            "value": {}
+        },
+        {
+            "name": "value",
+            "type": "string",
+            "doc": "The value of the modification that was performed.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

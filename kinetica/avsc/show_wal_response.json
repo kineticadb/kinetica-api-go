@@ -1,0 +1,73 @@
+{
+    "endpoint": "/show/wal",
+    "type": "record",
+    "name": "show_wal_response",
+    "doc": "Returns information about the requested table wal entries.",
+    "fields": [
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of returned tables.",
+            "value": {}
+        },
+        {
+            "name": "sizes",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "long"
+                }
+            },
+            "doc": "List of current wal usage.",
+            "value": {}
+        },
+        {
+            "name": "capacities",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "List of wal capacities.",
+            "value": {}
+        },
+        {
+            "name": "uncommitted",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "long"
+                }
+            },
+            "doc": "List of number of uncommitted entries.",
+            "value": {}
+        },
+        {
+            "name": "settings",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "List of table wal settings.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

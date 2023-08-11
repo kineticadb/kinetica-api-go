@@ -1,0 +1,288 @@
+{
+    "endpoint": "/visualize/image/labels",
+    "type": "record",
+    "name": "visualize_image_labels_request",
+    "desc_name": "Visualize Image Labels",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Generate a rasterized image tile containing text labels",
+    "generate": "NO_DOCS",
+    "doc": "For internal use only.  Generates a rasterized image tile containing text labels defined by data contained in the given table, suitable for overlaying onto a feature image tile covering the same area (for example one generated using @{endpoint /visualize/image}).
+
+All color values must be integers encoded in the format AARRGGBB when represented in hexadecimal.
+
+Fonts are specified as strings of the form 'FAMILY STYLE-OPTIONS SIZE', where FAMILY is the font family, STYLE-OPTIONS is a whitespace separated list of words defining style, variant, weight, stretch, or gravity, and SIZE is a decimal number (size in points) or optionally followed by the unit modifier 'px' for absolute size. All three sub-fields are optional; default values will be used for omitted sub-fields. (For example, 'Helvetica Bold Italic 10' specifies Helvetica, Bold and Italic, 10 points.) A substitute font will be used if a requested font is not installed.",
+    "fields": [
+        {
+            "name" : "table_name",
+            "type" : "string",
+            "doc"  : "Name of the table containing the data defining the labels to render.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name" : "x_column_name",
+            "type" : "string",
+            "doc"  : "Double, float or decimal expression that evaluates to the x coordinates of the center points of the labels.",
+            "value": {}
+        },
+        {
+            "name" : "y_column_name",
+            "type" : "string",
+            "doc"  : "Double, float or decimal expression that evaluates to the y coordinates of the center points of the labels.",
+            "value": {}
+        },
+        {
+            "name" : "x_offset",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the number of output pixels by which the labels will be offset horizontally from their specified x coordinates. If blank, an offset of 0 will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "y_offset",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the number of output pixels by which the labels will be offset vertically from their specified y coordinates. If blank, an offset of 0 will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "text_string",
+            "type" : "string",
+            "doc"  : "Expression that evaluates to the text for the labels.",
+            "value": {}
+        },
+        {
+            "name" : "font",
+            "type" : "string",
+            "doc"  : "Expression that evaluates to the fonts for the labels. If blank, a default system font will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "text_color",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the text color for the labels. If blank, opaque black will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "text_angle",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the angle of clockwise rotation (in degrees) for the labels. If blank, an angle of 0 will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "text_scale",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the scaling factor for the labels. (1 is normal size, 0.5 is half size, 2 is double size, etc.) If blank, a scaling factor of 1 will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "draw_box",
+            "type" : "string",
+            "doc"  : "Boolean expression indicating whether boxes will be drawn around the labels. If blank, no boxes will be drawn.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "draw_leader",
+            "type" : "string",
+            "doc"  : "Boolean expression indicating whether leader lines will be drawn from the labels to points specified using @{input leader_x_column_name} and @{input leader_y_column_name}. If blank, no leader lines will be drawn.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "line_width",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the line width in output pixels for the labels' boxes and leader lines. If blank, a line width of 1 will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "line_color",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the line color for the labels' boxes and leader lines. If blank, opaque black will be used.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "fill_color",
+            "type" : "string",
+            "doc"  : "Numeric expression that evaluates to the fill color for the labels' boxes. If blank, the boxes will not be filled.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "leader_x_column_name",
+            "type" : "string",
+            "doc"  : "Double, float or decimal expression that evaluates to the x coordinates of the points to which the labels' leader lines will be drawn. May be left blank if no leader lines are to be drawn.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "leader_y_column_name",
+            "type" : "string",
+            "doc"  : "Double, float or decimal expression that evaluates to the y coordinates of the points to which the labels' leader lines will be drawn. May be left blank if no leader lines are to be drawn.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "filter",
+            "type" : "string",
+            "doc"  : "Boolean expression indicating which labels to include in the image. If blank, all labels will be included.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name" : "min_x",
+            "type" : "double",
+            "doc"  : "Lower bound for the x coordinates of labels to include in the image.",
+            "value": {}
+        },
+        {
+            "name" : "max_x",
+            "type" : "double",
+            "doc"  : "Upper bound for the x coordinates of labels to include in the image.",
+            "value": {}
+        },
+        {
+            "name" : "min_y",
+            "type" : "double",
+            "doc"  : "Lower bound for the y coordinates of labels to include in the image.",
+            "value": {}
+        },
+        {
+            "name" : "max_y",
+            "type" : "double",
+            "doc"  : "Upper bound for the y coordinates of labels to include in the image.",
+            "value": {}
+        },
+        {
+            "name" : "width",
+            "type" : "int",
+            "doc"  : "Width of the generated image.",
+            "value": {}
+        },
+        {
+            "name" : "height",
+            "type" : "int",
+            "doc"  : "Height of the generated image.",
+            "value": {}
+        },
+        {
+            "name" : "projection",
+            "type" : "string",
+            "doc"  : "Spatial Reference System (i.e. EPSG Code).",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "EPSG:4326":
+                    {
+                        "doc": "",
+                        "value" : {}
+                    },
+                    "PLATE_CARREE":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+        		    "900913":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "EPSG:900913":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "102100":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "EPSG:102100":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "3857":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "EPSG:3857":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "WEB_MERCATOR":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                },
+                "default": "PLATE_CARREE"
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {},
+		"valid_keys" :
+		{
+	            "chunk_skipping" : {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+		}
+            }
+        }
+    ]
+}

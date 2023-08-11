@@ -1,0 +1,24 @@
+{
+    "endpoint": "/lock/table",
+    "type": "record", 
+    "name": "lock_table_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "lock_type",
+            "type": "string",
+            "doc": "Returns the lock state of the table.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

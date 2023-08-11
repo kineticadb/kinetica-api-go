@@ -1,0 +1,30 @@
+{
+    "endpoint": "/insert/records/random", 
+    "type": "record", 
+    "name": "insert_records_random_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "count", 
+            "type": "long", 
+            "doc": "Number of records inserted.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

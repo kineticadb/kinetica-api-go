@@ -1,0 +1,37 @@
+{
+    "endpoint": "/show/files", 
+    "type": "record", 
+    "name": "show_files_request", 
+    "desc_name": "Show Files",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show information about files in KiFS",    
+    "doc": "Shows information about files in {KiFS}@{link /tools/kifs/}. Can be used for individual files, or to show all files in a given directory.",
+    "fields": 
+    [
+        {
+            "name": "paths",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "File paths to show. Each path can be a KiFS directory name, or a full path to a KiFS file.",
+            "value" : {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

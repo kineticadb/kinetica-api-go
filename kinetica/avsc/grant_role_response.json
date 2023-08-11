@@ -1,0 +1,30 @@
+{
+    "endpoint": "/grant/role",
+    "type": "record",
+    "name": "grant_role_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "role",
+            "type": "string",
+            "doc": "Value of @{input role}.",
+            "value": {}
+        },
+        {
+            "name": "member",
+            "type": "string",
+            "doc": "Value of @{input member}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "endpoint": "/admin/alter/configuration",
+    "type" : "record",
+    "name" : "admin_alter_configuration_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name": "status",
+            "type": "string",
+            "doc":"",
+            "value":
+            {
+                "default": {}
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

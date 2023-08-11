@@ -1,0 +1,24 @@
+{
+    "endpoint": "/update/records/byseries", 
+    "type": "record", 
+    "name": "update_records_by_series_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "count", 
+            "type": "int", 
+            "doc": "", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

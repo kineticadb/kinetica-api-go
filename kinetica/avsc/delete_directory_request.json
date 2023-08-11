@@ -1,0 +1,99 @@
+{
+    "endpoint": "/delete/directory",
+    "type": "record",
+    "name": "delete_directory_request",
+    "desc_name": "Delete Directory",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Delete a directory from KiFS",
+    "doc": "Deletes a directory from {KiFS}@{link /tools/kifs/}.",
+    "fields": [
+        {
+            "name": "directory_name",
+            "type": "string",
+            "doc": "Name of the directory in KiFS to be deleted. The directory must contain no files, unless {recursive}@{key of input options} is {true}@{choice of input.key options.recursive}",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "recursive": 
+                    {
+                        "doc" : "If {true}@{choice of input.key options.recursive}, will delete directory and all files residing in it. If false, directory must be empty for deletion.",
+                        "value" : 
+                        {
+                            "valid_choices" : 
+                            {
+                                "true" : 
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                }
+                            },
+                            "default":"false"
+                        }
+                    },
+                    "no_error_if_not_exists": 
+                    {
+                        "doc" : "If {true}@{choice of input.key options.no_error_if_not_exists}, no error is returned if specified directory does not exist",
+                        "value" : 
+                        {
+                            "valid_choices" : 
+                            {
+                                "true" : 
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                }
+                            },
+                            "default":"false"
+                        }
+                    },
+                    "delete_all_directories":
+                    {
+                        "doc": "<INTERNAL> If true all directories are deleted except for system-created directories. All files in all directories are deleted.",
+                        "value":
+                        {
+                            "valid_choices" : 
+                            {
+                                "true" : 
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value": {}
+                                }
+                            },
+                            "default":"false",
+                            "internal_option":true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,396 @@
+{
+    "endpoint": "/create/union",
+    "type": "record",
+    "name": "create_union_request",
+    "desc_name": "Create Union",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "creates_table_from_multiple_tables": true,
+    "short_doc": "Create a table that is the merge of one or more tables",
+    "doc": "Merges data from one or more tables with comparable data types into a new table.
+
+The following merges are supported:
+
+UNION (DISTINCT/ALL) - For data set union details and examples, see {Union}@{link /concepts/unions/}.  For limitations, see {Union Limitations and Cautions}@{link /concepts/unions/#limitations-and-cautions}.
+
+INTERSECT (DISTINCT/ALL) - For data set intersection details and examples, see {Intersect}@{link /concepts/intersect/}.  For limitations, see {Intersect Limitations}@{link /concepts/intersect/#limitations}.
+
+EXCEPT (DISTINCT/ALL) - For data set subtraction details and examples, see {Except}@{link /concepts/except/}.  For limitations, see {Except Limitations}@{link /concepts/except/#limitations}.
+
+MERGE VIEWS - For a given set of {filtered views}@{link /concepts/filtered_views/} on a single table, creates a single filtered view containing all of the unique records across all of the given filtered data sets.
+
+Non-charN 'string' and 'bytes' column types cannot be merged, nor can columns marked as {store-only}@{link /concepts/types/#data-handling}.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to be created, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.",
+            "value":
+            {
+                "is_new_table_name": true
+            }
+        },
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The list of table names to merge, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must contain the names of one or more existing tables.",
+            "value":
+            {
+                "is_input_table_names": true
+            }
+        },
+        {
+            "name": "input_column_names",
+            "type": {
+                "type": "array",
+                "items": {"type": "array", "items": "string"}
+            },
+            "doc": "The list of columns from each of the corresponding input tables.",
+            "value": {}
+        },
+        {
+            "name": "output_column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The list of names of the columns to be stored in the output table.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the projection as part of @{input table_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of the schema for the output table. If the schema provided is non-existent, it will be automatically created.",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "materialize_on_gpu" :
+                    {
+                        "doc": "No longer used.  See {Resource Management Concepts}@{link /rm/concepts/} for information about how resources are managed.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "mode" :
+                    {
+                        "doc" : "If {merge_views}@{choice of input.key options.mode}, then this operation will merge the provided views. All @{input table_names} must be views from the same underlying base table.",
+                        "value" :
+                        {
+                            "default" : "union_all",
+                            "valid_choices" :
+                            {
+                                "union_all" :
+                                {
+                                    "doc" : "Retains all rows from the specified tables.",
+                                    "value" : {}
+                                },
+                                "union" :
+                                {
+                                    "doc" : "Retains all unique rows from the specified tables (synonym for {union_distinct}@{choice of input.key options.mode}).",
+                                    "value" : {}
+                                },
+                                "union_distinct" :
+                                {
+                                    "doc" : "Retains all unique rows from the specified tables.",
+                                    "value" : {}
+                                },
+                                "except" :
+                                {
+                                    "doc" : "Retains all unique rows from the first table that do not appear in the second table (only works on 2 tables).",
+                                    "value" : {}
+                                },
+                                "except_all" :
+                                {
+                                    "doc" : "Retains all rows(including duplicates) from the first table that do not appear in the second table (only works on 2 tables).",
+                                    "value" : {}
+                                },
+                                "intersect" :
+                                {
+                                    "doc" : "Retains all unique rows that appear in both of the specified tables (only works on 2 tables).",
+                                    "value" : {}
+                                },
+                                "intersect_all" :
+                                {
+                                    "doc" : "Retains all rows(including duplicates) that appear in both of the specified tables (only works on 2 tables).",
+                                    "value" : {}
+                                },
+                                "merge_views" :
+                                {
+                                    "doc" : "Merge two or more views (or views of views) of the same base data set into a new view. If this mode is selected @{input input_column_names} AND @{input output_column_names} must be empty. The resulting view would match the results of a SQL OR operation, e.g., if filter 1 creates a view using the expression 'x = 20' and filter 2 creates a view using the expression 'x <= 10', then the merge views operation creates a new view using the expression 'x = 20 OR x <= 10'.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "chunk_size" :
+                    {
+                        "doc"  : "Indicates the number of records per chunk to be used for this output table.",
+                        "value" : {}
+                    },
+                    "chunk_column_max_memory" :
+                    {
+                        "doc"  : "Indicates the target maximum data size for each column in a chunk to be used for this output table.",
+                        "value" : {}
+                    },
+                    "create_indexes" :
+                    {
+                        "doc"  : "Comma-separated list of columns on which to create indexes on the output table.  The columns specified must be present in @{input output_column_names}.",
+                        "value" : {}
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the output table specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "persist" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.persist}, then the output table specified in @{input table_name} will be persisted and will not expire unless a {ttl}@{key of input options} is specified.   If {false}@{choice of input.key options.persist}, then the output table will be an in-memory table and will expire unless a {ttl}@{key of input options} is specified otherwise.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "retain_chunks" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "ID of view of which this output table is a member",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                   "force_replicated" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.force_replicated}, then the output table specified in @{input table_name} will be replicated even if the source tables are not.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_definition" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "virtual_union" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.virtual_union}, then the output table specified in @{input table_name} will be implemented as a virtual union.",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "in_initialize_materialized_view":
+                    {
+                        "doc"  :  "option set internally to indicate to worker the join table is part of a persisted materialized view being created at startup - in combination with throw_error:on_worker_restart will cause worker to throw an error",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default": ""
+                        }
+                    },
+                    "throw_error":
+                    {
+                        "doc"  :  "The option can be set to throw errors on the worker or the head node and the error can be thrown either during the initial creation of the table, during initialization of a view member at restart or during view refresh.",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "on_worker_creation":
+                                {
+                                    "doc": "throw an error from the worker when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_worker_refresh" :
+                                {
+                                    "doc": "throw an error from the worker when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_worker_restart" :
+                                {
+                                    "doc": "throw an error from the worker when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                },
+                                "on_head_node_creation":
+                                {
+                                    "doc": "throw an error from the head node when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_head_node_refresh" :
+                                {
+                                    "doc": "throw an error from the head node when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_head_node_restart" :
+                                {
+                                    "doc": "throw an error from the head node when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "partial_distinct" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "isa_change_detection" : 
+                    {
+                        "doc"  : "<DEVELOPER>: disable shard key check for except-all",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "retain_latent_view_members":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "shard_local":
+                    {
+                        "doc" : "When true disables sharding checks - allow differently sharded tables to be inputs when mode is union, union_distinct, except, except_all, intersect, or intersect_all.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

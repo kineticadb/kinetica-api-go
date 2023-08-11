@@ -1,0 +1,442 @@
+{
+    "endpoint": "/create/jointable",
+    "type": "record",
+    "name": "create_join_table_request",
+    "desc_name": "Create Join Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "creates_table_from_multiple_tables": true,
+    "short_doc": "Create a table that is the result of a SQL JOIN",
+    "doc": "Creates a table that is the result of a SQL JOIN.
+
+For join details and examples see: {Joins}@{link /concepts/joins/}.  For limitations, see {Join Limitations and Cautions}@{link /concepts/joins/#limitations-cautions}.",
+    "fields": [
+        {
+            "name": "join_table_name",
+            "type": "string",
+            "doc": "Name of the join table to be created, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.",
+            "value":
+            {
+                "is_new_table_name": true
+            }
+        },
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The list of table names composing the join, each in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Corresponds to a SQL statement FROM clause.",
+            "value": {
+                "is_input_table_names": true
+            }
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of member table columns or column expressions to be included in the join. Columns can be prefixed with 'table_id.column_name', where 'table_id' is the table name or alias.  Columns can be aliased via the syntax 'column_name as alias'. Wild cards '*' can be used to include all columns across member tables or 'table_id.*' for all of a single table's columns.  Columns and column expressions composing the join must be uniquely named or aliased--therefore, the '*' wild card cannot be used if column names aren't unique across all tables.",
+            "value": {}
+        },
+        {
+            "name": "expressions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "An optional list of expressions to combine and filter the joined tables.  Corresponds to a SQL statement WHERE clause. For details see: {expressions}@{link /concepts/expressions/}.",
+            "value": {
+                "default" : []
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the join as part of @{input join_table_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the join. If the schema is non-existent, it will be automatically created.",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "max_query_dimensions" :
+                    {
+                        "doc"  : "No longer used.",
+                        "value" : {}
+                    },
+                    "optimize_lookups" :
+                    {
+                        "doc"  : "Use more memory to speed up the joining of tables.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "predicate_join":
+                    {
+                        "doc"   : "force all filter plan steps to be done as predicate_joins",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "refresh_method" :
+                    {
+                        "doc"  : "Method by which the join can be refreshed when the data in underlying member tables have changed.",
+                        "value" : {
+                            "internal_option": true,
+                            "default" : "manual",
+                            "valid_choices" :
+                            {
+                                "manual" :
+                                {
+                                    "doc": "refresh only occurs when manually requested by calling this endpoint with refresh option set to {refresh}@{choice of input.key options.refresh} or {full_refresh}@{choice of input.key options.refresh}",
+                                    "value" : {}
+                                },
+                                "on_query" :
+                                {
+                                    "doc":  "incrementally refresh (refresh just those records added) whenever a new query is issued and new data is inserted into the base table.  A full refresh of all the records occurs when a new query is issued and there have been inserts to any non-base-tables since the last query.  {TTL}@{link /concepts/ttl/} will be set to not expire; any {ttl}@{key of input options} specified will be ignored.",
+                                    "value" : {}
+                                },
+                                "on_insert" :
+                                {
+                                    "doc": "incrementally refresh (refresh just those records added) whenever new data is inserted into a base table.  A full refresh of all the records occurs when a new query is issued and there have been inserts to any non-base-tables since the last query.  {TTL}@{link /concepts/ttl/} will be set to not expire; any {ttl}@{key of input options} specified will be ignored.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "Do a manual refresh of the join if it exists - throws an error otherwise",
+                        "value" : {
+                            "internal_option": true,
+                            "default" : "no_refresh",
+                            "valid_choices" :
+                            {
+                                "no_refresh" :
+                                {
+                                    "doc": "don't refresh",
+                                    "value" : {}
+                                },
+                                "refresh" :
+                                {
+                                    "doc":  "incrementally refresh (refresh just those records added) if new data has been inserted into the base table.  A full refresh of all the records occurs if there have been inserts to any non-base-tables since the last refresh",
+                                    "value" : {}
+                                },
+                                "full_refresh" :
+                                {
+                                    "doc": "always refresh even if no new records have been added.  Only refresh method guaranteed to do a full refresh (refresh all the records) if a delete or update has occurred since the last refresh.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "always_refresh" :
+                    {
+                        "doc"  : "When refresh is requested always refresh even if no new records have been added.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the join table specified in @{input join_table_name}.",
+                        "value" : {}
+                    },
+                    "explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "explain_create" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "create_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters_in_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "export_qualified_column_names" :
+                    {
+                       "doc"  : "<DEVELOPER>",
+                       "value" :
+                       {
+                            "default" : "false",
+                            "internal_option": true
+                       }
+                    },
+                    "force_order":
+                    {
+                       "doc"  : "When true execute the expressions in expressions parameter in the order they were given. When false the filter-planner can reorder expressions in an attempt to optimize query execution.",
+                       "value" :
+                       {
+                            "default" : "false",
+                            "internal_option": true
+                       }
+                    },
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    },
+                    "preserve_input_join_table_type" :
+                    {
+                       "doc"  : "<DEVELOPER>",
+                       "value" :
+                       {
+                            "default" : "false",
+                            "internal_option": true
+                       }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "view this projection is part of",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "no_count" :
+                    {
+                        "doc"  : "return a count of 0 for the join table for logging and for show_table. optimization needed for large overlapped equi-join stencils",
+                        "value" :
+                        {
+                            "default": "false"
+                        }
+                    },
+                    "chunk_size" :
+                    {
+                        "doc"  : "Maximum number of records per joined-chunk for this table. Defaults to the gpudb.conf file chunk size",
+                        "value" : {}
+                    },
+                    "no_incremental_refresh":
+                    {
+                        "doc" : "Tells worker not to incrementally refresh a join",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "sleep" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value"  :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "chunk_sleep" :
+                    {
+                        "doc"  : "for debugging - purpose is to have each chunk processing step sleep for specified time",
+                        "value"  :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_definition" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "in_initialize_materialized_view":
+                    {
+                        "doc"  :  "option set internally to indicate to worker the join table is part of a persisted materialized view being created at startup - in combination with throw_error:on_worker_restart will cause worker to throw an error",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default": ""
+                        }
+                    },
+                    "throw_error":
+                    {
+                        "doc"  :  "The option can be set to throw errors on the worker or the head node and the error can be thrown either during the initial creation of the table, during initialization of a view member at restart or during view refresh.",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "on_worker_creation":
+                                {
+                                    "doc": "throw an error from the worker when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_worker_refresh" :
+                                {
+                                    "doc": "throw an error from the worker when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_worker_restart" :
+                                {
+                                    "doc": "throw an error from the worker when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                },
+                                "on_head_node_creation":
+                                {
+                                    "doc": "throw an error from the head node when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_head_node_refresh" :
+                                {
+                                    "doc": "throw an error from the head node when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_head_node_restart" :
+                                {
+                                    "doc": "throw an error from the head node when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "enable_predicate_equi_join" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "enable_compound_equi_join":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "enable_overlapped_equi_join":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "enable_transitive_simplifications":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "retain_latent_view_members":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "shard_local":
+                    {
+                        "doc" : "When true disables sharding checks - allow randomly sharded tables to be joined with each other",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "replace_one_record_table_terms":
+                    {
+                        "doc" : "When true optimizes the expressions list by replacing terms that refer to table with one record with a constant value with the value of that term.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

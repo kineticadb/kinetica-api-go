@@ -1,0 +1,45 @@
+{
+    "endpoint": "/admin/alter/jobs",
+    "type" : "record",
+    "name" : "admin_alter_jobs_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name" : "job_ids",
+            "type" : 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc"  : "Jobs on which the action was performed.",
+            "value" : { }
+        },
+        {
+            "name" : "action",
+            "type" : "string",
+            "doc"  : "Action requested on the jobs.",
+            "value" : { }
+        },
+        {
+            "name" : "status",
+            "type" : 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "Status of the requested action for each job.",
+            "value" : { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

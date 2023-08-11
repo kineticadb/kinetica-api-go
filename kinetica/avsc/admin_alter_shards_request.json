@@ -1,0 +1,88 @@
+{
+    "endpoint": "/admin/alter/shards",
+    "type" : "record",
+    "name" : "admin_alter_shards_request",
+    "desc_name": "Administration: Alter Shards",
+    "generate" : "NO_API",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Specify shards mapping to the ranks.",
+    "doc": "Specify the mapping of the shards to the various ranks in the cluster. In most cases, it should be sufficient to let the system automatically distribute the shards evenly across the available ranks. However, this endpoint can be used to move shards for various administrative reasons, say in case of heterogeneous node clusters.  It should be noted that the system may reassign the shards the when the number of nodes in the cluster changes or the cluster is rebalanced.",
+    "fields" : [
+        {
+            "name" : "version",
+            "type" : "long",
+            "doc": "",
+            "value": { }
+        },
+        {
+            "name" : "use_index",
+            "type" : "boolean",
+            "doc": "Set to true when only the shards being moved are specified in the request.  The index must indicate the shards being moved.",
+            "value": { }
+        },
+        {
+            "name" : "rank",
+            "type" : {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc": "node to which the shard will be moved.",
+            "value": { }
+        },
+        {
+            "name" : "tom",
+            "type" : {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc": "Toms to which the shard will be moved. ",
+            "value": { }
+        },
+        {
+            "name" : "index",
+            "type" : {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc": "The shard being moved.  When use_index is set to true, size of this array must equal the size of rank/tom array.",
+            "value": { }
+        },
+        {
+            "name" : "backup_map_list",
+            "type" : {
+                "type": "array",
+                "items": "int"
+            },
+            "doc": "List of rank_tom integers for which backup toms are defined",
+            "value": { }
+        },
+        {
+            "name" : "backup_map_values",
+            "type" : {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "int"
+                }
+            },
+            "doc": "List of the backup rank_tom(s) for each rank_tom in backup_map_list",
+            "value": { }
+
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

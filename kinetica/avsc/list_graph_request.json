@@ -1,0 +1,33 @@
+{
+    "endpoint": "/list/graph",
+    "name": "list_graph_request",
+    "desc_name": "List Graphs",
+    "generate": "NO_DOCS",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "Lists basic information about one or all graphs that exist on the graph server.",
+    "short_doc": "Lists graphs.",
+    "fields": [
+        {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Name of the graph on which to retrieve information. If empty, information about all graphs is returned.",
+            "value": {
+              "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {}
+            }
+        }
+    ]
+}

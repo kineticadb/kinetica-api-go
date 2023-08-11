@@ -1,0 +1,203 @@
+{
+    "endpoint": "/filter",
+    "type": "record",
+    "name": "filter_request",
+    "desc_name": "Filter",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Filter a dataset for records matching an expression",
+    "doc": "Filters data based on the specified expression.  The results are
+stored in a {result set}@{link /concepts/filtered_views/} with the
+given @{input view_name}.
+
+For details see {Expressions}@{link /concepts/expressions/}.
+
+The response message contains the number of points for which the expression
+evaluated to be true, which is equivalent to the size of the result view.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to filter, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  This may be the name of a table or a view (when chaining queries).",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "view_name",
+            "type": "string",
+            "doc": "If provided, then this will be the name of the view containing the results, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Must not be an already existing table or view.",
+            "value":
+            {
+                "default" : "",
+                "is_output_table_name": true
+            }
+        },
+        {
+            "name": "expression",
+            "type": "string",
+            "doc": "The select expression to filter the specified table.  For details see {Expressions}@{link /concepts/expressions/}.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the view as part of @{input view_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the newly created view. If the schema is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "join_type" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "view this filtered-view is part of",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the view specified in @{input view_name}.",
+                        "value" : {}
+                    },
+                    "create_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "no_count" :
+                    {
+                        "doc"  : "return a count of 0 for the join table for logging and for show_table. optimization needed for large overlapped equi-join stencils",
+                        "value" :
+                        {
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    },
+                    "throw_error":
+                    {
+                        "doc"  :  "The option can be set to throw errors on the worker or the head node and the error can be thrown either during the initial creation of the table, during initialization of a view member at restart or during view refresh.",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "on_worker_creation":
+                                {
+                                    "doc": "throw an error from the worker when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_worker_refresh" :
+                                {
+                                    "doc": "throw an error from the worker when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_worker_restart" :
+                                {
+                                    "doc": "throw an error from the worker when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                },
+                                "on_head_node_creation":
+                                {
+                                    "doc": "throw an error from the head node when the table is initially created",
+                                    "value" : {}
+                                },
+                                "on_head_node_refresh" :
+                                {
+                                    "doc": "throw an error from the head node when refreshing the table - only applies to materialized view members",
+                                    "value" : {}
+                                },
+                                "on_head_node_restart" :
+                                {
+                                    "doc": "throw an error from the head node when initializing the view member at restart.  only applies to materialized view members.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "enable_predicate_equi_join" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "enable_compound_equi_join":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "enable_overlapped_equi_join":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

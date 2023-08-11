@@ -1,0 +1,103 @@
+{
+    "endpoint": "/aggregate/histogram", 
+    "type": "record", 
+    "name": "aggregate_histogram_request", 
+    "desc_name": "Aggregate Histogram",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Perform a histogram calculation given a table, column, and interval function",
+    "doc": "Performs a histogram calculation given a table, a column, and an
+interval function. The @{input interval} is used to produce bins of that size
+and the result, computed over the records falling within each bin, is returned.
+For each bin, the start value is inclusive, but the end value is
+exclusive--except for the very last bin for which the end value is also
+inclusive.  The value returned for each bin is the number of records in it,
+except when a column name is provided as a
+{value_column}@{key of input options}.  In this latter case the sum of the
+values corresponding to the {value_column}@{key of input options} is used as the
+result instead.  The total number of bins requested cannot exceed 10,000.
+
+NOTE:  The Kinetica instance being accessed must be running a CUDA (GPU-based)
+build to service a request that specifies a {value_column}@{key of input options}.", 
+
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of the table on which the operation will be performed. Must be an existing table, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "column_name", 
+            "type": "string", 
+            "doc": "Name of a column or an expression of one or more column names over which the histogram will be calculated.", 
+            "value": {}
+        }, 
+        {
+            "name": "start", 
+            "type": "double", 
+            "doc": "Lower end value of the histogram interval, inclusive.", 
+            "value": {}
+        }, 
+        {
+            "name": "end", 
+            "type": "double", 
+            "doc": "Upper end value of the histogram interval, inclusive.", 
+            "value": {}
+        }, 
+        {
+            "name": "interval", 
+            "type": "double", 
+            "doc": "The size of each bin within the start and end parameters.", 
+            "value": {}
+        }, 
+        {
+            "name": "options", 
+            "type": {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            { 
+                "default" : {},
+                "valid_keys" :
+                {
+                    "value_column" :
+                    {
+                        "doc"  : "The name of the column to use when calculating the bin values (values are summed).  The column must be a numerical type (int, double, long, float).",
+                        "value" : {}
+                    },
+                    "use_cache":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "do_start_end_filter":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "do_copy_if":
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        } 
+    ]
+}

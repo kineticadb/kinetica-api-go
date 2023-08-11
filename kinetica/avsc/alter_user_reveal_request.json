@@ -1,0 +1,42 @@
+{
+    "endpoint": "/alter/user/reveal",
+    "type": "record",
+    "name": "alter_user_reveal_request",
+    "desc_name": "Alter user in reveal",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "generate" : "NO_API",
+    "short_doc": "Alter user in reveal",
+    "doc": "",
+    "fields": [
+        {
+            "name": "user_name",
+            "type": "string",
+            "doc": "",
+            "value": {}
+        },
+        {
+            "name": "password",
+            "type": "string",
+            "doc": "",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                }
+            }
+        }
+    ]
+}

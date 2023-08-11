@@ -1,0 +1,32 @@
+{
+    "endpoint": "/create/video",
+    "name": "create_video_response",
+    "desc_name": "Create Video",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "job_id",
+            "type": "long",
+            "doc":  "An identifier for the created job.",
+            "value": {}
+        },
+        {
+            "name": "path", 
+            "type": "string", 
+            "doc": "Fully qualified KIFS path to the video file.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

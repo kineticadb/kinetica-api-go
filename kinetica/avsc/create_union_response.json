@@ -1,0 +1,41 @@
+{
+    "endpoint": "/create/union", 
+    "type": "record", 
+    "name": "create_union_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {
+                "default" : {},
+                "valid_keys" : { 
+                    "count" :
+                    {
+                        "doc": "Number of records in the final table",
+                        "value" : {}
+                    },
+                    "qualified_table_name":
+                    {
+                        "doc" : "The fully qualified name of the result table (i.e. including the schema)",
+                        "value" :
+                        {
+                            "is_qualified_output_table_name": true
+                        }
+                    }
+                }
+            }                     
+        }
+    ]
+}

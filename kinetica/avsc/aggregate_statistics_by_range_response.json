@@ -1,0 +1,30 @@
+{
+    "endpoint": "/aggregate/statistics/byrange", 
+    "type": "record", 
+    "name": "aggregate_statistics_by_range_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "stats", 
+            "type": {
+                "type": "map", 
+                "values": {
+                    "type": "array", 
+                    "items": "double"
+                }
+            }, 
+            "doc": "A map with a key for each statistic in the stats input parameter having a value that is a vector of the corresponding value-column bin statistics. In a addition the key count has a value that is a histogram of the binning-column.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

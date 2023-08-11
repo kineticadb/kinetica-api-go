@@ -1,0 +1,24 @@
+{
+    "endpoint": "/admin/offline",
+    "type": "record", 
+    "name": "admin_offline_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "is_offline",
+            "type": "boolean",
+            "doc": "Returns true if the system is offline, or false otherwise.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

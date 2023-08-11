@@ -1,0 +1,59 @@
+{
+    "endpoint": "/insert/records", 
+    "type": "record", 
+    "name": "insert_records_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "record_ids", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "An array containing the IDs with which the added records are identified internally.", 
+            "value": { "managed": true }
+        }, 
+        {
+            "name": "count_inserted", 
+            "type": "int", 
+            "doc": "The number of records inserted.", 
+            "value": {}
+        }, 
+        {
+            "name": "count_updated", 
+            "type": "int", 
+            "doc": "The number of records updated.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": 
+            {
+                "valid_keys" :
+                {
+                    "data_rerouted" :
+                    {
+                        "doc" : "When present, indicates that data inserted in a multi-head insert was rerouted internally due to shard assignments changing. The value will be the shard array version used to re-route",
+                        "value": { "internal_option": "true" }
+                    },
+                    "bad_record_indices" :
+                    {
+                        "doc" : "If return_individual_errors option is specified or implied, returns a comma-separated list of invalid indices (0-based)",
+                        "value": {}
+                    },
+                    "error_N" :
+                    {
+                        "doc" : "Error message for record at index N (0-based)",
+                        "value": {}
+                    }
+                }
+            }
+        }
+    ]
+}

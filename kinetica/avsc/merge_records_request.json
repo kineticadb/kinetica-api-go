@@ -1,0 +1,157 @@
+{
+    "endpoint": "/merge/records",
+    "type": "record",
+    "name": "merge_records_request",
+    "desc_name": "Merge Records",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "creates_table_from_multiple_tables": true,
+    "short_doc": "Merge records from multiple source tables to a new result table",
+    "doc": "Create a new empty result table (specified by @{input table_name}),
+and insert all records from source tables
+(specified by @{input source_table_names}) based on the field mapping
+information (specified by @{input field_maps}).
+
+For merge records details and examples, see
+{Merge Records}@{link /concepts/merge_records/}.  For limitations, see
+{Merge Records Limitations and Cautions}@{link /concepts/merge_records/#limitations-and-cautions}.
+ 
+The field map (specified by @{input field_maps}) holds the user-specified maps
+of target table column names to source table columns. The array of
+@{input field_maps} must match one-to-one with the @{input source_table_names},
+e.g., there's a map present in @{input field_maps} for each table listed in
+@{input source_table_names}.",
+    "fields":
+    [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "The name of the new result table for the records to be merged into, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Must NOT be an existing table.",
+            "value":
+            {
+                "is_new_table_name": true
+            }
+        },
+        {
+            "name": "source_table_names",
+            "type":
+            {
+         		"type": "array",
+        		"items": "string"
+            },
+            "doc": "The list of names of source tables to get the records from, each in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be existing table names.",
+            "value":
+            {
+                "is_input_table_names": true
+            }
+        },
+        {
+            "name": "field_maps",
+            "type":
+            {
+        		"type": "array",
+        		"items":
+                {
+                    "type": "map",
+                    "values": "string"
+            	}
+            },
+            "doc": "Contains a list of source/target column mappings, one mapping for each source table listed in @{input source_table_names} being merged into the target table specified by @{input table_name}.  Each mapping contains the target column names (as keys) that the data in the mapped source columns or column {expressions}@{link /concepts/expressions/} (as values) will be merged into.  All of the source columns being merged into a given target column must match in type, as that type will determine the type of the new target column.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the merged table as part of @{input table_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the newly created merged table specified by @{input table_name}.",
+                        "value" : {}
+                    },
+                    "is_replicated" :
+                    {
+                        "doc" : "Indicates the {distribution scheme}@{link /concepts/tables/#distribution} for the data of the merged table specified in @{input table_name}.  If true, the table will be {replicated}@{link /concepts/tables/#replication}.  If false, the table will be {randomly sharded}@{link /concepts/tables/#random-sharding}.",
+                        "value":
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the merged table specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "persist" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.persist}, then the table specified in @{input table_name} will be persisted and will not expire unless a {ttl}@{key of input options} is specified.   If {false}@{choice of input.key options.persist}, then the table will be an in-memory table and will expire unless a {ttl}@{key of input options} is specified otherwise.",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "chunk_size" :
+                    {
+                        "doc"  : "Indicates the number of records per chunk to be used for the merged table specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "chunk_column_max_memory" :
+                    {
+                        "doc"  : "Indicates the target maximum data size for each column in a chunk to be used for the merged table specified in @{input table_name}.",
+                        "value" : {}
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "view this result table is part of",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

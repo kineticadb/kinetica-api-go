@@ -1,0 +1,59 @@
+{
+    "endpoint": "/show/directories", 
+    "type": "record", 
+    "name": "show_directories_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "directories",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "KiFS directory names",
+            "value" : {}
+        },
+        {
+            "name": "users",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "User that created each directory for the respective directories in @{output directories}",
+            "value" : {}
+        },
+        {
+            "name": "creation_times",
+            "type": 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "The creation time for each directory in milliseconds since epoch, for the respective directories in @{output directories}",
+            "value": {}
+        },
+        {
+            "name": "permissions",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Highest level of permission the calling user has for the respective directories in @{output directories}.
+Will be empty if no permissions. If a user has been granted both read and write permissions, 'directory_write' will be listed.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

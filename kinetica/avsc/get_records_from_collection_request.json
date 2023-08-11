@@ -1,0 +1,121 @@
+{
+    "endpoint": "/get/records/fromcollection",
+    "type": "record",
+    "name": "get_records_from_collection_request",
+    "desc_name": "Get Records from Collection",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "[DEPRECATED]  Retrieve records from a collection, optionally returning the record IDs",
+    "doc": "Retrieves records from a collection. The operation can optionally
+return the record IDs which can be used in certain queries such as
+@{endpoint /delete/records}.
+
+This operation supports paging through the data via the @{input offset} and
+@{input limit} parameters.
+
+Note that when using the Java API, it is not possible to retrieve records from
+join views using this operation.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the collection or table from which records are to be retrieved, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing collection or table.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "offset",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the number of initial results to skip (this can be useful for paging through the results).",
+            "value" :
+	        {
+		        "min": 0,
+		        "max": "MAX_INT",
+		        "default": 0
+	        }
+        },
+        {
+            "name" : "limit",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the maximum number of results to be returned, or END_OF_SET (-9999) to indicate that the max number of results should be returned.  The number of records returned will never exceed the server's own limit, defined by the {max_get_records_size}@{link /config/#general} parameter in the server configuration.  Use @{input offset} & @{input limit} to request subsequent pages of results.",
+            "value" :
+	        {
+                "default": -9999
+	        }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records; either {binary}@{choice of input encoding} or {json}@{choice of input encoding}.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default": "binary",
+                "semantics":
+                {
+                    "type": "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "return_record_ids" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.return_record_ids} then return the internal record ID along with each returned record.",
+                        "value":
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "max_json_string_length" :
+                    {
+                        "doc": "Maximum string length to return when using json encoding; longer strings will be truncated. Default is '0', which disables truncation.",
+                        "value":
+                        {
+                            "default": "0",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

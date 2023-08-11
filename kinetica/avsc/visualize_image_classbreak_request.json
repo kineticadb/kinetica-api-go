@@ -1,0 +1,773 @@
+{
+    "endpoint" : "/visualize/image/classbreak",
+    "type" : "record",
+    "name" : "visualize_image_classbreak_request",
+    "desc_name": "Visualize Image Classbreak",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Generate 'class break' rasterized image tiles",    
+    "generate" : "NO_DOCS",     
+    "doc"  : "For internal use only.  Generates 'class break' rasterized image tiles for an area of interest using the given tables and the provided parameters.
+
+A class break rendering is where data from one or more tables is rasterized with styling applied on a per-class basis. Class breaks based on one or more data columns are supported. Distinct values (for strings) or ranges (for numeric attributes) must be provided in the cb_column_name1/cb_vals1 and cb_column_name2/cb_vals2 parameters. The styling parameters must be specified for each class.
+
+All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value).",
+    "fields" : [
+        { 
+            "name" : "table_names", 
+            "type" : 
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "Name of the table containing the data for the various layers to be rendered.", 
+            "value": {}
+        },
+        {
+            "name" : "world_table_names", 
+            "type" : 
+            { 
+                "type" : "array", 
+                "items" : "string"
+            }, 
+            "doc"  : "Optional name of the tables containing the data for the entire track when the @{input table_names} contains only part of the track data, but the entire track has to be rendered.", 
+            "value":{}
+        },
+        { 
+            "name" : "x_column_name", 
+            "type" : "string", 
+            "doc"  : "Name of the column containing the x coordinates.", 
+            "value": {}
+        },
+        { 
+            "name" : "y_column_name",
+            "type" : "string", 
+            "doc"  : "Name of the column containing the y coordinates.", 
+            "value": {} 
+        },
+        { 
+            "name" : "symbol_column_name",
+            "type" : "string",
+            "doc"  : "Name of the column containing the symbol code coordinates.",
+            "value": {}
+        },
+        {
+            "name" : "geometry_column_name",
+            "type" : "string",
+            "doc"  : "Name of the column containing geometry data.",
+            "value": {}
+        },        
+        { "name" : "track_ids", 
+            "type" : 
+            { 
+                "type" : "array", 
+                "items" : 
+                { 
+                    "type" : "array", 
+                    "items" : "string" 
+                }
+            }, 
+            "doc"  : "Tracks from the @{input table_names} to be rendered.", 
+            "value": { "managed": true }
+        },
+        { 
+            "name" : "cb_attr",
+            "type" : "string", 
+            "doc"  : "Name of the column for the generic class break.",
+            "value": {} 
+        },
+        { 
+            "name" : "cb_vals", "type" :
+            {
+                "type" : "array", 
+                "items" : "string" 
+            }, 
+            "doc"  : "A list of class break values or ranges (e.g. '0:5,5:10,15:30').",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointcolor_attr",
+            "type" : "string",
+            "doc"  : "Name of the column for the point color class break.",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointcolor_vals",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "A list of class break values or ranges (e.g. '0:5,5:10,15:30').",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointalpha_attr",
+            "type" : "string",
+            "doc"  : "Name of the column for the point alpha class break.",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointalpha_vals",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "A list of class break values or ranges (e.g. '0:5,5:10,15:30').",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointsize_attr",
+            "type" : "string",
+            "doc"  : "Name of the column for the point size class break.",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointsize_vals",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "A list of class break values or ranges (e.g. '0:5,5:10,15:30').",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointshape_attr",
+            "type" : "string",
+            "doc"  : "Name of the column for the point shape class break.",
+            "value": {}
+        },
+        {
+            "name" : "cb_pointshape_vals",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "A list of class break values or ranges (e.g. '0:5,5:10,15:30').",
+            "value": {}
+        },
+        { 
+            "name" : "min_x", 
+            "type" : "double", 
+            "doc"  : "Lower bound for the x values.", 
+            "value": {} 
+        },
+        { 
+            "name" : "max_x", 
+            "type" : "double", 
+            "doc"  : "Upper bound for the x values.", 
+            "value": {} 
+        },
+        { 
+            "name" : "min_y", 
+            "type" : "double", 
+            "doc"  : "Lower bound for the y values.", 
+            "value": {} 
+        },
+        { 
+            "name" : "max_y", 
+            "type" : "double", 
+            "doc"  : "Upper bound for the y values.", 
+            "value": {} 
+        },
+        { 
+            "name" : "width", 
+            "type" : "int", 
+            "doc"  : "Width of the generated image.", 
+            "value": {} 
+        },
+        { 
+            "name" : "height",
+            "type" : "int", 
+            "doc"  : "Height of the generated image.", 
+            "value": {}
+        },
+        {
+            "name" : "projection",
+            "type" : "string", 
+            "doc"  : "Spatial Reference System (i.e. EPSG Code).", 
+            "value": 
+            {
+                "valid_choices" :
+                {
+                    "EPSG:4326" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "PLATE_CARREE" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "900913" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:900913" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "102100" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:102100" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "3857" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:3857" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "WEB_MERCATOR" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default": "PLATE_CARREE"
+            }
+        },
+        {
+            "name" : "bg_color",
+            "type" : "long",
+            "doc"  : "Background color of the generated image.",
+            "value": {}
+        },
+        {
+            "name" : "style_options",
+            "type":
+            {
+                "type": "map",
+                "values":
+                {
+                    "type" : "array",
+                    "items" : "string"
+                }
+            },
+            "doc" : "Styling options for the image.",
+            "value" :
+            {
+            "valid_keys" :
+            {
+                "do_points" :
+                {
+                "doc"  : "Rasterize point data toggle.",
+                "value":
+                {
+                    "value_type" : "boolean",
+                    "valid_choices" :
+                    {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    },
+                    "default": "true"
+                }
+                },
+                "do_shapes" :
+                {
+                "doc"  : "Rasterize shapes toggle.",
+                "value":
+                {
+                    "value_type" : "boolean",
+                    "valid_choices" :
+                    {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    },
+                    "default": "true"
+                }
+                },
+                "do_tracks" :
+                {
+                "doc"  : "Rasterize tracks toggle.",
+                "value":
+                {
+                    "value_type" : "boolean",
+                    "valid_choices" :
+                    {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    },
+                    "default": "true"
+                }
+                },
+                "do_symbology" :
+                {
+                "doc"  : "Rasterize symbols toggle.",
+                "value":
+                {
+                    "value_type" : "boolean",
+                    "valid_choices" :
+                    {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    },
+                    "default": "false"
+                }
+                },
+                "pointcolors" :
+                {
+                "doc"  : "Comma-separated list of ARGB color values in hex for the points.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default" : "FF0000"
+                }
+                },                
+                "cb_pointalphas": 
+                {
+                "doc"   : "Comma-separated list of opacities for points. 0-255 where 0 is transparent and 255 is opaque.  Overrides the point color alpha values.",
+                "value" :
+                {
+                    "value_type": "int",
+                    "default" : "255",
+                    "min": "0",
+                    "max": "255"
+                }
+                },
+                "pointsizes" :
+                {
+                "doc"  : "Comma-separated list of point sizes.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default":"3"
+                }
+                },
+                "pointoffset_x" :
+                {
+                "doc"  : "Points' X coordinate offset in pixels.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default":"0"
+                }
+                },
+                "pointoffset_y" :
+                {
+                "doc"  : "Points' Y coordinate offset in pixels.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default":"0"
+                }
+                },
+                "pointshapes" :
+                {
+                "doc"  : "Comma-separated list of point shapes.",
+                "value":
+                {
+                    "default" : "none",
+                    "valid_choices" :
+                    {
+                    "none" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "circle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "square" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "diamond" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowcircle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowsquare" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowdiamond" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "symbolcode" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    }
+                }
+                },
+                "symbolrotations" :
+                {
+                "doc"  : "An expression to specify the rotation angle to be applied to symbol rendering.",
+                "value":
+                {
+                    "default" : "0"
+                }
+                },
+                "shapelinewidths" :
+                {
+                "doc"  : "Width of the lines.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default":"3"
+                }
+                },
+                "shapelinecolors" :
+                {
+                "doc"  : "RGB color values in hex for the line.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default": "FFFF00 "
+                }
+                },
+                "shapelinepatterns" :
+                {
+                "doc"  : "Dashed line pattern represented as a 64bit bitmap.",
+                "value":
+                {
+                    "value_type" : "unsigned long",
+                    "default":"0"
+                }
+                },
+                "shapelinepatternlen" :
+                {
+                "doc"  : "Length of the dashed line pattern in number of bits.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "1",
+                    "max" : "64",
+                    "default":"32"
+                }
+                },
+                "shapefillcolors" :
+                {
+                "doc"  : "RGB color values in hex for the fill color of the shapes. Use '-1' for no fill.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default": "-1"
+                }
+                },
+                "hashlineintervals" :
+                {
+                "doc"  : "Distance between the center points of hash lines in pixels.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "default":"20"
+                }
+                },
+                "hashlinecolors" :
+                {
+                "doc"  : "RGB color values in hex for the hash lines.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default": "The same as line color."
+                }
+                },
+                "hashlineangles" :
+                {
+                "doc"  : "Clockwise rotation angle from a perpendicular hash line to hash lines in degree.",
+                "value":
+                {
+                    "value_type" : "float",
+                    "default":"0"
+                }
+                },
+                "hashlinelens" :
+                {
+                "doc"  : "length of hash lines in pixels.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "default":"0"
+                }
+                },
+                "hashlinewidths" :
+                {
+                "doc"  : "width of hash lines in pixels.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "default":"3"
+                }
+                },
+                "tracklinewidths" :
+                {
+                "doc"  : "Comma-separated list of track line widths. '0' implies do not draw track lines.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default": "3"
+                }
+                },
+                "tracklinecolors" :
+                {
+                "doc"  : "Comma-separated list of track line colors.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default": "00FF00"
+                }
+                },
+                "trackmarkersizes" :
+                {
+                "doc"  : "Comma-separated list of track marker sizes.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default": "3"
+                }
+                },
+                "trackmarkercolors" :
+                {
+                "doc"  : "Comma-separated list of track marker colors.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default": "0000FF"
+                }
+                },
+                "trackmarkershapes" :
+                {
+                "doc"  : "Comma-separated list of track marker shapes.",
+                "value":
+                {
+                    "default": "none",
+                    "valid_choices" :
+                    {
+                    "none" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "circle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "square" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "diamond" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowcircle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowsquare" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowdiamond" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "oriented_arrow" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "oriented_triangle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "symbolcode" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    }
+                }
+                },
+                "trackheadcolors" :
+                {
+                "doc"  : "Comma-separated list of track head colors.",
+                "value":
+                {
+                    "value_type" : "long",
+                    "default":"FFFFFF"
+                }
+                },
+                "trackheadsizes" :
+                {
+                "doc"  : "Comma-separated list of track head marker sizes.",
+                "value":
+                {
+                    "value_type" : "int",
+                    "min" : "0",
+                    "max" : "20",
+                    "default": "10"
+                }
+                },
+                "trackheadshapes" :
+                {
+                "doc"  : "Comma-separated list of track head marker shapes.",
+                "value":
+                {
+                    "default": "circle",
+                    "valid_choices" :
+                    {
+                    "none" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "circle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "square" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "diamond" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowcircle" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowsquare" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "hollowdiamond" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "symbolcode" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                    }
+                }
+                }
+            }
+            }
+        },
+        {
+            "name": "options", 
+            "doc": "Optional parameters.", 
+            "type":
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name" : "cb_transparency_vec",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc"  : "Used for internal purpose. Indicating the color of each class is semi-transparent or not (0: opaque or completely transparent, 1: semi-transparent)",
+            "value": {}
+        }
+    ]
+}

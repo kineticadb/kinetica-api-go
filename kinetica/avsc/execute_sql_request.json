@@ -1,0 +1,520 @@
+{
+    "endpoint": "/execute/sql",
+    "type": "record",
+    "name": "execute_sql_request",
+    "desc_name": "Execute SQL",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Execute a SQL statement (query, DML, or DDL)",
+    "doc": "Execute a SQL statement (query, DML, or DDL).
+
+See {SQL Support}@{link /sql/} for the complete set of supported SQL commands.",
+    "fields": [
+        {
+            "name": "statement",
+            "type": "string",
+            "doc": "SQL statement (query, DML, or DDL) to be executed",
+            "value": {}
+        },
+        {
+            "name": "offset",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the number of initial results to skip (this can be useful for paging through the results).",
+            "value" :
+            {
+                "default": 0,
+                "min" : "0",
+                "max" : "MAX_INT"
+            }
+        },
+        {
+            "name" : "limit",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the maximum number of results to be returned, or
+END_OF_SET (-9999) to indicate that the maximum number of results allowed by the server should be
+returned.  The number of records returned will never exceed the server's own limit, defined by the
+{max_get_records_size}@{link /config/#config-main-general} parameter in the server configuration.
+Use @{output has_more_records} to see if more records exist in the result to be fetched, and
+@{input offset} & @{input limit} to request subsequent pages of results.",
+            "value" :
+            {
+                "default": -9999
+            }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records; either 'binary' or 'json'.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default" : "binary",
+                "semantics":
+                {
+                    "type": "encoding"
+                }
+            }
+        },
+        {
+            "name" : "request_schema_str",
+            "type" : "string",
+            "doc"  : "Avro schema of @{input data}.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name": "data",
+            "type":
+            {
+                "type": "array",
+                "items": "bytes"
+            },
+            "doc": "An array of binary-encoded data for the records to be binded to the SQL query.  Or use {query_parameters}@{key of input options} to pass the data in JSON format.",
+            "value":
+            {
+                "default":[]
+            }
+        },
+        {
+            "name": "options",
+            "type": { "type" : "map", "values" : "string" },
+            "doc": "Optional parameters.",
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "cost_based_optimization" :
+                    {
+                        "doc": "If {false}@{choice of input.key options.cost_based_optimization}, disables the cost-based optimization of the given query.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "distributed_joins" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.distributed_joins}, enables the use of distributed joins in servicing the given query.  Any query requiring a distributed join will succeed, though hints can be used in the query to change the distribution of the source data to allow the query to succeed.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "distributed_operations" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.distributed_operations}, enables the use of distributed operations in servicing the given query.  Any query requiring a distributed join will succeed, though hints can be used in the query to change the distribution of the source data to allow the query to succeed.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "ignore_existing_pk" :
+                    {
+                        "doc"  : "Can be used to customize behavior when the updated primary key value already exists as described in @{endpoint /insert/records}.",
+                        "value" :
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "late_materialization" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.late_materialization}, Joins/Filters results  will always be materialized ( saved to result tables format)",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "paging_table" :
+                    {
+                        "doc" : "When empty or the specified paging table not exists, the system will create a paging table and return when query output has more records than the user asked. If the paging table exists in the system, the records from the paging table are returned without evaluating the query.",
+                        "value" : {}
+                    },
+                    "paging_table_ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the paging table.",
+                        "value" : {}
+                    },
+                    "parallel_execution" :
+                    {
+                        "doc": "If {false}@{choice of input.key options.parallel_execution}, disables the parallel step execution of the given query.",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "plan_cache" :
+                    {
+                        "doc": "If {false}@{choice of input.key options.plan_cache}, disables plan caching for the given query.",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "prepare_mode" :
+                    {
+                        "doc": "If {true}@{choice of input.key options.prepare_mode}, compiles a query into an execution plan and saves it in query cache. Query execution is not performed and an empty response will be returned to user",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "preserve_dict_encoding" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.preserve_dict_encoding}, then columns that were dict encoded in the source table will be dict encoded in the projection table.",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "query_parameters" :
+                    {
+                        "doc" : "Query parameters in JSON array or arrays (for inserting multiple rows).  This can be used instead of @{input data} and @{input request_schema_str}.",
+                        "value" : {}
+                    },
+                    "results_caching" :
+                    {
+                        "doc": "If {false}@{choice of input.key options.results_caching}, disables caching of the results of the given query",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "rule_based_optimization" :
+                    {
+                        "doc": "If {false}@{choice of input.key options.rule_based_optimization}, disables rule-based rewrite optimizations for the given query",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "ssq_optimization" :
+                    {
+                        "doc": "If {false}@{choice of input.key options.ssq_optimization}, scalar subqueries will be translated into joins",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "ttl":
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the intermediate result tables used in query execution.",
+                        "value" : {}
+                    },
+                    "update_on_existing_pk" :
+                    {
+                        "doc"  : "Can be used to customize behavior when the updated primary key value already exists as described in @{endpoint /insert/records}.",
+                        "value" :
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "validate_change_column" :
+                    {
+                        "doc" : "When changing a column using alter table, validate the change before applying it. If {true}@{choice of input.key options.validate_change_column}, then validate all values. A value too large (or too long) for the new type will prevent any change. If {false}@{choice of input.key options.validate_change_column}, then when a value is too large or long, it will be truncated.",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+
+
+                    "chunk_skipping" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    },
+                    "create_explain" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "current_schema" :
+                    {
+                        "doc" : "Use the supplied value as the {default schema}@{link /concepts/schemas/#default-schema} when processing this SQL command.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "no_count" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    },
+                    "planner_join_validations" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "postgres_proxy_request" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default": "false",
+                            "internal_option": true
+                        }
+                    },
+                    "show_filters" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    },
+                    "use_approx_count_distinct":
+                    {
+                        "doc" : "For all COUNT_DISTINCT aggregate functions, use the faster but less accurate APPROXIMATE_COUNT_DISTINCT instead.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default": "",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

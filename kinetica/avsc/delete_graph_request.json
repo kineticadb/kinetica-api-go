@@ -1,0 +1,69 @@
+{
+    "endpoint": "/delete/graph",
+    "name": "delete_graph_request",
+    "desc_name": "Delete Graph",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "Deletes an existing graph from the graph server and/or persist.",
+    "short_doc": "Deletes a graph.",
+    "fields": [
+        {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Name of the graph to be deleted.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc" : "Optional parameters.",
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "delete_persist": {
+                        "type": "boolean",
+                        "doc":  "If set to {true}@{choice of input.key options.delete_persist}, the graph is removed from the server and persist. If set to {false}@{choice of input.key options.delete_persist}, the graph is removed from the server but is left in persist. The graph can be reloaded from persist if it is recreated with the same 'graph_name'.",
+                        "value": {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "server_id": {
+                        "doc": "Indicates which graph server(s) to send the request to. Default is to send to get information about all the servers.",
+                        "value": {} 
+                     },
+                     "bypass_client_check": {
+                         "type": "boolean",
+                         "doc": "Set for non-user requests.",
+                         "value": {
+                             "internal_option": true,
+                             "default": "false",
+                             "valid_choices" :
+                             {
+                                 "true": { "doc": "", "value": {} },
+                                 "false": { "doc": "", "value": {} }
+                             }
+                         }
+                     }
+                }
+            }
+        }
+    ]
+}

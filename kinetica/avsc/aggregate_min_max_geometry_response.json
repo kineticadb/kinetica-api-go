@@ -1,0 +1,42 @@
+{
+    "endpoint": "/aggregate/minmax/geometry", 
+    "type": "record", 
+    "name": "aggregate_min_max_geometry_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "min_x", 
+            "type": "double", 
+            "doc": "Minimum x-coordinate value of the @{input column_name}.", 
+            "value": {}
+        },
+        {
+            "name": "max_x", 
+            "type": "double", 
+            "doc": "Maximum x-coordinate value of the @{input column_name}.", 
+            "value": {}
+        },
+        {
+            "name": "min_y", 
+            "type": "double", 
+            "doc": "Minimum y-coordinate value of the @{input column_name}.", 
+            "value": {}
+        },
+        {
+            "name": "max_y", 
+            "type": "double", 
+            "doc": "Maximum y-coordinate value of the @{input column_name}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

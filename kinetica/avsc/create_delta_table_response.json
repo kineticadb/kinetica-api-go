@@ -1,0 +1,26 @@
+{
+    "endpoint": "/create/deltatable",
+    "type": "record",
+    "name": "create_delta_table_response",
+    "desc_name": "Create Delta Table",
+    "generate" : "NO_DOCS",
+    "doc" : "",
+    "fields": [
+        {
+            "name": "delta_table_name", 
+            "type": "string", 
+            "doc": "Value of @{delta_table_name}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

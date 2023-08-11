@@ -1,0 +1,26 @@
+{
+    "endpoint": "/show/system/timing", 
+    "type": "record", 
+    "name": "show_system_timing_request", 
+    "desc_name": "Show System Timing",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show the last 100 requests, the request timing, and internal job id",    
+    "doc": "Returns the last 100 database requests along with the request timing and internal job id. The admin tool uses it to present request timing information to the user.", 
+    "fields": [
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters, currently unused.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

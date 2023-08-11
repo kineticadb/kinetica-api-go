@@ -1,0 +1,111 @@
+{
+    "endpoint": "/show/resourcegroups",
+    "type": "record",
+    "name": "show_resource_groups_request",
+    "desc_name": "Show Resource Group",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Shows information relating to resource groups",
+    "doc": "Requests resource group properties.",
+    "fields": [
+        {
+            "name": "names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of names of groups to be shown. A single entry with an empty string returns all groups.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "show_default_values" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.show_default_values} include values of fields that are based on the default resource group.",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "show_default_group" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.show_default_group} include the default resource group in the response.",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "show_ranking" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.show_ranking} include the resource group ranking in the response.",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "request_json" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

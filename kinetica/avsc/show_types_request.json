@@ -1,0 +1,84 @@
+{
+    "endpoint": "/show/types",
+    "type": "record",
+    "name": "show_types_request",
+    "desc_name": "Show Types",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show information for specified types",
+    "doc": "Retrieves information for the specified data type ID or type label. For all data types that match the input criteria, the database returns the type ID, the type schema, the label (if available), and the type's column properties.", 
+    "fields": [
+        {
+            "name": "type_id",
+            "type": "string",
+            "doc": "Type Id returned in response to a call to @{endpoint /create/type}.",
+            "value": {}
+        },
+        {
+            "name": "label",
+            "type": "string",
+            "doc": "Option string that was supplied by user in a call to @{endpoint /create/type}.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "no_join_types" :
+                    {
+                        "doc"  : "When set to 'true', no join types will be included.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "include_inferred" :
+                    {
+                        "doc" : "If true, show information regarding types inferred during file or payload ingest",
+                        "value" :
+                        {
+                            "default":"false",
+                            "internal_option" : true,
+                            "valid_choices" :
+                            {
+                                "true" : 
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "endpoint": "/aggregate/minmax", 
+    "type": "record", 
+    "name": "aggregate_min_max_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "min", 
+            "type": "double", 
+            "doc": "Minimum value of the @{input column_name}.", 
+            "value": {}
+        },
+        {
+            "name": "max", 
+            "type": "double", 
+            "doc": "Maximum value of the @{input column_name}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,198 @@
+{
+    "endpoint": "/show/table",
+    "type": "record",
+    "name": "show_table_request",
+    "desc_name": "Show Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc" : "Show information about tables, views, or schemas.",
+    "doc": "Retrieves detailed information about a table, view, or schema,
+specified in @{input table_name}. If the supplied @{input table_name} is a
+schema the call can return information about either the schema itself or the
+tables and views it contains. If @{input table_name} is empty, information about
+all schemas will be returned.
+
+If the option {get_sizes}@{key of input options} is set to
+{true}@{choice of input.key options.get_sizes}, then the number of records
+in each table is returned (in @{output sizes} and
+@{output full_sizes}), along with the total number of objects across all
+requested tables (in @{output total_size} and @{output total_full_size}).
+
+For a schema, setting the {show_children}@{key of input options} option to
+{false}@{choice of input.key options.show_children} returns only information
+about the schema itself; setting {show_children}@{key of input options} to
+{true}@{choice of input.key options.show_children} returns a list of tables and
+views contained in the schema, along with their corresponding detail.
+
+To retrieve a list of every table, view, and schema in the database, set
+@{input table_name} to '*' and {show_children}@{key of input options} to
+{true}@{choice of input.key options.show_children}.  When doing this, the
+returned @{output total_size} and @{output total_full_size} will not include the sizes of 
+non-base tables (e.g., filters, views, joins, etc.).",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table for which to retrieve the information, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  If blank, then returns information about all tables and views.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "force_synchronous" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.force_synchronous} then the table sizes will wait for read lock before returning.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "true"
+                        }
+                    },
+                    "get_sizes" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.get_sizes} then the number of records in each table, along with a cumulative count, will be returned; blank, otherwise.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "show_children" :
+                    {
+                        "doc"  : "If @{input table_name} is a schema, then {true}@{choice of input.key options.show_children} will return information about the tables and views in the schema, and {false}@{choice of input.key options.show_children} will return information about the schema itself. If @{input table_name} is a table or view, {show_children}@{key of input options} must be {false}@{choice of input.key options.show_children}. If @{input table_name} is empty, then {show_children}@{key of input options} must be {true}@{choice of input.key options.show_children}.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "true"
+                        }
+                    },
+                    "current_schema" :
+                    {
+                        "doc": "Name of a schema to use for table name resolution.  If supplied, table names will be resolved in this schema instead of the default schema for the current user.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "no_error_if_not_exists" :
+                    {
+                        "doc"  : "If {false}@{choice of input.key options.no_error_if_not_exists} will return an error if the provided @{input table_name} does not exist. If {true}@{choice of input.key options.no_error_if_not_exists} then it will return an empty result.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "get_column_info" :
+                    {
+                        "doc"  : "If {true}@{choice of input.key options.get_column_info} then column info (memory usage, etc) will be returned.",
+                        "internal_option" : "true",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "case_insensitive" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "dependencies" :
+                    {
+                        "doc": "Include view dependencies in the output",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

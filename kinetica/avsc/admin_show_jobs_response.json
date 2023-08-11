@@ -1,0 +1,109 @@
+{
+    "endpoint": "/admin/show/jobs",
+    "type" : "record",
+    "name" : "admin_show_jobs_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name" : "job_id",
+            "type" : 
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name" : "status",
+            "type" :  
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name" : "endpoint_name",
+            "type" :  
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name" : "time_received",
+            "type" :  
+            {
+                "type": "array",
+                "items": "long"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name" : "auth_id",
+            "type" :  
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name" : "source_ip",
+            "type" : {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name" : "user_data",
+            "type" :  
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+                {
+            "name" : "flags",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "",
+            "value" : { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "job_tag" :
+                    {
+                        "doc":  "The job tag specified by the user or if unspecified by user, an internally generated unique identifier for the job across clusters.",
+                        "value": {}
+                    }
+                }
+            }
+        }
+    ]
+}
+

@@ -1,0 +1,153 @@
+{
+    "endpoint": "/show/tablemonitors",
+    "type": "record", 
+    "name": "show_table_monitors_response", 
+    "doc": "Returns detailed information about existing table monitors.",
+    "fields": [
+        {
+            "name": "monitor_ids",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of monitor IDs.",
+            "value": {}
+        },
+        {
+            "name": "table_names",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of source tables being monitored for the respective @{output monitor_ids}.",
+            "value": {}
+        },
+        {
+            "name": "events",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of notification events for the respective @{output monitor_ids}.",
+            "value": {}
+        },
+        {
+            "name": "increasing_columns",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of columns used on the respective tables in @{output table_names} that will increase for new records.",
+            "value": {}
+        },
+        {
+            "name": "filter_expressions",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of filter expressions used on the respective tables in @{output table_names} to limit records for notifications.",
+            "value": {}
+        },
+        {
+            "name": "datasink_names",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of datasink names for the respective @{output monitor_ids} if one is defined.",
+            "value": {}
+        },
+        {
+            "name": "additional_info",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Additional information about the respective monitors in @{output monitor_ids}.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "@INNER_STRUCTURE":
+                    {
+                        "doc": "",
+                        "value":
+                        {
+                            "default": {},
+                            "valid_keys":
+                            {
+                                "monitor_type":
+                                {
+                                    "doc": "Notification type for the respective @{output monitor_ids} and @{output table_names}.",
+                                    "value": 
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "type_schema":
+                                {
+                                    "doc": "Notification type schemas for the respective @{output monitor_ids} and @{output table_names}.",
+                                    "value": 
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "materialized_view_for_increasing_column":
+                                {
+                                    "doc": "Materialized view created for the @{output increasing_columns}.",
+                                    "value": {}
+                                },
+                                "materialized_view_for_filter":
+                                {
+                                    "doc": "Materialized views created for the @{output filter_expressions}.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "references":
+                                {
+                                    "doc": "Reference count on the respective @{output monitor_ids}.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "datasink_json":
+                                {
+                                    "doc": "Datasink info in JSON format for the respective @{output monitor_ids} if one is defined.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

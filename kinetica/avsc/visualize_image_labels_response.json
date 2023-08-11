@@ -1,0 +1,44 @@
+{
+    "endpoint" : "/visualize/image/labels",
+    "type" : "record",
+    "name" : "visualize_image_labels_response",
+    "doc"  : "",
+    "fields" : [
+        {
+            "name" : "width",
+            "type" : "double",
+            "doc"  : "Value of @{input width}.",
+            "value": {}
+        },
+        {
+            "name" : "height",
+            "type" : "double",
+            "doc"  : "Value of @{input height}.",
+            "value": {}
+        },
+        {
+            "name" : "bg_color",
+            "type" : "long",
+            "doc"  : "Background color of the output image, which is always 0 (transparent).",
+            "value": {}
+        },
+        {
+            "name" : "image_data",
+            "type" : "bytes",
+            "doc"  : "Generated image data.",
+            "value": {
+                "managed": true
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

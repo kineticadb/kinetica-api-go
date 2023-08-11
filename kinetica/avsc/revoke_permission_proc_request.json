@@ -1,0 +1,54 @@
+{
+    "endpoint": "/revoke/permission/proc",
+    "type": "record",
+    "name": "revoke_permission_proc_request",
+    "desc_name": "Revoke Proc Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Revoke a proc-level permission from a user or role",
+    "doc": "Revokes a proc-level permission from a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role from which the permission will be revoked. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to revoke from the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "proc_execute" :
+                    {
+                        "doc" : "Execute access to the proc.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to which the permission grants access. Must be an existing proc, or an empty string if the permission grants access to all procs.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

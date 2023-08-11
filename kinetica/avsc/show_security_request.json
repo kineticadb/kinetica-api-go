@@ -1,0 +1,35 @@
+{
+    "endpoint": "/show/security",
+    "type": "record",
+    "name": "show_security_request",
+    "desc_name": "Show Security",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show security information relating to users and/or roles.",
+    "doc": "Shows security information relating to users and/or roles. If the caller is not a system administrator, only information relating to the caller and their roles is returned.",
+    "fields": [
+        {
+            "name": "names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A list of names of users and/or roles about which security information is requested. If none are provided, information about all users and roles will be returned.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

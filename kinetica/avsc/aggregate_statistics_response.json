@@ -1,0 +1,27 @@
+{
+    "endpoint": "/aggregate/statistics", 
+    "type": "record", 
+    "name": "aggregate_statistics_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "stats", 
+            "type": {
+                "type": "map", 
+                "values": "double"
+            }, 
+            "doc": "(statistic name, double value) pairs of the requested statistics, including the total count by default.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

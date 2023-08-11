@@ -1,0 +1,88 @@
+{
+    "endpoint": "/download/files", 
+    "type": "record", 
+    "name": "download_files_request", 
+    "desc_name": "Download Files",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Download one or more files from KiFS",
+    "doc": "Downloads one or more files from {KiFS}@{link /tools/kifs/}.",
+    "fields":
+    [
+        {
+            "name": "file_names",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "An array of the file names to download from KiFS. The full path must be provided.",
+            "value" : {}
+        },
+        {
+            "name": "read_offsets",
+            "type":
+            {
+                "type":"array",
+                "items":"long"
+            },
+            "doc": "An array of starting byte offsets from which to read each
+respective file in @{input file_names}. Must either be empty or the same length
+as @{input file_names}. If empty, files are downloaded in their entirety. If not
+empty, @{input read_lengths} must also not be empty.",
+            "value" : {}
+        },
+        {
+            "name": "read_lengths",
+            "type":
+            {
+                "type":"array",
+                "items":"long"
+            },
+            "doc": "Array of number of bytes to read from each respective file
+in @{input file_names}. Must either be empty or the same length as
+@{input file_names}. If empty, files are downloaded in their entirety. If not
+empty, @{input read_offsets} must also not be empty.",
+            "value" : {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                   "file_encoding" :
+                    {
+                        "doc" : "Encoding to be applied to the output file data. When using JSON serialization it is recommended to specify this as {base64}@{choice of input.key options.file_encoding}.",
+                        "value" : 
+                        {
+                            "default" : "none",
+                            "valid_choices" :
+                            {
+                                "base64" :
+                                {
+                                    "doc" : "Apply base64 encoding to the output file data.",
+                                    "value" : {}
+                                },
+                                "none" :
+                                {
+                                    "doc" : "Do not apply any encoding to the output file data.",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    ]
+}

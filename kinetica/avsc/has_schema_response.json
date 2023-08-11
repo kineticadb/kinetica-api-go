@@ -1,0 +1,47 @@
+{
+    "endpoint": "/has/schema", 
+    "type": "record", 
+    "name": "has_schema_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "schema_name", 
+            "type": "string",
+            "doc": "Value of @{input schema_name}", 
+            "value": {}
+        },
+        {
+            "name": "schema_exists", 
+            "type": "boolean",
+            "doc": "Indicates whether the schema exists or not.", 
+            "value": 
+            {
+                "valid_choices" :
+                {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "type" : "boolean",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "type" : "boolean",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

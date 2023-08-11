@@ -1,0 +1,125 @@
+{
+    "endpoint": "/alter/resourcegroup",
+    "type": "record",
+    "name": "alter_resource_group_request",
+    "desc_name": "Alter Resource Group",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter an existing resource group",
+    "doc": "Alters the properties of an exisiting resource group to facilitate resource management.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the group to be altered. Must be an existing resource group name.",
+            "value": {}
+        },
+        {
+            "name": "tier_attributes",
+            "type":
+            {
+                "type": "map",
+                "values":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Optional map containing tier names and their respective attribute group limits.  The only valid attribute limit that can be set is max_memory (in bytes) for the VRAM & RAM tiers.
+
+For instance, to set max VRAM capacity to 1GB and max RAM capacity to 10GB, use:  {'VRAM':{'max_memory':'1000000000'}, 'RAM':{'max_memory':'10000000000'}}",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "max_memory" :
+                    {
+                        "doc"  : "Maximum amount of memory usable in the given tier at one time for this group.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "ranking",
+            "type": "string",
+            "doc": "If the resource group ranking is to be updated, this indicates the relative ranking among existing resource groups where this resource group will be moved; leave blank if not changing the ranking.  When using {before}@{choice of input ranking} or {after}@{choice of input ranking}, specify which resource group this one will be inserted before or after in @{input adjoining_resource_group}.",
+            "value" :
+            {
+                "default": "",
+                "valid_choices":
+                {
+                    "":  { "doc": "", "value": {} },
+                    "first":  { "doc": "", "value": {} },
+                    "last":   { "doc": "", "value": {} },
+                    "before": { "doc": "", "value": {} },
+                    "after":  { "doc": "", "value": {} }
+                }
+            }
+        },
+        {
+            "name": "adjoining_resource_group",
+            "type": "string",
+            "doc": "If @{input ranking} is {before}@{choice of input ranking} or {after}@{choice of input ranking}, this field indicates the resource group before or after which the current group will be placed; otherwise, leave blank.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "max_cpu_concurrency" :
+                    {
+                        "doc" : "Maximum number of simultaneous threads that will be used to execute a request for this group.",
+                        "value" : {"min" : "4"}
+                    },
+                    "max_scheduling_priority" :
+                    {
+                        "doc" : "Maximum priority of a scheduled task for this group.",
+                        "value": {"min" : "1", "max" : "100" }
+                    },
+                    "max_tier_priority" :
+                    {
+                        "doc" : "Maximum priority of a tiered object for this group.",
+                        "value": {"min" : "1", "max" : "10" }
+                    },
+                    "is_default_group" :
+                    {
+                        "type" : "boolean",
+                        "doc" : "If {true}@{choice of input.key options.is_default_group}, this request applies to the global default resource group. It is an error for this field to be {true}@{choice of input.key options.is_default_group} when the @{input name} field is also populated.",
+                        "value":
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

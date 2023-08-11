@@ -1,0 +1,24 @@
+{
+    "endpoint": "/drop/schema",
+    "type": "record",
+    "name": "drop_schema_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "schema_name",
+            "type": "string",
+            "doc": "Value of @{input schema_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

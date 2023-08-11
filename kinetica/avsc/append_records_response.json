@@ -1,0 +1,25 @@
+{
+    "endpoint": "/append/records",
+    "type": "record",
+    "name": "append_records_response",
+    "doc": "",
+    "fields": 
+    [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

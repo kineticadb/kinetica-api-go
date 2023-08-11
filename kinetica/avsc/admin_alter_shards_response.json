@@ -1,0 +1,24 @@
+{
+    "endpoint": "/admin/alter/shards",
+    "type" : "record", 
+    "name" : "admin_alter_shards_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name" : "version",
+            "type" : "long",
+            "doc": "",
+            "value": { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

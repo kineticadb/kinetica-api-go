@@ -1,0 +1,43 @@
+{
+    "endpoint": "/reserve/resource", 
+    "type": "record", 
+    "name": "reserve_resource_request", 
+    "desc_name": "Reserve resource request",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Request to reserve a resource (e.g. memory) on a gpudb node",
+    "generate" : "NO_DOCS",
+    "doc": "Request for a component reserve a resource on a gpudb node. Currently only memory is supported",
+    "fields": 
+    [
+        {
+            "name": "component",
+            "type": "string",
+            "doc": "Component requesting a resource reservation e.g. graph0. This may be a new reservation or change from a previous reservation.",
+            "value": {}
+        },
+        {
+            "name": "bytes_requested",
+            "type": "long",
+            "doc": "Absolute number of bytes requested for the reservation.",
+            "value" : {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                }
+            }
+        }
+    ]
+}

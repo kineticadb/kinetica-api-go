@@ -1,0 +1,45 @@
+{
+    "endpoint": "/clear/statistics",
+    "type": "record",
+    "name": "clear_statistics_request",
+    "desc_name": "Clear Statistics",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Clears statistics for column(s) in a table.",
+    "doc": "Clears statistics (cardinality, mean value, etc.) for a column in a specified table.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of a table, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}. Must be an existing table.",
+            "value":
+            {
+                "is_input_table_name": true,
+                "default": ""
+            }
+        },
+        {
+            "name": "column_name",
+            "type": "string",
+            "doc": "Name of the column in @{input table_name} for which to clear statistics. The column must be from an existing table. An empty string clears statistics for all columns in the table.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+       }
+    ]
+}

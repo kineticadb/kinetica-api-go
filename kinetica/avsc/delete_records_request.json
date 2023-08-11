@@ -1,0 +1,92 @@
+{
+    "endpoint": "/delete/records",
+    "type": "record",
+    "name": "delete_records_request",
+    "desc_name": "Delete Records",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Delete matching records from a dataset",
+    "doc": "Deletes record(s) matching the provided criteria from the given table. The record selection criteria can either be one or more  @{input expressions} (matching multiple records), a single record identified by {record_id}@{key of input options} options, or all records when using {delete_all_records}@{key of input options}.  Note that the three selection criteria are mutually exclusive.  This operation cannot be run on a view.  The operation is synchronous meaning that a response will not be available until the request is completely processed and all the matching records are deleted.",
+
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table from which to delete records, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}. Must contain the name of an existing table; not applicable to views.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "expressions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A list of the actual predicates, one for each select; format should follow the guidelines provided {here}@{link /concepts/expressions/}. Specifying one or more @{input expressions} is mutually exclusive to specifying {record_id}@{key of input options} in the @{input options}.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "global_expression":
+                    {
+                        "doc": "An optional global expression to reduce the search space of the @{input expressions}.",
+                        "value": { "default" : "" }
+                    },
+                    "record_id":
+                    {
+                        "doc": "A record ID identifying a single record, obtained at the time of {insertion of the record}@{endpoint /insert/records} or by calling @{endpoint /get/records/fromcollection} with the *return_record_ids* option. This option cannot be used to delete records from {replicated}@{link /concepts/tables/#replication} tables.",
+                        "value": {}
+                    },
+                    "delete_all_records":
+                     {
+                        "doc": "If set to {true}@{choice of input.key options.delete_all_records}, all records in the table will be deleted. If set to {false}@{choice of input.key options.delete_all_records}, then the option is effectively ignored.",
+                        "value":
+                         {
+                            "valid_choices":
+                            {
+                                "true":
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false":
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                   "view_name" :
+                   {
+                       "doc": "<DEVELOPER>",
+                       "value":  { "internal_option": true }
+                   },
+                   "internal_security_token" :
+                   {
+                       "doc" : "<DEVELOPER>",
+                       "value" :
+                       {
+                           "internal_option": true
+                       }
+                   }
+                }
+            }
+        }
+    ]
+}

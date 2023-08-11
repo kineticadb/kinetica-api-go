@@ -1,0 +1,18 @@
+{
+    "endpoint": "/upload/files", 
+    "type": "record", 
+    "name": "upload_files_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

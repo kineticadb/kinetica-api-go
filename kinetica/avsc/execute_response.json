@@ -1,0 +1,14 @@
+{
+    "endpoint": "/execute", 
+    "type": "record", 
+    "name": "execute_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "status", 
+            "type": "string", 
+            "doc": "", 
+            "value": {}
+        }
+    ]
+}

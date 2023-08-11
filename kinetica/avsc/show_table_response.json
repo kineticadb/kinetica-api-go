@@ -1,0 +1,588 @@
+{
+    "endpoint": "/show/table",
+    "type": "record",
+    "name": "show_table_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Value of @{input table_name}.",
+            "value": {}
+        },
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "If @{input table_name} is a table or view, then the single element of the array is @{input table_name}. If @{input table_name} is a schema and {show_children}@{key of input options} is set to {true}@{choice of input.key options.show_children}, then this array is populated with the names of all tables and views in the given schema; if {show_children}@{key of input options} is {false}@{choice of input.key options.show_children} then this array will only include the schema name itself. If @{input table_name} is an empty string, then the array contains the names of all tables in the user's default schema.",
+            "value": {}
+        },
+        {
+            "name": "table_descriptions",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "List of descriptions for the respective tables in @{output table_names}.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "COLLECTION":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "JOIN":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "LOGICAL_EXTERNAL_TABLE":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "LOGICAL_VIEW":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "MATERIALIZED_EXTERNAL_TABLE":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "MATERIALIZED_VIEW":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "MATERIALIZED_VIEW_MEMBER":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "MATERIALIZED_VIEW_UNDER_CONSTRUCTION":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "REPLICATED":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "RESULT_TABLE":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "SCHEMA":
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "VIEW" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "type_ids",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Type ids of the respective tables in @{output table_names}.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "type_id",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "type_schemas",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Type schemas of the respective tables in @{output table_names}.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "type_schema",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "type_labels",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Type labels of the respective tables in @{output table_names}.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "label",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "properties",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values":
+                    {
+                        "type": "array",
+                        "items": "string"
+                    }
+                }
+            },
+            "doc": "Property maps of the respective tables in @{output table_names}.",
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "properties",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "additional_info",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Additional information about the respective tables in @{output table_names}.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "@INNER_STRUCTURE":
+                    {
+                        "doc": "",
+                        "value":
+                        {
+                            "default": {},
+                            "valid_keys" :
+                            {
+                                "request_avro_type":
+                                {
+                                    "doc" : "Method by which this table was created.",
+                                    "value":
+                                    {
+                                        "valid_choices" :
+                                        { 
+                                            "create_table":
+                                            {
+                                                "doc" : "",
+                                                "value" : {}
+                                            },
+                                            "create_projection":
+                                            {
+                                                "doc" : "",
+                                                "value" : {}
+                                            },
+                                            "create_union":
+                                            {
+                                                "doc" : "",
+                                                "value" : {}
+                                            }
+                                        }
+                                    }
+                                },
+
+                                "request_avro_json" :
+                                {
+                                    "doc" : "The JSON representation of request creating this table.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "protected" :
+                                {
+                                    "doc"  : "No longer used.  Indicated whether the respective table was protected or not.",
+                                    "value" :
+                                    {
+                                        "valid_choices" :
+                                        {
+                                            "true" :
+                                            {
+                                                "doc" : "",
+                                                "value" : {}
+                                            },
+                                            "false" :
+                                            {
+                                                "doc" : "",
+                                                "value" : {}
+                                            }
+                                        }
+                                    }
+                                },
+                                "record_bytes" :
+                                {
+                                    "doc" : "The number of in-memory bytes per record which is the sum of the byte sizes of all columns with property  'data'.",
+                                    "value" : {}
+                                },
+                                "collection_names" :
+                                {
+                                    "doc" : "[DEPRECATED--use schema_name instead]  This will now contain the name of the schema for the table.  There can only be one schema for a table.",
+                                    "value" : {}
+                                },
+                                "schema_name" :
+                                {
+                                    "doc" : "The name of the schema for the table.  There can only be one schema for a table.",
+                                    "value" : {}
+                                },
+                                "table_ttl" :
+                                {
+                                    "doc" : "The value of the {time-to-live}@{link /concepts/ttl/} setting.  Not present for schemas.",
+                                    "value" : {}
+                                },
+                                "remaining_table_ttl" :
+                                {
+                                    "doc" : "The remaining {time-to-live}@{link /concepts/ttl/}, in minutes, before the respective table expires (-1 if it will never expire).  Not present for schemas.",
+                                    "value" : {}
+                                },
+                                "memory_ttl" :
+                                {
+                                    "doc" : "No longer used.",
+                                    "value" :
+                                    {
+                                       "internal_option": true
+                                    }
+                                },
+                                "foreign_keys" :
+                                {
+                                    "doc" : "Semicolon-separated list of {foreign keys}@{link /concepts/tables/#foreign-key}, of the format 'source_column references target_table(primary_key_column)'. Not present for schemas.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "foreign_shard_key" :
+                                {
+                                    "doc" : "Foreign shard key description of the format: <fk_foreign_key> references <pk_column_name> from <pk_table_name>(<pk_primary_key>). Not present for schemas.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "partition_type" :
+                                {
+                                    "doc" : "{Partitioning}@{link /concepts/tables/#partitioning} scheme used for this table",
+                                    "value":
+                                    {
+                                        "default": "NONE",
+                                        "valid_choices" :
+                                        { 
+                                            "RANGE":
+                                            {
+                                                "doc" : "Using {range partitioning}@{link /concepts/tables/#partitioning-by-range}",
+                                                "value" : {}
+                                            },
+                                            "INTERVAL":
+                                            {
+                                                "doc" : "Using {interval partitioning}@{link /concepts/tables/#partitioning-by-interval}",
+                                                "value" : {}
+                                            },
+                                            "LIST":
+                                            {
+                                                "doc" : "Using {manual list partitioning}@{link /concepts/tables/#partitioning-by-list-manual}",
+                                                "value" : {}
+                                            },
+                                            "HASH" :
+                                            {
+                                                "doc" : "Using {hash partitioning}@{link /concepts/tables/#partitioning-by-hash}.",
+                                                "value" : {}
+                                            },
+                                            "SERIES" :
+                                            {
+                                                "doc" : "Using {series partitioning}@{link /concepts/tables/#partitioning-by-series}.",
+                                                "value" : {}
+                                            },
+                                            "NONE":
+                                            {
+                                                "doc" : "Using no partitioning",
+                                                "value" : {}
+                                            }
+                                        }
+                                    }
+                                },
+                                "partition_keys" :
+                                {
+                                    "doc" : "Comma-separated list of partition keys",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "partition_definitions" :
+                                {
+                                    "doc" : "Comma-separated list of partition definitions, whose format depends on the partition_type.  See {partitioning}@{link /concepts/tables/#partitioning} documentation for details.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "partition_definitions_json" :
+                                {
+                                    "doc" : "JSON formatted partition definitions of the form: { <partition_name> : <partition_definition> ',' ... }",
+                                    "value":
+                                    {
+                                        "default": "",
+                                        "internal_option": true
+                                    }
+                                },
+                                "is_automatic_partition" :
+                                {
+                                    "doc" : "True if partitions will be created for LIST VALUES which don't fall into existing partitions",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "attribute_indexes" :
+                                {
+                                    "doc" : "Semicolon-separated list of columns that have {indexes}@{link /concepts/indexes/#column-index}. Not present for schemas.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "compressed_columns" :
+                                {
+                                    "doc" : "No longer supported.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "column_info" :
+                                {
+                                    "doc" : "JSON-encoded string representing a map of column name to information including memory usage if if the {get_column_info}@{key of input options} option is {true}@{choice of input.key options.get_sizes}.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "global_access_mode" :
+                                {
+                                    "doc"  : "Returns the global access mode (i.e. lock status) for the table.",
+                                    "value" :
+                                    {
+                                        "valid_choices" :
+                                        {
+                                            "no_access":
+                                            {
+                                                "doc": "No read/write operations are allowed on this table.",
+                                                "value": {}
+                                            },
+                                            "read_only":
+                                            {
+                                                "doc": "Only read operations are allowed on this table.",
+                                                "value": {}
+                                            },
+                                            "write_only":
+                                            {
+                                                "doc": "Only write operations are allowed on this table.",
+                                                "value": {}
+                                            },
+                                            "read_write":
+                                            {
+                                                "doc": "All read/write operations are allowed on this table.",
+                                                "value": {}
+                                            }
+                                        }
+                                    }
+                                },
+                                "view_table_name" :
+                                {
+                                    "doc" : "For materialized view the name of the view this member table is part of - if same as the table_name then this is the root of the view",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "is_view_persisted" :
+                                {
+                                    "doc" : "True if the view named view_table_name is persisted - reported for each view member.  Means method of recreating this member is saved - not the members data",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "is_dirty" :
+                                {
+                                    "doc" : "True if some input table of the materialized view that affects this member table has been modified since the last refresh",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "refresh_method" :
+                                {
+                                    "doc" : "For materialized view current refresh_method - one of manual, periodic, on_change",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "refresh_start_time" :
+                                {
+                                    "doc" : "For materialized view with periodic refresh_method the current intial datetime string that periodic refreshes began",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "refresh_stop_time" :
+                                {
+                                    "doc" : "Time at which the periodic view refresh stops.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "refresh_period" :
+                                {
+                                    "doc" : "For materialized view with periodic refresh_method the current refresh period in seconds",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "last_refresh_time" :
+                                {
+                                    "doc" : "For materialized view the a datatime string indicating the last time the view was refreshed",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "next_refresh_time" :
+                                {
+                                    "doc" : "For materialized view with periodic refresh_method a datetime string indicating the next time the view is to be refreshed",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "user_chunk_size" :
+                                {
+                                    "doc" : "User-specified number of records per chunk, if provided at table creation time",
+                                    "value":
+                                    {
+                                        "default":""
+                                    }
+                                },
+                                "owner_resource_group" :
+                                {
+                                    "doc" : "Name of the owner resource group",
+                                    "value":
+                                    {
+                                        "default":""
+                                    }
+                                },
+                                "alternate_shard_keys" :
+                                {
+                                    "doc" : "Semicolon-separated list of shard keys that were equated in joins (applicable for join tables).",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                },
+                                "datasource_subscriptions" :
+                                {
+                                    "doc" : "Semicolon-separated list of datasource names the table has subscribed to.",
+                                    "value":
+                                    {
+                                        "default": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+          },
+        {
+            "name": "sizes",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "If {get_sizes}@{key of input options} is {true}@{choice of input.key options.get_sizes}, an array containing the number of records of each corresponding table in @{output table_names}.  Otherwise, an empty array.",
+            "value": {}
+        },
+        {
+            "name": "full_sizes",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "doc": "If {get_sizes}@{key of input options} is {true}@{choice of input.key options.get_sizes}, an array containing the number of records of each corresponding table in @{output table_names} (same values as @{output sizes}).  Otherwise, an empty array.",
+            "value": {}
+        },
+        {
+            "name": "join_sizes",
+            "type": {
+                "type": "array",
+                "items": "double"
+            },
+            "doc": "If {get_sizes}@{key of input options} is {true}@{choice of input.key options.get_sizes}, an array containing the number of unfiltered records in the cross product of the sub-tables of each corresponding join-table in @{output table_names}. For simple tables, this number will be the same as @{output sizes}.  For join-tables, this value gives the number of joined-table rows that must be processed by any aggregate functions operating on the table.  Otherwise, (if {get_sizes}@{key of input options} is {false}@{choice of input.key options.get_sizes}), an empty array.",
+            "value": {}
+        },
+        {
+            "name": "total_size",
+            "type": "long",
+            "doc": "If {get_sizes}@{key of input options} is {true}@{choice of input.key options.get_sizes}, the sum of the elements of @{output sizes}.  Otherwise, -1.",
+            "value": {}
+        },
+        {
+            "name": "total_full_size",
+            "type": "long",
+            "doc": "If {get_sizes}@{key of input options} is {true}@{choice of input.key options.get_sizes}, the sum of the elements of @{output full_sizes} (same value as @{output total_size}).  Otherwise, -1.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

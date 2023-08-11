@@ -1,0 +1,62 @@
+{
+    "endpoint": "/drop/schema",
+    "type": "record",
+    "name": "drop_schema_request",
+    "desc_name": "Drop Schema",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Drop an existing SQL-style schema.",
+    "doc": "Drops an existing SQL-style {schema}@{link /concepts/schemas/}, specified in @{input schema_name}.",
+    "fields": 
+    [
+        {
+            "name": "schema_name",
+            "type": "string",
+            "doc": "Name of the schema to be dropped. Must be an existing schema.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "no_error_if_not_exists" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.no_error_if_not_exists} and if the schema specified in @{input schema_name} does not exist, no error is returned. If {false}@{choice of input.key options.no_error_if_not_exists} and if the schema specified in @{input schema_name} does not exist, then an error is returned.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "cascade":
+                    {
+                        "doc": "If {true}@{choice of input.key options.cascade}, all tables within the schema will be dropped. If {false}@{choice of input.key options.cascade}, the schema will be dropped only if empty.",
+                        "value": 
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,63 @@
+{
+    "endpoint": "/grant/permission/system",
+    "type": "record",
+    "name": "grant_permission_system_request",
+    "desc_name": "Grant System Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Grant a system-level permission to a user or role",
+    "doc": "Grants a system-level permission to a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role to which the permission will be granted. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to grant to the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "system_admin" :
+                    {
+                        "doc" : "Full access to all data and system functions.",
+                        "value" : {}
+                    },
+                    "system_user_admin" :
+                    {
+                        "doc": "Access to administer users and roles that do not have system_admin permission.",
+                        "value" : {}
+                    },
+                    "system_write" :
+                    {
+                        "doc" : "Read and write access to all tables.",
+                        "value" : {}
+                    },
+                    "system_read" :
+                    {
+                        "doc" : "Read-only access to all tables.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

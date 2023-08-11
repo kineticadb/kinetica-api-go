@@ -1,0 +1,100 @@
+{
+    "endpoint": "/grant/permission/table",
+    "type": "record",
+    "name": "grant_permission_table_request",
+    "desc_name": "Grant Table Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Grant a table-level permission to a user or role",
+    "doc": "Grants a table-level permission to a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role to which the permission will be granted. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to grant to the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "table_admin" :
+                    {
+                        "doc" : "Full read/write and administrative access to the table.",
+                        "value" : {}
+                    },
+                    "table_insert" :
+                    {
+                        "doc" : "Insert access to the table.",
+                        "value" : {}
+                    },
+                    "table_update" :
+                    {
+                        "doc" : "Update access to the table.",
+                        "value" : {}
+                    },
+                    "table_delete" :
+                    {
+                        "doc" : "Delete access to the table.",
+                        "value" : {}
+                    },
+                    "table_read" :
+                    {
+                        "doc" : "Read access to the table.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to which the permission grants access, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table, view, or schema. If a schema, the permission also applies to tables and views in the schema.",
+            "value": {}
+        },
+        {
+            "name": "filter_expression",
+            "type": "string",
+            "doc": "Optional filter expression to apply to this grant.  Only rows that match the filter will be affected.",
+            "value": { "default": "" }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "columns" :
+                    {
+                        "doc" : "Apply security to these columns, comma-separated",
+                        "value" :
+                        {
+                            "default" : ""
+                        }
+                    },
+                    "sql_where" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+
+                }
+            }
+        }
+    ]
+}

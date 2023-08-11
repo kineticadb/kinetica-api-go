@@ -1,0 +1,65 @@
+{
+    "endpoint": "/admin/alter/jobs",
+    "type" : "record",
+    "name" : "admin_alter_jobs_request",
+    "desc_name": "Administration: Alter Job",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter a job",
+    "doc": "Perform the requested action on a list of one or more job(s). Based
+on the type of job and the current state of execution, the action may not be
+successfully executed. The final result of the attempted actions for each
+specified job is returned in the status array of the response. See
+{Job Manager}@{link /admin/job_manager/} for more information.",
+    "fields" : [
+        {
+            "name" : "job_ids",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "long"
+            },
+            "doc"  : "Jobs to be modified.",
+            "value" : { }
+        },
+        {
+            "name" : "action",
+            "type" : "string",
+            "doc"  : "Action to be performed on the jobs specified by job_ids.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "cancel":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "job_tag" :
+                    {
+                        "doc" : "Job tag returned in call to create the job",
+                        "value" : {}
+                    }
+
+                }
+            }
+        }
+    ]
+}

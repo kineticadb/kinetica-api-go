@@ -1,0 +1,72 @@
+{
+    "endpoint": "/admin/show/jobs",
+    "type" : "record",
+    "name" : "admin_show_jobs_request",
+    "desc_name": "Administration: Show Jobs",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show the current jobs in GPUdb",
+    "doc": "Get a list of the current jobs in GPUdb.",
+    "fields" : [
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "show_async_jobs" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.show_async_jobs}, then the completed async jobs are also included in the response. By default, once the async jobs are completed they are no longer included in the jobs list.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true":
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "show_details" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "valid_choices" :
+                            {
+                                "true":
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+

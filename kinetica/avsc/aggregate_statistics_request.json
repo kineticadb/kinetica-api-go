@@ -1,0 +1,209 @@
+{
+    "endpoint": "/aggregate/statistics",
+    "type": "record",
+    "name": "aggregate_statistics_request",
+    "desc_name": "Aggregate Statistics",
+    "short_doc": "Calculate statistics of a dataset",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "doc": "Calculates the requested statistics of the given column(s) in a
+given table.
+
+The available statistics are:
+  {count}@{choice of input stats} (number of total objects),
+  {mean}@{choice of input stats},
+  {stdv}@{choice of input stats} (standard deviation),
+  {variance}@{choice of input stats},
+  {skew}@{choice of input stats},
+  {kurtosis}@{choice of input stats},
+  {sum}@{choice of input stats},
+  {min}@{choice of input stats},
+  {max}@{choice of input stats},
+  {weighted_average}@{choice of input stats},
+  {cardinality}@{choice of input stats} (unique count),
+  {estimated_cardinality}@{choice of input stats},
+  {percentile}@{choice of input stats}, and
+  {percentile_rank}@{choice of input stats}.
+
+Estimated cardinality is calculated by using the hyperloglog approximation
+technique.
+
+Percentiles and percentile ranks are approximate and are calculated using the
+t-digest algorithm. They must include the desired
+{percentile}@{choice of input stats}/{percentile_rank}@{choice of input stats}.
+To compute multiple percentiles each value must be specified separately
+(i.e. 'percentile(75.0),percentile(99.0),percentile_rank(1234.56),percentile_rank(-5)').
+
+A second, comma-separated value can be added to the
+{percentile}@{choice of input stats} statistic to calculate percentile
+resolution, e.g., a 50th percentile with 200 resolution would be
+'percentile(50,200)'.
+
+The weighted average statistic requires a weight column to be specified in
+{weight_column_name}@{key of input options}.  The weighted average is then
+defined as the sum of the products of @{input column_name} times the
+{weight_column_name}@{key of input options} values divided by the sum of the
+{weight_column_name}@{key of input options} values.
+
+Additional columns can be used in the calculation of statistics via
+{additional_column_names}@{key of input options}.  Values in these columns will
+be included in the overall aggregate calculation--individual aggregates will not
+be calculated per additional column.  For instance, requesting the
+{count}@{choice of input stats} & {mean}@{choice of input stats} of
+@{input column_name} x and {additional_column_names}@{key of input options}
+y & z, where x holds the numbers 1-10, y holds 11-20, and z holds 21-30, would
+return the total number of x, y, & z values (30), and the single average value
+across all x, y, & z values (15.5).
+
+The response includes a list of key/value pairs of each statistic requested and
+its corresponding value.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table on which the statistics operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "column_name",
+            "type": "string",
+            "doc": "Name of the primary column for which the statistics are to be calculated.",
+            "value": {}
+        },
+        {
+            "name": "stats",
+            "type": "string",
+            "doc": "Comma separated list of the statistics to calculate, e.g. \"sum,mean\".",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "count" :
+                    {
+                        "doc": "Number of objects (independent of the given column(s)).",
+                        "value" : {}
+                    },
+                    "mean" :
+                    {
+                        "doc": "Arithmetic mean (average), equivalent to sum/count.",
+                        "value" : {}
+                    },
+                    "stdv" :
+                    {
+                        "doc": "Sample standard deviation (denominator is count-1).",
+                        "value" : {}
+                    },
+                    "variance" :
+                    {
+                        "doc": "Unbiased sample variance (denominator is count-1).",
+                        "value" : {}
+                    },
+                    "skew" :
+                    {
+                        "doc": "Skewness (third standardized moment).",
+                        "value" : {}
+                    },
+                    "kurtosis" :
+                    {
+                        "doc": "Kurtosis (fourth standardized moment).",
+                        "value" : {}
+                    },
+                    "sum" :
+                    {
+                        "doc": "Sum of all values in the column(s).",
+                        "value" : {}
+                    },
+                    "min" :
+                    {
+                        "doc": "Minimum value of the column(s).",
+                        "value" : {}
+                    },
+                    "max" :
+                    {
+                        "doc": "Maximum value of the column(s).",
+                        "value" : {}
+                    },
+                    "weighted_average" :
+                    {
+                        "doc": "Weighted arithmetic mean (using the option {weight_column_name}@{key of input options} as the weighting column).",
+                        "value" : {}
+                    },
+                    "cardinality" :
+                    {
+                        "doc": "Number of unique values in the column(s).",
+                        "value" : {}
+                    },
+                    "estimated_cardinality" :
+                    {
+                        "doc": "Estimate (via hyperloglog technique) of the number of unique values in the column(s).",
+                        "value" : {}
+                    },
+                    "percentile" :
+                    {
+                        "doc": "Estimate (via t-digest) of the given percentile of the column(s) (percentile(50.0) will be an approximation of the median). Add a second, comma-separated value to calculate percentile resolution, e.g., 'percentile(75,150)'",
+                        "value" : {}
+                    },
+                    "percentile_rank" :
+                    {
+                        "doc": "Estimate (via t-digest) of the percentile rank of the given value in the column(s) (if the given value is the median of the column(s), percentile_rank(<median>) will return approximately 50.0).",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "additional_column_names" :
+                    {
+                        "doc"  : "A list of comma separated column names over which statistics can be accumulated along with the primary column.  All columns listed and @{input column_name} must be of the same type.  Must not include the column specified in @{input column_name} and no column can be listed twice.",
+                        "value" : {}
+                    },
+                    "weight_column_name" :
+                    {
+                        "doc"  : "Name of column used as weighting attribute for the weighted average statistic.",
+                        "value" : {}
+                    },
+                    "estimated_cardinality_method" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "hll_log2_num_streams" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "hll_accumulator_size" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

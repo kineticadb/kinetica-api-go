@@ -1,0 +1,93 @@
+{
+    "endpoint": "/insert/records/frompayload",
+    "type": "record",
+    "name": "insert_records_from_payload_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "type_id", 
+            "type": "string", 
+            "doc": "ID of the currently registered table structure {type}@{link /concepts/types/} for the target table",
+            "value": {}
+        },
+        {
+            "name": "type_definition",
+            "type": "string",
+            "doc": "A JSON string describing the columns of the target table",
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "type_schema",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "type_label",
+            "type": "string",
+            "doc": "The user-defined description associated with the target table's structure",
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "label",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "type_properties",
+            "type": {
+                "type": "map",
+                "values": {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "A mapping of each target table column name to an array of column properties associated with that column",
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "properties",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "count_inserted",
+            "type": "long",
+            "doc":  "Number of records inserted into the target table.",
+            "value": {}
+        },
+        {
+            "name": "count_skipped",
+            "type": "long", 
+            "doc":  "Number of records skipped, when not running in {abort}@{choice of input.key options.error_handling} error handling mode.", 
+            "value": {}
+        },
+        {
+            "name": "count_updated",
+            "doc":  "[Not yet implemented]  Number of records updated within the target table.",
+            "type": "long",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

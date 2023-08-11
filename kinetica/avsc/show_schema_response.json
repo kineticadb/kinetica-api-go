@@ -1,0 +1,62 @@
+{
+    "endpoint": "/show/schema",
+    "type": "record",
+    "name": "show_schema_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "schema_name",
+            "type": "string",
+            "doc": "Value of @{input schema_name}.",
+            "value": {}
+        },
+        {
+            "name": "schema_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A list of all schema names for which information is returned",
+            "value": {}
+        },
+        {
+            "name": "schema_tables",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "An array of arrays containing a list of tables in each of the respective @{output schema_names}.",
+            "value": {}
+        },
+        {
+            "name": "additional_info",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Additional information about the respective tables in @{output schema_names}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}
+

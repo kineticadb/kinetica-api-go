@@ -1,0 +1,26 @@
+{
+    "endpoint": "/delete/graph",
+    "name": "delete_graph_response",
+    "desc_name": "Delete Graph",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a successful deletion."
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

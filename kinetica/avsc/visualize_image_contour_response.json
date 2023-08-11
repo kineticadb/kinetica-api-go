@@ -1,0 +1,82 @@
+{
+    "endpoint" : "/visualize/image/contour",
+    "type" : "record",
+    "name" : "visualize_image_contour_response",
+    "doc"  : "The isolines are contained in the @{output image_data} field.",
+    "fields" : [
+        { 
+            "name" : "width",
+            "type" : "int",
+            "doc"  : "Width of the image as provided in @{input width}.",
+            "value": {}
+        },
+        { 
+            "name" : "height",
+            "type" : "int",
+            "doc"  : "Height of the image as provided in @{input height}.",
+            "value": {}
+        },
+        { 
+            "name" : "bg_color",
+            "type" : "long",
+            "doc"  : "Background color of the image as provided in {bg_color}@{key of input style_options}.",
+            "value": {}
+        },
+        { 
+            "name" : "image_data",
+            "type" : "bytes",
+            "doc"  : "Generated contour image data.",
+            "value": {
+                "managed": true
+            }
+        },
+        {
+            "name" : "grid_data",
+            "type" : "bytes",
+            "doc"  : "Grid used to build the contour.",
+            "value": {
+                "managed": true
+            }
+        },
+        {
+            "name" : "fill_n0",
+            "type" : "double",
+            "doc"  : "Density estimate.",
+            "value": {}
+        },
+        {
+            "name" : "fill_nn",
+            "type" : "double",
+            "doc"  : "Distribution estimate.",
+            "value": {}
+        },
+        {
+            "name" : "min_level",
+            "type" : "double",
+            "doc"  : "Lowest value in the grid.",
+            "value": {}
+        },
+        {
+            "name" : "max_level",
+            "type" : "double",
+            "doc"  : "Highest value in the grid.",
+            "value": {}
+        },
+        {
+            "name" : "samples_used",
+            "type" : "long",
+            "doc"  : "Total number of sample points used to compute the contour grid.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

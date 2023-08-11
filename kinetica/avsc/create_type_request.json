@@ -1,0 +1,263 @@
+{
+    "endpoint": "/create/type",
+    "type": "record",
+    "name": "create_type_request",
+    "desc_name": "Create Type",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a table record type",
+    "doc": "Creates a new type describing the layout of a table. The type definition is a JSON string describing the fields (i.e. columns) of the type. Each field consists of a name and a data type. Supported data types are: double, float, int, long, string, and bytes. In addition, one or more properties can be specified for each column which customize the memory usage and query availability of that column.  Note that some properties are mutually exclusive--i.e. they cannot be specified for any given column simultaneously.  One example of mutually exclusive properties are {data}@{map value of input properties} and {store_only}@{map value of input properties}.
+
+A single {primary key}@{link /concepts/tables/#primary-keys} and/or single {shard key}@{link /concepts/tables/#shard-keys} can be set across one or more columns. If a primary key is specified, then a uniqueness constraint is enforced, in that only a single object can exist with a given primary key column value (or set of values for the key columns, if using a composite primary key). When {inserting}@{endpoint /insert/records} data into a table with a primary key, depending on the parameters in the request, incoming objects with primary key values that match existing objects will either overwrite (i.e. update) the existing object or will be skipped and not added into the set.
+
+Example of a type definition with some of the parameters::
+
+\t{\"type\":\"record\",\n\t\"name\":\"point\",\n\t\"fields\":[{\"name\":\"msg_id\",\"type\":\"string\"},\n\t\t\t{\"name\":\"x\",\"type\":\"double\"},\n\t\t\t{\"name\":\"y\",\"type\":\"double\"},\n\t\t\t{\"name\":\"TIMESTAMP\",\"type\":\"double\"},\n\t\t\t{\"name\":\"source\",\"type\":\"string\"},\n\t\t\t{\"name\":\"group_id\",\"type\":\"string\"},\n\t\t\t{\"name\":\"OBJECT_ID\",\"type\":\"string\"}]\n\t}\n\nProperties::\n\n\t{\"group_id\":[\"store_only\"],\n\t\"msg_id\":[\"store_only\",\"text_search\"]\n\t}",
+    "fields":
+    [
+        {
+            "name": "type_definition",
+            "type": "string",
+            "doc": "a JSON string describing the columns of the type to be registered.",
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "type_schema",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "label",
+            "type": "string",
+            "doc": "A user-defined description string which can be used to differentiate between tables and types with otherwise identical schemas.",
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "label",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "properties",
+            "type":
+            {
+                "type": "map",
+                "values":
+                {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "Each key-value pair specifies the properties to use for a given column where the key is the column name.  All keys used must be relevant column names for the given table.  Specifying any property overrides the default properties for that column (which is based on the column's data type).",
+            "value":
+            {
+                "default": {},
+                "semantics" :
+                {
+                    "type": "properties",
+                    "dimensionality": 0
+                },
+                "valid_values" :
+                {
+                    "data" :
+                    {
+                        "doc"  : "Default property for all numeric and string type columns; makes the column available for GPU queries.",
+                        "value" : {}
+                    },
+                    "text_search" :
+                    {
+                        "doc"  : "Valid only for select 'string' columns. Enables full text search--see {Full Text Search}@{link /concepts/full_text_search/} for details and applicable string column types. Can be set independently of {data}@{map value of input properties} and {store_only}@{map value of input properties}.",
+                        "value" : {}
+                    },
+                    "store_only" :
+                    {
+                        "doc"  : "Persist the column value but do not make it available to queries (e.g. @{endpoint /filter})-i.e. it is mutually exclusive to the {data}@{map value of input properties} property. Any 'bytes' type column must have a {store_only}@{map value of input properties} property. This property reduces system memory usage.",
+                        "value" : {}
+                    },
+                    "disk_optimized" :
+                    {
+                        "doc"  : "Works in conjunction with the {data}@{map value of input properties} property for string columns. This property reduces system disk usage by disabling reverse string lookups. Queries like @{endpoint /filter}, @{endpoint /filter/bylist}, and @{endpoint /filter/byvalue} work as usual but @{endpoint /aggregate/unique} and @{endpoint /aggregate/groupby} are not allowed on columns with this property.",
+                        "value" : {}
+                    },
+                    "timestamp" :
+                    {
+                        "doc" : "Valid only for 'long' columns. Indicates that this field represents a timestamp and will be provided in milliseconds since the Unix epoch: 00:00:00 Jan 1 1970.  Dates represented by a timestamp must fall between the year 1000 and the year 2900.",
+                        "value" : {}
+                    },
+                    "ulong" :
+                    {
+                        "doc" : "Valid only for 'string' columns.  It represents an unsigned long integer data type. The string can only be interpreted as an unsigned long data type with minimum value of zero, and maximum value of 18446744073709551615.",
+                        "value" : {}
+                    },
+                    "uuid" :
+                    {
+                        "doc" : "Valid only for 'string' columns.  It represents an uuid data type. Internally, it is stored as a 128-bit integer.",
+                        "value" : {}
+                    },
+                    "decimal" :
+                    {
+                        "doc" : "Valid only for 'string' columns.  It represents a SQL type NUMERIC(19, 4) data type.  There can be up to 15 digits before the decimal point and up to four digits in the fractional part.  The value can be positive or negative (indicated by a minus sign at the beginning).  This property is mutually exclusive with the {text_search}@{map value of input properties} property.",
+                        "value" : {}
+                    },
+                    "date" :
+                    {
+                        "doc" : "Valid only for 'string' columns.  Indicates that this field represents a date and will be provided in the format 'YYYY-MM-DD'.  The allowable range is 1000-01-01 through 2900-01-01.  This property is mutually exclusive with the {text_search}@{map value of input properties} property.",
+                        "value" : {}
+                    },
+                    "time" :
+                    {
+                        "doc" : "Valid only for 'string' columns.  Indicates that this field represents a time-of-day and will be provided in the format 'HH:MM:SS.mmm'.  The allowable range is 00:00:00.000 through 23:59:59.999.  This property is mutually exclusive with the {text_search}@{map value of input properties} property.",
+                        "value" : {}
+                    },
+                    "datetime" :
+                    {
+                        "doc" : "Valid only for 'string' columns.  Indicates that this field represents a datetime and will be provided in the format 'YYYY-MM-DD HH:MM:SS.mmm'.  The allowable range is 1000-01-01 00:00:00.000 through 2900-01-01 23:59:59.999.  This property is mutually exclusive with the {text_search}@{map value of input properties} property.",
+                        "value" : {}
+                    },
+                    "char1" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 1 character.",
+                        "value" : {}
+                    },
+                    "char2" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 2 characters.",
+                        "value" : {}
+                    },
+                    "char4" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 4 characters.",
+                        "value" : {}
+                    },
+                    "char8" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 8 characters.",
+                        "value" : {}
+                    },
+                    "char16" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 16 characters.",
+                        "value" : {}
+                    },
+                    "char32" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 32 characters.",
+                        "value" : {}
+                    },
+                    "char64" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 64 characters.",
+                        "value" : {}
+                    },
+                    "char128" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 128 characters.",
+                        "value" : {}
+                    },
+                    "char256" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns. Strings with this property must be no longer than 256 characters.",
+                        "value" : {}
+                    },
+                    "int8" :
+                    {
+                        "doc" : "This property provides optimized memory and query performance for int columns. Ints with this property must be between -128 and +127 (inclusive)",
+                        "value" : {}
+                    },
+                    "int16" :
+                    {
+                        "doc" : "This property provides optimized memory and query performance for int columns. Ints with this property must be between -32768 and +32767 (inclusive)",
+                        "value" : {}
+                    },
+                    "ipv4" :
+                    {
+                        "doc" : "This property provides optimized memory, disk and query performance for string columns representing IPv4 addresses (i.e. 192.168.1.1). Strings with this property must be of the form: A.B.C.D where A, B, C and D are in the range of 0-255.",
+                        "value" : {}
+                    },
+                    "wkt" :
+                    {
+                        "doc" : "Valid only for 'string' and 'bytes' columns. Indicates that this field contains geospatial geometry objects in Well-Known Text (WKT) or Well-Known Binary (WKB) format.",
+                        "value" : {}
+                    },
+                    "primary_key" :
+                    {
+                        "doc" : "This property indicates that this column will be part of (or the entire) {primary key}@{link /concepts/tables/#primary-keys}.",
+                        "value" : {}
+                    },
+                    "shard_key" :
+                    {
+                        "doc" : "This property indicates that this column will be part of (or the entire) {shard key}@{link /concepts/tables/#shard-keys}.",
+                        "value" : {}
+                    },
+                    "nullable" :
+                    {
+                        "doc" : "This property indicates that this column is nullable.  However, setting this property is insufficient for making the column nullable.  The user must declare the type of the column as a union between its regular type and 'null' in the avro schema for the record type in @{input type_definition}.  For example, if a column is of type integer and is nullable, then the entry for the column in the avro schema must be: ['int', 'null'].
+
+The C++, C#, Java, and Python APIs have built-in convenience for bypassing setting the avro schema by hand.  For those languages, one can use this property as usual and not have to worry about the avro schema for the record.",
+                        "value" : {}
+                    },
+                    "dict" :
+                    {
+                        "doc" : "This property indicates that this column should be {dictionary encoded}@{link /concepts/dictionary_encoding/}. It can only be used in conjunction with restricted string (charN), int, long or date columns. Dictionary encoding is best for columns where the cardinality (the number of unique values) is expected to be low. This property can save a large amount of memory.",
+                        "value" : {}
+                    },
+                    "init_with_now" :
+                    {
+                        "doc" : "For 'date', 'time', 'datetime', or 'timestamp' column types, replace empty strings and invalid timestamps with 'NOW()' upon insert.",
+                        "value" : {}
+                    },
+                    "init_with_uuid" :
+                    {
+                        "doc" : "For 'uuid' type,  repalce empty strings and invalid uuid values with new_uuid()' upon insert.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "is_result_table" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "field_descs" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "external_file_info" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "endpoint": "/create/user/reveal",
+    "type": "record",
+    "name": "create_user_reveal_response",
+    "desc_name": "Create User Reveal Response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

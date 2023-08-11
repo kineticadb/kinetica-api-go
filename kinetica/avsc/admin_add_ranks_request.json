@@ -1,0 +1,92 @@
+{
+    "endpoint": "/admin/add/ranks",
+    "type" : "record",
+    "name" : "admin_add_ranks_request",
+    "desc_name": "Administration: Add Ranks",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Add new ranks to the Kinetica cluster",
+    "doc": "Add one or more ranks to an existing Kinetica cluster. The new ranks will not contain any data initially (other than replicated tables) and will not be assigned any shards. To rebalance data and shards across the cluster, use @{endpoint /admin/rebalance}.
+
+The database must be offline for this operation, see @{endpoint /admin/offline}
+
+For example, if attempting to add three new ranks (two ranks on host 172.123.45.67 and one rank on host 172.123.45.68) to a Kinetica cluster with additional configuration parameters:
+
+* @{input hosts}
+  would be an array including 172.123.45.67 in the first two indices
+  (signifying two ranks being added to host 172.123.45.67) and
+  172.123.45.68 in the last index (signifying one rank being added
+  to host 172.123.45.67)
+* @{input config_params}
+  would be an array of maps, with each map corresponding to the ranks
+  being added in @{input hosts}. The key of each map would be
+  the configuration parameter name and the value would be the
+  parameter's value, e.g. '{\"rank.gpu\":\"1\"}'
+
+This endpoint's processing includes copying all replicated table data to the new rank(s) and therefore could take a long time. The API call may time out if run directly.  It is recommended to run this endpoint asynchronously via @{endpoint /create/job}.
+",
+    "fields" : [
+        {
+            "name" : "hosts",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "Array of host IP addresses (matching a hostN.address from the gpudb.conf file), or host identifiers (e.g. 'host0' from the gpudb.conf file), on which to add ranks to the cluster. The hosts must already be in the cluster. If needed beforehand, to add a new host to the cluster use @{endpoint /admin/add/host}. Include the same entry as many times as there are ranks to add to the cluster, e.g., if two ranks on host 172.123.45.67 should be added, @{input hosts} could look like '[\"172.123.45.67\", \"172.123.45.67\"]'. All ranks will be added simultaneously, i.e. they're not added in the order of this array. Each entry in this array corresponds to the entry at the same index in the @{input config_params}.",
+            "value" : {}
+        },
+        {
+            "name" : "config_params",
+            "type" :
+            {
+                "type" : "array",
+                "items" :
+                {
+                    "type" : "map",
+                    "values" : "string"
+                }
+            },
+            "doc"  : "Array of maps containing configuration parameters to apply to the new ranks found in @{input hosts}. For example, '{\"rank.gpu\":\"2\", \"tier.ram.rank.limit\":\"10000000000\"}'. Currently, the available parameters are rank-specific parameters in the {Network}@{link /config/#network}, {Hardware}@{link /config/#hardware}, {Text Search}@{link /config/#text-search}, and {RAM Tiered Storage}@{link /config/#ram-tier} sections in the gpudb.conf file, with the key exception of the 'rankN.host' settings in the Network section that will be determined by @{input hosts} instead. Though many of these configuration parameters typically are affixed with 'rankN' in the gpudb.conf file (where N is the rank number), the 'N' should be omitted in @{input config_params} as the new rank number(s) are not allocated until the ranks have been added to the cluster. Each entry in this array corresponds to the entry at the same index in the @{input hosts}. This array must either be completely empty or have the same number of elements as the @{input hosts}.  An empty @{input config_params} array will result in the new ranks being set with default parameters.",
+            "value" : {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "dry_run" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.dry_run}, only validation checks will be performed. No ranks are added.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

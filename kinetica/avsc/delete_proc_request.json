@@ -1,0 +1,44 @@
+{
+    "endpoint": "/delete/proc",
+    "type": "record",
+    "name": "delete_proc_request",
+    "desc_name": "Delete Proc",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Delete a proc",
+    "doc": "Deletes a proc. Any currently running instances of the proc will be killed.",
+    "fields": [
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to be deleted. Must be the name of a currently existing proc.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {},
+                  "valid_keys" :
+                {
+                    "force_delete" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "internal_option": true
+                        }
+                    } 
+                 }   
+ 
+            }
+        }
+    ]
+}

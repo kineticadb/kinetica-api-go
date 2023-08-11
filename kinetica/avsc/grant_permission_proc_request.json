@@ -1,0 +1,54 @@
+{
+    "endpoint": "/grant/permission/proc",
+    "type": "record",
+    "name": "grant_permission_proc_request",
+    "desc_name": "Grant Proc Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Grant a proc-level permission to a user or role",
+    "doc": "Grants a proc-level permission to a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role to which the permission will be granted. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to grant to the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "proc_execute" :
+                    {
+                        "doc" : "Execute access to the proc.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to which the permission grants access. Must be an existing proc, or an empty string to grant access to all procs.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

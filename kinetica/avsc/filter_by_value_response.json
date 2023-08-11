@@ -1,0 +1,41 @@
+{
+    "endpoint": "/filter/byvalue", 
+    "type": "record", 
+    "name": "filter_by_value_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "count", 
+            "type": "long", 
+            "doc": "The number of records passing the value filter.", 
+            "value":
+            {
+                "is_output_table_count": true
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "qualified_view_name":
+                    {
+                        "doc" : "The fully qualified name of the view (i.e. including the schema)",
+                        "value" :
+                        {
+                            "is_qualified_output_table_name": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

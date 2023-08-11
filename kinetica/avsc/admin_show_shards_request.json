@@ -1,0 +1,25 @@
+{
+    "endpoint": "/admin/show/shards",
+    "type" : "record", 
+    "name" : "admin_show_shards_request",
+    "desc_name": "Administration: Show Shards",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show the mapping of the shards to the ranks",
+    "doc": "Show the mapping of shards to the corresponding rank and tom.  The response message contains list of 16384 (total number of shards in the system) Rank and TOM numbers corresponding to each shard.", 
+    "fields" : [
+        {
+            "name": "options", 
+            "type":
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.",
+            "value": {
+                "default": {}
+            }
+        }
+    ]
+}

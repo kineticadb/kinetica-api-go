@@ -1,0 +1,28 @@
+{
+    "endpoint": "/show/resource/statistics",
+    "type": "record", 
+    "name": "show_resource_statistics_response",
+    "doc": "Returns statistics on a per-rank basis.", 
+    "fields": [
+        {
+            "name": "statistics_map",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Map of resource statistics",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

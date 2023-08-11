@@ -1,0 +1,59 @@
+{
+    "endpoint": "/show/proc",
+    "type": "record",
+    "name": "show_proc_request",
+    "desc_name": "Show Proc",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show information about a proc.",
+    "doc": "Shows information about a proc.",
+    "fields": [
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to show information about. If specified, must be the name of a currently existing proc. If not specified, information about all procs will be returned.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+             {
+                "default": {},
+                "valid_keys":
+                {
+                    "include_files":
+                     {
+                        "doc": "If set to {true}@{choice of input.key options.include_files}, the files that make up the proc will be returned. If set to {false}@{choice of input.key options.include_files}, the files will not be returned.",
+                        "value":
+                         {
+                            "valid_choices":
+                            {
+                                "true":
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false":
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

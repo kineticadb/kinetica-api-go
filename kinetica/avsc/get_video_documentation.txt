@@ -1,0 +1,108 @@
+.. From [gpudb-schemas/endpoint-schemas/get_video_documentation.txt]:
+..
+.. This documentation serves to detail the /get/video endpoint.  It, through code
+.. generation, supplies the content for the /get/video endpoint in the REST API.
+..
+.. NOTE:  No targets can be defined here, as they would end up getting
+..        replicated in three places.  Any links to sections contained within
+..        will have to be URL links to the generated content pages with #Section
+..        appended.
+
+Overview
+--------
+
+*Kinetica* provides a Video service for rendering animated maps. Videos are
+rendered to ``WebM`` files stored using {{< doc "/tools/kifs" "KiFS" >}}.
+
+Videos must first be created using {{< doc "/api/rest/create_video_rest" >}} by
+specifying a visualization style together with animation parameters.  Videos are
+rendered with a transparent background so they may be displayed over a basemap.
+
+
+Configuration
+-------------
+
++--------------------------+----------------------------------------------+-------------------------------------------------------------------------------+
+| Name                     | Default                                      | Description                                                                   |
++==========================+==============================================+===============================================================================+
+| ``video_temp_directory`` | ``${gaia.temp_directory}/gpudb-temp-videos`` | Directory where video files should be temporarily stored during rendering     |
+|                          |                                              | geospatial data. Only used on *rank0*.                                        |
++--------------------------+----------------------------------------------+-------------------------------------------------------------------------------+
+| ``video_max_count``      | ``-1``                                       | The maximum number of videos to allow on the system. Set to ``0`` to disable  |
+|                          |                                              | video rendering. Set to ``-1`` to allow an unlimited number of videos.        |
++--------------------------+----------------------------------------------+-------------------------------------------------------------------------------+
+| ``video_default_ttl``    | ``-1``                                       | System default {{sc~doc~/concepts/ttl,time-to-live (TTL)}} for videos, which  |
+|                          |                                              | is the number of minutes before a video will expire and be removed.  Set to   |
+|                          |                                              | ``-1`` to disable expiration.                                                 |
++--------------------------+----------------------------------------------+-------------------------------------------------------------------------------+
+
+
+Usage
+-----
+
+Base video retrieval URI::
+
+  http://<kinetica-host>:<port>/get/video/<path>
+
+URI parameters:
+
++----------+---------------------------------------------------------------------------------------+
+| Name     | Description                                                                           |
++==========+=======================================================================================+
+| ``path`` | A fully-qualified {{sc~doc~/tools/kifs,KiFS}} path to a video file.  The user must    |
+|          | have read access to the file.                                                         |
++----------+---------------------------------------------------------------------------------------+
+
+
+Example
+-------
+
+Below is a snippet of a Javascript *Mapbox* style specification using Kinetica's
+``/get/video`` URL as a source::
+
+    const videoPath = "/sys_temp/my-video.webm"
+    const url = "http://localhost:9191/get/video"
+    const videoStyle = {
+        version: 8,
+        sources: {
+            video: {
+                type: 'video',
+                urls: [
+                    url + videoPath,
+                ],
+                coordinates: [
+                    [-122.51596391201019, 37.56238816766053],
+                    [-122.51467645168304, 37.56410183312965],
+                    [-122.51309394836426, 37.563391708549425],
+                    [-122.51423120498657, 37.56161849366671]
+                ]
+            },
+            satellite: {
+                type: 'raster',
+                url: 'mapbox://mapbox.satellite',
+                tileSize: 256
+            },
+        },
+        layers: [
+            {
+                id: 'satellite',
+                type: 'raster',
+                source: 'satellite'
+            },
+            {
+                id: 'video',
+                type: 'raster',
+                source: 'video'
+            }
+        ]
+    };
+    
+    let map = new mapboxgl.Map({
+        container: 'map',
+        minZoom: 14,
+        zoom: 17,
+        center: [-122.514426, 37.562984],
+        bearing: -96,
+        style: videoStyle
+    });
+

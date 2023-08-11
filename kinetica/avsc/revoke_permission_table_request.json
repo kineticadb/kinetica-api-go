@@ -1,0 +1,85 @@
+{
+    "endpoint": "/revoke/permission/table",
+    "type": "record",
+    "name": "revoke_permission_table_request",
+    "desc_name": "Revoke Table Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Revoke a table-level permission from a user or role",
+    "doc": "Revokes a table-level permission from a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role from which the permission will be revoked. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to revoke from the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "table_admin" :
+                    {
+                        "doc" : "Full read/write and administrative access to the table.",
+                        "value" : {}
+                    },
+                    "table_insert" :
+                    {
+                        "doc" : "Insert access to the table.",
+                        "value" : {}
+                    },
+                    "table_update" :
+                    {
+                        "doc" : "Update access to the table.",
+                        "value" : {}
+                    },
+                    "table_delete" :
+                    {
+                        "doc" : "Delete access to the table.",
+                        "value" : {}
+                    },
+                    "table_read" :
+                    {
+                        "doc" : "Read access to the table.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to which the permission grants access, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table, view or schema.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "columns" :
+                    {
+                        "doc" : "Apply security to these columns, comma-separated",
+                        "value" :
+                        {
+                            "default" : ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

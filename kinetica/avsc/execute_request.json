@@ -1,0 +1,29 @@
+{
+    "endpoint": "/execute", 
+    "type": "record", 
+    "name": "execute_request", 
+    "desc_name": "Execute",
+    "short_doc": "",
+    "doc": "", 
+    "fields": [
+        {
+            "name": "statement", 
+            "type": "string", 
+            "doc": "", 
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

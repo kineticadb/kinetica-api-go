@@ -1,0 +1,24 @@
+{
+    "endpoint": "/delete/proc",
+    "type": "record",
+    "name": "delete_proc_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Value of @{input proc_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

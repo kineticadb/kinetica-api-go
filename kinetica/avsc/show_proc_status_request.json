@@ -1,0 +1,67 @@
+{
+    "endpoint": "/show/proc/status",
+    "type": "record",
+    "name": "show_proc_status_request",
+    "desc_name": "Show Proc Status",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show the statuses of running or completed proc instances.",
+    "doc": "Shows the statuses of running or completed proc instances. Results are grouped by run ID (as returned from @{endpoint /execute/proc}) and data segment ID (each invocation of the proc command on a data segment is assigned a data segment ID).",
+    "fields": [
+        {
+            "name": "run_id",
+            "type": "string",
+            "doc": "The run ID of a specific proc instance for which the status will be returned. If a proc with a matching run ID is not found, the response will be empty. If not specified, the statuses of all executed proc instances will be returned.",
+            "value":
+            {
+                "default": ""
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "clear_complete":
+                    {
+                        "doc": "If set to {true}@{choice of input.key options.clear_complete}, if a proc instance has completed (either successfully or unsuccessfully) then its status will be cleared and no longer returned in subsequent calls.",
+                        "value":
+                        {
+                            "valid_choices":
+                            {
+                                "true":
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false":
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    },
+                    "run_tag":
+                    {
+                        "doc": "If @{input run_id} is specified, return the status for a proc instance that has a matching run ID and a matching run tag that was provided to @{endpoint /execute/proc}. If @{input run_id} is not specified, return statuses for all proc instances where a matching run tag was provided to @{endpoint /execute/proc}.",
+                        "value":
+                        {
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

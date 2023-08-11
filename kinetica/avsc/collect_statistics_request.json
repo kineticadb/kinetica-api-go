@@ -1,0 +1,44 @@
+{
+    "endpoint": "/collect/statistics",
+    "type": "record",
+    "name": "collect_statistics_request",
+    "desc_name": "Collect Statistics",
+    "short_doc": "Collect statistics on a column.",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "doc": "Collect statistics for a column(s) in a specified table.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of a table, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of one or more column names in @{input table_name} for which to collect statistics (cardinality, mean value, etc.).",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,72 @@
+{
+    "endpoint": "/aggregate/kmeans", 
+    "type": "record", 
+    "name": "aggregate_k_means_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "means", 
+            "type": {
+            	"type" : "array",
+            	"items" : {
+            		"type" : "array",
+            		"items" : "double"
+            	}
+            }, 
+            "doc": "The k-mean values found.", 
+            "value": {}
+        },
+        {
+            "name": "counts", 
+            "type": {
+            	"type" : "array",
+            	"items" : "long"
+            }, 
+            "doc": "The number of elements in the cluster closest the corresponding k-means values.", 
+            "value": {}
+        },
+        {
+            "name": "rms_dists", 
+            "type": {
+            	"type" : "array",
+            	"items" : "double"
+            }, 
+            "doc": "The root mean squared distance of the elements in the cluster for each of the k-means values.", 
+            "value": {}
+        },
+        {
+            "name": "count", 
+            "type": "long", 
+            "doc": "The total count of all the clusters - will be the size of the input table.", 
+            "value": {}
+        },
+        {
+            "name": "rms_dist", 
+            "type": "double", 
+            "doc": "The sum of all the rms_dists - the value the k-means algorithm is attempting to minimize.",
+            "value": {}
+        },
+        {
+            "name": "tolerance", 
+            "type": "double", 
+            "doc": "The distance between the last two iterations of the algorithm before it quit.", 
+            "value": {}
+        },
+        {
+            "name": "num_iters", 
+            "type": "int", 
+            "doc": "The number of iterations the algorithm executed before it quit.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

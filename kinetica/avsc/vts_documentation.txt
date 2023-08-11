@@ -1,0 +1,154 @@
+.. From [gpudb-schemas/endpoint-schemas/vts_documentation.txt]:
+..
+.. This documentation serves to detail the /vts endpoint.  It, through code
+.. generation, supplies the content for the /vts endpoint in the REST API, as
+.. well as the Vector Tile Service under Functions.
+..
+.. NOTE:  No targets can be defined here, as they would end up getting
+..        replicated in three places.  Any links to sections contained within
+..        will have to be URL links to the generated content pages with #Section
+..        appended.
+
+Overview
+--------
+
+*Kinetica* provides a *Vector Tile Service* (*VTS*) to generate Vector Tiles and
+support client-side visualization of the geospatial data contained within the
+tiles. The Vector Tile format generated follows the open standard *Mapbox*
+`Vector Tile specification <https://github.com/mapbox/vector-tile-spec/tree/master/2.1>`_.
+The *Kinetica VTS* feeds a client-side Vector Tile renderer, such as
+*Mapbox GL*, by adding the *VTS* URL to the renderer's style configuration as a
+map layer source. Any *Kinetica* table that is defined with at least one
+*WKT*-{{sc~doc~/concepts/types,type}} (geometry) column can be used as the
+data source for the ``layer`` parameter. Input geometries are pre-processed upon 
+ingestion for faster vector tile generation. The data source, geographical 
+position, and zoom level of each Vector Tile are specified in a *VTS* request. 
+The requested Vector Tile is then returned in the response.
+
+The VTS offers a couple advantages over server-side WMS calls:
+
+* VTS supports client-side control of styling like image fill
+* When using vector tiles, the browser only requests new information as needed
+  and caches data along the way; WMS output must be re-rendered on every 
+  pan/zoom
+
+.. important::
+
+   The Kinetica VTS requires access to GPUs, i.e. VTS cannot be used on an
+   Intel build.
+
+
+Configuration
+-------------
+
+Before using the VTS, the service must be enabled and configured via the
+{{sc~file~gpudb.conf}} configuration file.
+
+Settings:
+
++-------------------------------+------------+-------------------------------------------------------------------------+-----------------------+
+| Name                          | Default    | Description                                                             | Allowable Values      |
++===============================+============+=========================================================================+=======================+
+| ``enable_vectortile_service`` | ``false``  | Enables the database VTS to support client-side visualization of        | ``true`` or ``false`` |
+|                               |            | geospatial data.                                                        |                       |
++-------------------------------+------------+-------------------------------------------------------------------------+-----------------------+
+| ``min_vectortile_zoomlevel``  | ``1``      | Determines the minimum zoom level for vector tile pre-processing. As    | Minimum is ``0``,     |
+|                               |            | the value gets lower, more geographical area is rendered.               | maximum is ``20``.    |
+|                               |            |                                                                         |                       |
+|                               |            | .. note:: A vector tile request for a lesser zoom level than this value |                       |
+|                               |            |           will take additional time to process as the vector tile is    |                       |
+|                               |            |           generated on the fly.                                         |                       |
++-------------------------------+------------+-------------------------------------------------------------------------+-----------------------+
+| ``max_vectortile_zoomlevel``  | ``8``      | Determines the maximum zoom level for vector tile pre-processing. As    | Minimum is ``0``,     |
+|                               |            | the value gets higher, less geographical area is rendered but details   | maximum is ``20``.    |
+|                               |            | more apparent (islands, rivers, roads, buildings).                      |                       |
+|                               |            |                                                                         |                       |
+|                               |            | .. note:: A vector tile request for a greater zoom level than this value|                       |
+|                               |            |           will take additional time to process as the vector tile is    |                       |
+|                               |            |           generated on the fly.                                         |                       |
++-------------------------------+------------+-------------------------------------------------------------------------+-----------------------+
+| ``vectortile_map_tiler``      | ``google`` | The name of the map tiler used for VTS. The configuration for the VTS   | * ``google`` (Mapbox) |
+|                               |            | must match the configuration for the client-side renderer.              | * ``tms`` (OpenLayers)|
++-------------------------------+------------+-------------------------------------------------------------------------+-----------------------+
+
+
+Usage
+-----
+
+Base *VTS* URI::
+
+  http://<kinetica-host>:<port>/vts/<layer>/<z>/<x>/<y>.pbf?attributes=<columns>
+
+.. important::
+
+   The *VTS* URL needs to be specified in the client-side visualizer's
+   configuration.
+
+URI parameters:
+
++-----------------+-------------------------------+---------------------------------------------------------+
+| Name            | Description                   | Allowable Values                                        |
++=================+===============================+=========================================================+
+| ``layer``       | Name of data source table.    | A valid table name, in ``[schema_name.]table_name``     |
+|                 |                               | format, using standard                                  |
+|                 |                               | {{sc~find~table name resolution,name resolution rules}} |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``attributes``  | List of geometry column names.| A comma separated list of column names of               |
+|                 |                               | the data source table.                                  |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``z``           | Zoom level of the requested   | Non-negative integer. The maximum value is 30. Provide  |
+|                 | tile.                         | the parameter as ``{z}`` to have the client-side        |
+|                 |                               | renderer dynamically set the value.                     |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``x``           | Horizontal index of the       | Non-negative integer. Provide the parameter as ``{x}``  |
+|                 | requested tile.               | to have the client-side renderer dynamically set the    |
+|                 |                               | value.                                                  |
++-----------------+-------------------------------+---------------------------------------------------------+
+| ``y``           | Vertical index of the         | Non-negative integer. Provide the parameter as ``{y}``  |
+|                 | requested tile.               | to have the client-side renderer dynamically set the    |
+|                 |                               | value.                                                  |
++-----------------+-------------------------------+---------------------------------------------------------+
+
+
+Example
+-------
+
+Below is a snippet of a Javascript *Mapbox style specification* using Kinetica's 
+*VTS* URL as a source::
+
+  // Config
+  var tableName = "nyc_neighborhood";
+  var wktColumn = "geom";
+  var kineticaUrl = "http://172.123.45.67:9191/vts/";
+
+  // Mapbox GL
+  map.on('load', function () {
+    map.addLayer({
+      "id": tableName + "_layer",
+      "version": 8,
+      "type" : "fill",
+      "source": {
+        "type": "vector",
+        "tiles": [kineticaUrl + tableName + "/{z}/{x}/{y}.pbf?attributes=" + wktColumn], // Note Mapbox uses the params in curly braces as dynamic values. Don't change those.
+        "maxzoom": 20
+      },
+      "source-layer": tableName,
+      "paint": {
+        "fill-color": "#EDF00F",
+        "fill-outline-color": "#000000"
+      }
+    });
+  });
+
+
+Limitations and Cautions
+------------------------
+
+* Vector tiles are kept in memory, so the zoom levels should be used to keep
+  the memory usage of tiles at a reasonable level. A higher zoom level typically
+  results in more tiles and more memory usage
+* The VTS currently does not support feature attributes
+* Since VTS sends feature information for each table row to the browser, the
+  client can get overwhelmed with data; performance is dependent upon client
+  hardware
+

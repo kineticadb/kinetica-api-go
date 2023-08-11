@@ -1,0 +1,60 @@
+{
+    "endpoint": "/alter/tier",
+    "type": "record",
+    "name": "alter_tier_request",
+    "desc_name": "Alter Tier",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter an existing tier",
+    "doc": "Alters properties of an exisiting
+{tier}@{link /rm/concepts/#storage-tiers} to facilitate
+{resource management}@{link /rm/concepts/}.
+
+To disable
+{watermark-based eviction}@{link /rm/concepts/#watermark-based-eviction},
+set both {high_watermark}@{key of input options} and
+{low_watermark}@{key of input options} to 100.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the tier to be altered. Must be an existing tier group name.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "capacity" :
+                    {
+                        "doc" : "Maximum size in bytes this tier may hold at once.",
+                        "type" : "long",
+                        "value" : {}
+                    },
+                    "high_watermark" :
+                    {
+                        "doc" : "Threshold of usage of this tier's resource that, once exceeded, will trigger watermark-based eviction from this tier.",
+                        "type" : "int",
+                        "value" : {"min": "0", "max": "100"}
+                    },
+                    "low_watermark" :
+                    {
+                        "doc" : "Threshold of resource usage that, once fallen below after crossing the {high_watermark}@{key of input options}, will cease watermark-based eviction from this tier.",
+                        "type" : "int",
+                        "value" : {"min": "0", "max": "100"}
+                    }
+                }
+            }
+        }
+    ]
+}

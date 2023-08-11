@@ -1,0 +1,42 @@
+{
+    "endpoint": "/show/statistics", 
+    "type": "record", 
+    "name": "show_statistics_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_names", 
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "Value of @{input table_names}.", 
+            "value": {}
+        }, 
+        {
+            "name": "stastistics_map", 
+            "type": {
+                "type": "array", 
+                "items": {
+                    "type": "array", 
+                    "items": {
+                        "type": "map", 
+                        "values": "string"
+                    }
+                }
+            }, 
+            "doc": "A list of maps which contain the column statistics of the table @{input table_names}. ", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

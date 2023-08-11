@@ -1,0 +1,59 @@
+{
+    "endpoint": "/visualize/video/heatmap", 
+    "type": "record", 
+    "name": "visualize_video_heatmap_response", 
+    "doc": "
+
+The response payload provides among other things the number of frames which were created.", 
+    "fields": [
+        {
+            "name": "width", 
+            "type": "double", 
+            "doc": "Value of @{input width}.", 
+            "value": {}
+        }, 
+        {
+            "name": "height", 
+            "type": "double", 
+            "doc": "Value of @{input height}.", 
+            "value": {}
+        }, 
+        {
+            "name": "bg_color", 
+            "type": "long", 
+            "doc": "Value of {bg_color}@{key of input style_options}.", 
+            "value": {}
+        }, 
+        {
+            "name": "num_frames", 
+            "type": "int", 
+            "doc": "Number of frames created for this request.", 
+            "value": {}
+        }, 
+        {
+            "name": "session_key", 
+            "type": "string", 
+            "doc": "Value of @{input session_key}.", 
+            "value": {}
+        }, 
+        {
+            "name": "data", 
+            "type": {
+                "type": "array", 
+                "items": "bytes"
+            }, 
+            "doc": "", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

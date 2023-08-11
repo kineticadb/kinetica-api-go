@@ -1,0 +1,25 @@
+{
+    "endpoint": "/delete/resourcegroup",
+    "type": "record",
+    "name": "delete_resource_group_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

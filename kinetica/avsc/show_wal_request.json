@@ -1,0 +1,47 @@
+{
+    "endpoint": "/show/wal",
+    "type": "record",
+    "name": "show_wal_request",
+    "desc_name": "Show Wal",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Shows information relating to table wal entries",
+    "doc": "Requests table wal properties.",
+    "fields": [
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of tables to query. An asterisk returns all tables.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "show_settings" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.show_settings} include a map of the wal settings for the requested tables.",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" : { "true" : { "doc": "", "value": {} }, "false" : { "doc": "", "value": {} } }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

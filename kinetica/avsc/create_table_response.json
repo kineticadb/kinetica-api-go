@@ -1,0 +1,48 @@
+{
+    "endpoint": "/create/table", 
+    "type": "record", 
+    "name": "create_table_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "type_id", 
+            "type": "string", 
+            "doc": "Value of @{input type_id}.", 
+            "value": {}
+        },
+        {
+            "name": "is_collection", 
+            "type": "boolean", 
+            "doc": "[DEPRECATED--this will always return false]  Indicates if the created entity is a schema.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "qualified_table_name":
+                    {
+                        "doc" : "The fully qualified name of the new table (i.e. including the schema)",
+                        "value" :
+                        {
+                            "is_qualified_output_table_name": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

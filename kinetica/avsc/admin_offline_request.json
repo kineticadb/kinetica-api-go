@@ -1,0 +1,70 @@
+{
+    "endpoint": "/admin/offline",
+    "type": "record", 
+    "name": "admin_offline_request",
+    "desc_name": "Administration: System Offline",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Take the system offline",
+    "doc": "Take the system offline. When the system is offline, no user operations can be performed with the exception of a system shutdown.",
+
+    "fields": [
+        {
+            "name": "offline",
+            "type": "boolean",
+            "doc": "Set to true if desired state is offline.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "true" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "false" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "valid_keys" :
+                {
+                    "flush_to_disk" :
+                    {
+                        "doc" : "Flush to disk when going offline",
+                        "value" : {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "endpoint": "/alter/graph",
+    "name": "alter_graph_response",
+    "desc_name": "alter Graph",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "For internal use only: Graph server admin command.",
+    "short_doc": "Admin graph server commands.",    
+    "fields": [
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Context specific feedback or action to be taken by the client",
+            "value": {}
+        },
+        {
+            "name": "action_arg",
+            "type": "string",
+            "doc": "Action specific argument.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

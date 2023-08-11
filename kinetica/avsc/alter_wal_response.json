@@ -1,0 +1,19 @@
+{
+    "endpoint": "/alter/wal",
+    "type": "record",
+    "name": "alter_wal_response",
+    "doc": "Returns information about the requested table wal modifications.",
+    "fields": [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

@@ -1,0 +1,27 @@
+{
+    "endpoint": "/kill/proc",
+    "type": "record",
+    "name": "kill_proc_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "run_ids",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of run IDs of proc instances that were killed.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

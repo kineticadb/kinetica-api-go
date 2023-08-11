@@ -1,0 +1,98 @@
+{
+    "endpoint": "/lock/table",
+    "type": "record",
+    "name": "lock_table_request",
+    "desc_name": "Lock Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc" : "Set read or write locks on a table",
+    "doc": "Manages global access to a table's data.  By default a table has a @{input lock_type} of {read_write}@{choice of input lock_type}, indicating all operations are permitted.  A user may request a {read_only}@{choice of input lock_type} or a {write_only}@{choice of input lock_type} lock, after which only read or write operations, respectively, are permitted on the table until the lock is removed.  When @{input lock_type} is {no_access}@{choice of input lock_type} then no operations are permitted on the table.  The lock status can be queried by setting @{input lock_type} to {status}@{choice of input lock_type}.",
+
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table to be locked, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  It must be a currently existing table or view.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "lock_type",
+            "type": "string",
+            "doc": "The type of lock being applied to the table. Setting it to {status}@{choice of input lock_type} will return the current lock status of the table without changing it.",
+            "value":
+            {
+                "default": "status",
+                "valid_choices":
+                {
+                    "status":
+                    {
+                        "doc": "Show locked status",
+                        "value": {}
+                    },
+                    "no_access":
+                    {
+                        "doc": "Allow no read/write operations",
+                        "value": {}
+                    },
+                    "read_only":
+                    {
+                        "doc": "Allow only read operations",
+                        "value": {}
+                    },
+                    "write_only":
+                    {
+                        "doc": "Allow only write operations",
+                        "value": {}
+                    },
+                    "read_write":
+                    {
+                        "doc": "Allow all read/write operations",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "internal_caller" :
+                    {
+                        "doc": "When is true, indicating lock/table enpoint is called from such internal users, e.g., {endpoint /alter/schema} function}.",
+                        "value" :
+                        {
+                            "internal_option":"true",
+                            "default":"false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "true",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "false",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

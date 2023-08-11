@@ -1,0 +1,27 @@
+{
+    "endpoint": "/show/system/status", 
+    "type": "record", 
+    "name": "show_system_status_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "status_map", 
+            "type": {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "A map of server configuration and health related status.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

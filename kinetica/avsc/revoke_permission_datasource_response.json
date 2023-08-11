@@ -1,0 +1,36 @@
+{
+    "endpoint": "/revoke/permission/datasource",
+    "type": "record",
+    "name": "revoke_permission_datasource_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Value of @{input permission}.",
+            "value": {}
+        },
+        {
+            "name": "datasource_name",
+            "type": "string",
+            "doc": "Value of @{input datasource_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

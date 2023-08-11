@@ -1,0 +1,74 @@
+{
+    "endpoint": "/create/container/registry",
+    "type": "record",
+    "name": "create_container_registry_request",
+    "desc_name": "Create a container registry",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Create a container registry",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "registry_name",
+            "type": "string",
+            "doc": "Name of the registry to be created",
+            "value":{}
+        },
+        {
+            "name": "uri",
+            "type": "string",
+            "doc": "The URI of the registry",
+            "value":{}
+
+        },
+        {
+            "name": "credential",
+            "type": "string",
+            "doc": "credential name to connect to the registry",
+            "value":{}
+
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "user_name" :
+                    {
+                        "doc": "user name to connect to the URI",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "password" :
+                    {
+                        "doc": "password associated to user_name to connect to the URI",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "email" :
+                    {
+                        "doc": "email associated to user_name to connect to the URI",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

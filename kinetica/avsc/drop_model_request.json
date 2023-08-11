@@ -1,0 +1,34 @@
+{
+    "endpoint": "/drop/model",
+    "type": "record",
+    "name": "drop_model_request",
+    "desc_name": "Drop a Model",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Drop a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Name of the model to be imported" ,
+            "value":{}
+
+        } ,
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {} 
+            }
+        }
+    ]
+}

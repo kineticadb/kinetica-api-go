@@ -1,0 +1,66 @@
+{
+    "endpoint": "/admin/switchover",
+    "type": "record",
+    "name": "admin_switchover_request",
+    "desc_name": "Administration: Switchover Process",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "short_doc": "Manually switchover one or more processes to another host",
+    "doc": "Manually switchover one or more processes to another host. Individual ranks or entire hosts may be moved to another host.",
+    "fields": [
+        {
+            "name": "processes",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Indicates the process identifier to switchover to another host. Options are 'hostN' and 'rankN' where 'N' corresponds to the number associated with a host or rank in the {Network}@{link /config/#network} section of the gpudb.conf file, e.g., 'host[N].address' or 'rank[N].host'. If 'hostN' is provided, all processes on that host will be moved to another host. Each entry in this array will be switched over to the corresponding host entry at the same index in @{input destinations}.",
+            "value" : {}
+        },
+        {
+            "name": "destinations",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Indicates to which host to switchover each corresponding process given in @{input processes}. Each index must be specified as 'hostN' where 'N' corresponds to the number associated with a host or rank in the {Network}@{link /config/#network} section of the gpudb.conf file, e.g., 'host[N].address'. Each entry in this array will receive the corresponding process entry at the same index in @{input processes}.",
+            "value" : {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "dry_run":
+                    {
+                        "doc": "If set to {true}@{choice of input.key options.dry_run}, only validation checks will be performed. Nothing is switched over.",
+                        "value": {
+                            "valid_choices": {
+                                "true": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "false"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "endpoint": "/admin/show/alerts",
+    "type" : "record",
+    "name" : "admin_show_alerts_request",
+    "desc_name": "Administration: Show Alerts",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": true,
+    "is_single_table_oriented": false,
+    "short_doc": "Show a list of generated alerts.",
+    "doc": "Requests a list of the most recent alerts.",
+    "fields" :
+    [
+        {
+            "name" : "num_alerts",
+            "type" : "int",
+            "doc"  : "Number of most recent alerts to request. The response will include up to @{input num_alerts} depending on how many alerts there are in the system. A value of 0 returns all stored alerts.",
+            "value" : {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

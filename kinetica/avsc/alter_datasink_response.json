@@ -1,0 +1,28 @@
+{
+    "endpoint": "/alter/datasink", 
+    "type": "record", 
+    "name": "alter_datasink_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "updated_properties_map", 
+            "type":
+        {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Map of values updated",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

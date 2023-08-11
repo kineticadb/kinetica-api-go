@@ -1,0 +1,120 @@
+{
+    "endpoint": "/get/records/fromcollection", 
+    "type": "record", 
+    "name": "get_records_from_collection_response", 
+    "doc": "(DEPRECATED)", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Value of @{input table_name}.", 
+            "value": {}
+        }, 
+        {
+            "name": "type_names", 
+            "type":
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "The type IDs of the corresponding records in @{output records_binary} or @{output records_json}. This is useful when @{input table_name} is a heterogeneous collection (collections containing tables of different types).", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "type_id",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "records_binary", 
+            "type":
+            {
+                "type": "array", 
+                "items": "bytes"
+            }, 
+            "doc": "If the encoding parameter of the request was 'binary' then this list contains the binary encoded records retrieved from the table/collection. Otherwise, empty list.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "binary",
+                    "homogeneous": false,
+                    "dimensionality": 1
+                },
+                "managed": "zero_copy"
+            }
+        }, 
+        {
+            "name": "records_json", 
+            "type":
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "If the encoding parameter of the request was 'json', then this list contains the JSON encoded records retrieved from the table/collection. Otherwise, empty list.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "json",
+                    "homogeneous": false,
+                    "dimensionality": 1
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "record_ids", 
+            "type":
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "If the 'return_record_ids' option of the request was 'true', then this list contains the internal ID for each object. Otherwise it will be empty.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {
+                "default" : {},
+                "valid_keys" : { 
+                    "total_number_of_records" :
+                    {
+                        "doc": "Total number of records.",
+                        "value" : {}
+                    },
+                    "has_more_records":
+                    {
+                        "doc" : "Too many records. Returned a partial set.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }                     
+        }
+    ]
+}

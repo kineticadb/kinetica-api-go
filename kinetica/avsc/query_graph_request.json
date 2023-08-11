@@ -1,0 +1,188 @@
+{
+    "endpoint": "/query/graph",
+    "name": "query_graph_request",
+    "desc_name": "Query Graph",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "Employs a topological query on a network graph generated a-priori by
+@{endpoint /create/graph} and returns a list of adjacent edge(s) or node(s),
+also known as an adjacency list, depending on what's been provided to the
+endpoint; providing edges will return nodes and providing nodes will return
+edges.
+
+To determine the node(s) or edge(s) adjacent to a value from a given column,
+provide a list of values to @{input queries}. This field can be populated with
+column values from any table as long as the type is supported by the given
+identifier. See
+{Query Identifiers}@{link /graph_solver/network_graph_solver/#query-identifiers}
+for more information.
+
+To return the adjacency list in the response, leave @{input adjacency_table}
+empty. To return the adjacency list in a table and not in the response, provide
+a value to @{input adjacency_table} and set
+{export_query_results}@{key of input options} to
+{false}@{choice of input.key options.export_query_results}. To return the
+adjacency list both in a table and the response, provide a value to
+@{input adjacency_table} and set {export_query_results}@{key of input options}
+to {true}@{choice of input.key options.export_query_results}.
+
+IMPORTANT: It's highly recommended that you review the
+{Network Graphs & Solvers}@{link /graph_solver/network_graph_solver/}
+concepts documentation, the
+{Graph REST Tutorial}@{link /guides/graph_rest_guide/},
+and/or some
+{/match/graph examples}@{link /guide-tags/graph-query}
+before using this endpoint.",
+    "short_doc": "Queries an existing graph.",
+    "fields": [
+       {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Name of the graph resource to query.",
+            "value": {}
+        },
+        {
+            "name": "queries",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Nodes or edges to be queried specified using {query identifiers}@{link /graph_solver/network_graph_solver/#query-identifiers}. Identifiers can be used with existing column names, e.g., 'table.column AS QUERY_NODE_ID', raw values, e.g., '{0, 2} AS QUERY_NODE_ID', or expressions, e.g., 'ST_MAKEPOINT(table.x, table.y) AS QUERY_NODE_WKTPOINT'. Multiple values can be provided as long as the same identifier is used for all values. If using raw values in an identifier combination, the number of values specified must match across the combination.",
+            "value": {}
+        },        
+        {
+            "name": "restrictions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Additional restrictions to apply to the nodes/edges of an existing graph. Restrictions must be specified using {identifiers}@{link /graph_solver/network_graph_solver/#identifiers}; identifiers are grouped as {combinations}@{link /graph_solver/network_graph_solver/#id-combos}. Identifiers can be used with existing column names, e.g., 'table.column AS RESTRICTIONS_EDGE_ID', expressions, e.g., 'column/2 AS RESTRICTIONS_VALUECOMPARED', or raw values, e.g., '{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If using raw values in an identifier combination, the number of values specified must match across the combination.",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "adjacency_table",
+            "type": "string",
+            "doc": "Name of the table to store the resulting adjacencies, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  If left blank, the query results are instead returned in the response even if {export_query_results}@{key of input options} is set to {false}@{choice of input.key options.export_query_results}. If the 'QUERY_TARGET_NODE_LABEL' {query identifier}@{link /graph_solver/network_graph_solver/#query-identifiers} is used in @{input queries}, then two additional columns will be available: 'PATH_ID' and 'RING_ID'. See {Using Labels}@{link /graph_solver/network_graph_solver/#using-labels} for more information.",
+            "value": {
+                "default": ""
+         }
+        },
+        {
+            "name": "rings",
+            "type": "int",
+            "doc": "Sets the number of rings around the node to query for adjacency, with '1' being the edges directly attached to the queried node. Also known as number of hops. For example, if it is set to '2', the edge(s) directly attached to the queried node(s) will be returned; in addition, the edge(s) attached to the node(s) attached to the initial ring of edge(s) surrounding the queried node(s) will be returned. If the value is set to '0', any nodes that meet the criteria in @{input queries} and @{input restrictions} will be returned. This parameter is only applicable when querying nodes.",
+            "value": {
+                "default": 1
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Additional parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {                    
+                    "force_undirected": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.force_undirected}, all inbound edges and outbound edges relative to the node will be returned. If set to {false}@{choice of input.key options.force_undirected}, only outbound edges relative to the node will be returned. This parameter is only applicable if the queried graph @{input graph_name} is directed and when querying nodes. Consult {Directed Graphs}@{link /graph_solver/network_graph_solver/#directed-graphs} for more details.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "limit": {
+                        "type": "int",
+                        "doc": "When specified, limits the number of query results. Note that if the {target_nodes_table}@{key of input options} is provided, the size of the corresponding table will be limited by the {limit}@{key of input options} value.",
+                        "value": {
+                            "default": {}
+                        }
+                    },                    
+                    "target_nodes_table": {
+                        "type": "string",
+                        "doc": "Name of the table to store the list of the final nodes reached during the traversal, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  If this value is left as the default, the table name will default to the @{input adjacency_table} value plus a '_nodes' suffix, e.g., '<adjacency_table_name>_nodes'. ",
+                        "value": {
+                            "default": ""
+                        }
+                    },
+                    "restriction_threshold_value": {
+                        "type": "float",
+                        "doc": "Value-based restriction comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED value greater than the {restriction_threshold_value}@{key of input options} will not be included in the solution.",
+                        "value": {}
+                    },
+                    "export_query_results": {
+                        "type": "boolean",
+                        "doc": "Returns query results in the response. If set to {true}@{choice of input.key options.export_query_results}, the @{output adjacency_list_int_array} (if the query was based on IDs), @{output adjacency_list_string_array} (if the query was based on names), or @{output adjacency_list_wkt_array} (if the query was based on WKTs) will be populated with the results. If set to {false}@{choice of input.key options.export_query_results}, none of the arrays will be populated.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "enable_graph_draw": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.enable_graph_draw}, adds a WKT-type column named 'QUERY_EDGE_WKTLINE' to the given @{input adjacency_table} and inputs WKT values from the source graph (if available) or auto-generated WKT values (if there are no WKT values in the source graph). A subsequent call to the {/wms}@{link /api/rest/wms_rest/} endpoint can then be made to display the query results on a map.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "and_labels": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.and_labels}, the result of the query has entities that satisfy all of the target labels, instead of any.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "server_id": {
+                        "doc": "Indicates which graph server(s) to send the request to. Default is to send to the server, amongst those containing the corresponding graph, that has the most computational bandwidth.",
+                        "value": {}
+                    },
+                    "keep_derived_table": {
+                        "type": "boolean",
+                        "doc": "",
+                        "value": {
+                            "default": "false",
+                            "internal_option": true,
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

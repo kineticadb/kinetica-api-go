@@ -1,0 +1,94 @@
+{
+    "endpoint": "/show/model",
+    "type": "record",
+    "name": "show_model_response",
+    "desc_name": "Show a Model",
+    "is_host_manager_endpoint": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Show a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of models",
+            "value": {}
+        },   
+        {
+            "name": "entity_ids",
+            "type": {
+                "type": "array",
+                "items": "int"
+            },
+            "doc": "List of entity ids. An entity id is an identifier in KML API to locate an ML object",
+            "value": {}
+        },    
+       {
+            "name": "input_schemas",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of input schemas",
+            "value": {}
+       },   
+       {
+            "name": "output_schemas",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of output schemas",
+            "value": {}
+        },     
+        {
+            "name": "registry_list",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of container registries",
+            "value": {}
+        },             
+        {
+            "name": "container_list",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of containers",
+            "value": {}
+        },             
+        {
+            "name": "run_function_list",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of run_functions",
+            "value": {}
+        },             
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "kml_response" :
+                    {
+                        "doc": "KML response",
+                        "value" : {}
+                    } 
+                }
+            }
+        }
+    ]
+}

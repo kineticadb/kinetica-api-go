@@ -1,0 +1,106 @@
+{
+    "endpoint": "/show/datasource",
+    "type": "record",
+    "name": "show_datasource_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "datasource_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The data source names.",
+            "value": {}
+        },
+        {
+            "name": "storage_provider_types",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The storage provider type of the data sources named in @{output datasource_names}.",
+             "value":
+             {
+                 "valid_choices":
+                 {
+                     "hdfs":
+                     {
+                         "doc": "Apache Hadoop Distributed File System",
+                         "value": {}
+                     },
+                     "s3":
+                     {
+                         "doc": "Amazon S3 bucket",
+                         "value": {}
+                     }
+                 }
+             }
+        },
+        {
+            "name": "additional_info",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Additional information about the respective data sources in @{output datasource_names}.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "@INNER_STRUCTURE":
+                    {
+                        "doc": "",
+                        "value":
+                        {
+                            "default": {},
+                            "valid_keys" :
+                            {
+                                "location":
+                                {
+                                    "doc" : "Location of the remote storage in 'storage_provider_type://[storage_path[:storage_port]]' format",
+                                    "value": {}
+                                },
+                                "s3_bucket_name" :
+                                {
+                                    "doc" : "Name of the Amazon S3 bucket used as the data source",
+                                    "value" : {}
+                                },
+                                "s3_region" :
+                                {
+                                    "doc" : "Name of the Amazon S3 region where the bucket is located",
+                                    "value" : {}
+                                },
+                                "hdfs_kerberos_keytab" :
+                                {
+                                    "doc" : "Kerberos key for the given HDFS user",
+                                    "value" : {}
+                                },
+                                "user_name" :
+                                {
+                                    "doc" : "Name of the remote system user",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,475 @@
+{
+    "endpoint": "/admin/show/cluster/operations",
+    "type" : "record",
+    "name" : "admin_show_cluster_operations_response",
+    "doc": "Returns details on the requested cluster operation.
+
+The response will also indicate how many cluster operations are stored in the history.",
+    "fields" : [
+        {
+            "name" : "history_index",
+            "type" : "int",
+            "doc"  : "The index of this cluster operation in the reverse-chronologically sorted list of operations, where 0 is the most recent operation.",
+            "value" : {}
+        },
+        {
+            "name" : "history_size",
+            "type" : "int",
+            "doc"  : "Number of cluster operations executed to date.",
+            "value" : {}
+
+        },
+        {
+            "name" : "in_progress",
+            "type" : "boolean",
+            "doc"  : "Whether this cluster operation is currently in progress or not.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "start_time",
+            "type" : "string",
+            "doc"  : "The start time of the cluster operation.",
+            "value" : {}
+        },
+        {
+            "name" : "end_time",
+            "type" : "string",
+            "doc"  : "The end time of the cluster operation, if completed.",
+            "value" : {}
+        },
+        {   
+            "name" : "endpoint",
+            "type" : "string",
+            "doc"  : "The endpoint that initiated the cluster operation.",
+            "value" : {}
+        },
+        {
+            "name" : "endpoint_schema",
+            "type" : "string",
+            "doc"  : "The schema for the original request.",
+            "value" : {}
+        },
+        {
+            "name": "overall_status",
+            "type": "string",
+            "doc": "Overall success status of the operation.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "OK":
+                    {
+                        "doc": "The operation was successful, or, if still in progress, the operation is successful so far.",
+                        "value": {}
+                    },
+                    "ERROR":
+                    {
+                        "doc": "An error occurred executing the operation.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "user_stopped",
+            "type" : "boolean",
+            "doc"  : "Whether a user stopped this operation at any point while in progress.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "percent_complete",
+            "type" : "int",
+            "doc"  : "Percent complete of this entire operation.",
+            "value" : {}
+        },
+        {
+            "name" : "dry_run",
+            "type" : "boolean",
+            "doc"  : "Whether this operation was a dry run.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "messages",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "Updates and error messages if any.",
+            "value" : {}
+        },
+        {
+            "name" : "add_ranks",
+            "type" : "boolean",
+            "doc"  : "Whether adding ranks is (or was) part of this operation.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "add_ranks_status",
+            "type" : "string",
+            "doc"  : "If this was a rank-adding operation, the add-specific status of the operation.",
+            "value" :
+            {
+                "valid_values" :
+                {
+                    "NOT_STARTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "IN_PROGRESS" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "INTERRUPTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "COMPLETED_OK" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "ERROR" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "ranks_being_added",
+            "type" :
+            {
+                "type": "array",
+                "items": "int"
+            },
+            "doc"  : "The rank numbers of the ranks currently being added, or the rank numbers that were added if the operation is complete.",
+            "value" : {}
+        },
+        {
+            "name" : "rank_hosts",
+            "type" :
+            {
+               "type": "array",
+                "items": "string"
+            },
+            "doc"  : "The host IP addresses of the ranks being added, in the same order as the @{output ranks_being_added} list.",
+            "value" : {}
+        },
+        {
+            "name" : "add_ranks_percent_complete",
+            "type" : "int",
+            "doc"  : "Current percent complete of the add ranks operation.",
+            "value" : {}
+
+        },
+        {
+            "name" : "remove_ranks",
+            "type" : "boolean",
+            "doc"  : "Whether removing ranks is (or was) part of this operation.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "remove_ranks_status",
+            "type" : "string",
+            "doc"  : "If this was a rank-removing operation, the removal-specific status of the operation.",
+            "value" :
+            {
+                "valid_values" :
+                {
+                    "NOT_STARTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "IN_PROGRESS" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "INTERRUPTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "COMPLETED_OK" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "ERROR" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "ranks_being_removed",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "int"
+            },
+            "doc" : "The ranks being removed, or that have been removed if the operation is completed.",
+            "value": {}
+        },
+        {
+            "name" : "remove_ranks_percent_complete",
+            "type" : "int",
+            "doc"  : "Current percent complete of the remove ranks operation.",
+            "value" : {}
+
+        },
+        {
+            "name" : "rebalance",
+            "type" : "boolean",
+            "doc"  : "Whether data and/or shard rebalancing is (or was) part of this operation.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "rebalance_unsharded_data",
+            "type" : "boolean",
+            "doc"  : "Whether rebalancing of unsharded data is (or was) part of this operation.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "rebalance_unsharded_data_status",
+            "type" : "string",
+            "doc"  : "If this was an operation that included rebalancing unsharded data, the rebalancing-specific status of the operation.",
+            "value" :
+            {
+                "valid_values" :
+                {
+                    "NOT_STARTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "IN_PROGRESS" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "INTERRUPTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "COMPLETED_OK" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "ERROR" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "unsharded_rebalance_percent_complete",
+            "type" : "int",
+            "doc"  : "Percentage of unsharded tables that completed rebalancing, out of all unsharded tables to rebalance.",
+            "value" : {}
+        },
+        {
+            "name" : "rebalance_sharded_data",
+            "type" : "boolean",
+            "doc"  : "Whether rebalancing of sharded data is (or was) part of this operation.",
+            "value" :
+            {
+                "valid_choices":
+                {
+                    "true":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "false":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "shard_array_version",
+            "type" : "long",
+            "doc"  : "Version of the shard array that is (or was) being rebalanced to. Each change to the shard array results in the version number incrementing.",
+            "value" : {}
+        },
+        {
+            "name" : "rebalance_sharded_data_status",
+            "type" : "string",
+            "doc"  : "If this was an operation that included rebalancing sharded data, the rebalancing-specific status of the operation.",
+            "value" :
+            {
+                "valid_values" :
+                {
+                    "NOT_STARTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "IN_PROGRESS" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "INTERRUPTED" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "COMPLETED_OK" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    },
+                    "ERROR" :
+                    {
+                        "doc"  : "",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name" : "num_shards_changing",
+            "type" : "int",
+            "doc"  : "Number of shards that will change as part of rebalance.",
+            "value" : {}
+        },
+        {
+            "name" : "sharded_rebalance_percent_complete",
+            "type" : "int",
+            "doc"  : "Percentage of shard keys, and their associated data if applicable, that have completed rebalancing.",
+            "value" : {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

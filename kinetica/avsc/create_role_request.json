@@ -1,0 +1,40 @@
+{
+    "endpoint": "/create/role",
+    "type": "record",
+    "name": "create_role_request",
+    "desc_name": "Create Role",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a new role",
+    "doc": "Creates a new role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the role to be created. Must contain only lowercase letters, digits, and underscores, and cannot begin with a digit. Must not be the same name as an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "resource_group" :
+                    {
+                        "doc" : "Name of an existing resource group to associate with this user",
+                        "value" : {}
+                    }
+                }
+            }
+        }
+    ]
+}

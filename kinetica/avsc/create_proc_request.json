@@ -1,0 +1,119 @@
+{
+    "endpoint": "/create/proc",
+    "type": "record",
+    "name": "create_proc_request",
+    "desc_name": "Create Proc",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a proc",
+    "doc": "Creates an instance (proc) of the
+{user-defined functions}@{link /concepts/udf/} (UDF) specified by the
+given command, options, and files, and makes it available for execution.",
+    "fields": [
+        {
+            "name": "proc_name",
+            "type": "string",
+            "doc": "Name of the proc to be created. Must not be the name of a currently existing proc.",
+            "value": {}
+        },
+        {
+            "name": "execution_mode",
+            "type": "string",
+            "doc": "The execution mode of the proc.",
+            "value": {
+                "default": "distributed",
+                "valid_choices": {
+                    "distributed": {
+                        "doc": "Input table data will be divided into data
+segments that are distributed across all nodes in the cluster, and the proc
+command will be invoked once per data segment in parallel. Output table data
+from each invocation will be saved to the same node as the corresponding input
+data.",
+                        "value": {}
+                    },
+                    "nondistributed": {
+                        "doc": "The proc command will be invoked only once per
+execution, and will not have direct access to any tables named as input or
+output table parameters in the call to @{endpoint /execute/proc}.  It will,
+however, be able to access the database using native API calls.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "files",
+            "type": {
+                "type": "map",
+                "values": "bytes"
+            },
+            "doc": "A map of the files that make up the proc. The keys of the
+map are file names, and the values are the binary contents of the files. The
+file names may include subdirectory names (e.g. 'subdir/file') but must not
+resolve to a directory above the root for the proc.
+
+Files may be loaded from existing files in KiFS. Those file names should be
+prefixed with the uri kifs:// and the values in the map should be empty",
+            "value": {
+                "default": {}
+            }
+        },
+        {
+            "name": "command",
+            "type": "string",
+            "doc": "The command (excluding arguments) that will be invoked when
+the proc is executed. It will be invoked from the directory containing the proc
+@{input files} and may be any command that can be resolved from that directory.
+It need not refer to a file actually in that directory; for example, it could be
+'java' if the proc is a Java application; however, any necessary external
+programs must be preinstalled on every database node. If the command refers to a
+file in that directory, it must be preceded with './' as per Linux convention.
+If not specified, and exactly one file is provided in @{input files}, that file
+will be invoked.",
+            "value": {
+                "default": ""
+            }
+        },
+        {
+            "name": "args",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "An array of command-line arguments that will be passed to @{input command} when the proc is executed.",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "max_concurrency_per_node":
+                    {
+                        "doc"  : "The maximum number of concurrent instances of the proc that will be executed per node. 0 allows unlimited concurrency.",
+                        "value":
+                        {
+                            "default": "0"
+                        }
+                    },
+                    "type_id" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value":  { "internal_option": true }
+                    }
+                }
+            }
+        }
+    ]
+}

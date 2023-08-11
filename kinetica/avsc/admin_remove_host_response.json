@@ -1,0 +1,20 @@
+{
+    "endpoint": "/admin/remove/host",
+    "type": "record",
+    "name": "admin_remove_host_response",
+    "desc_name": "Admin Remove Host Response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

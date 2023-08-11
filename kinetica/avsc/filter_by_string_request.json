@@ -1,0 +1,135 @@
+{
+    "endpoint": "/filter/bystring",
+    "type": "record",
+    "name": "filter_by_string_request",
+    "desc_name": "Filter by String",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Filter a dataset for records with matching column text values",
+    "doc": "Calculates which objects from a table or view match a string
+expression for the given string columns. Setting
+{case_sensitive}@{key of input options} can modify case sensitivity in matching
+for all modes except {search}@{choice of input mode}. For
+{search}@{choice of input mode} mode details and limitations, see
+{Full Text Search}@{link /concepts/full_text_search/}.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table on which the filter operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be an existing table or view.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "view_name",
+            "type": "string",
+            "doc": "If provided, then this will be the name of the view containing the results, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Must not be an already existing table or view.",
+            "value":
+            {
+                "default" : "",
+                "is_output_table_name": true
+            }
+        },
+        {
+            "name": "expression",
+            "type": "string",
+            "doc": "The expression with which to filter the table.",
+            "value": {}
+        },
+        {
+            "name": "mode",
+            "type": "string",
+            "doc": "The string filtering mode to apply. See below for details.",
+            "value":
+            {
+                "valid_choices":
+                {
+                    "search":
+                    {
+                        "doc": "Full text search query with wildcards and boolean operators. Note that for this mode, no column can be specified in @{input column_names}; all string columns of the table that have text search enabled will be searched.",
+                        "value": {}
+                    },
+                    "equals":
+                    {
+                        "doc": "Exact whole-string match (accelerated).",
+                        "value": {}
+                    },
+                    "contains":
+                    {
+                        "doc": "Partial substring match (not accelerated).  If the column is a string type (non-charN) and the number of records is too large, it will return 0.",
+                        "value": {}
+                    },
+                    "starts_with":
+                    {
+                        "doc": "Strings that start with the given expression (not accelerated). If the column is a string type (non-charN) and the number of records is too large, it will return 0.",
+                        "value": {}
+                    },
+                    "regex":
+                    {
+                        "doc": "Full regular expression search (not accelerated). If the column is a string type (non-charN) and the number of records is too large, it will return 0.",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of columns on which to apply the filter. Ignored for {search}@{choice of input mode} mode.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "doc": "Optional parameters.",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "value":
+            {
+                "default" : {},
+                "valid_keys":
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the view as part of @{input view_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the newly created view. If the schema is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "case_sensitive":
+                    {
+                        "doc" : "If {false}@{choice of input.key options.case_sensitive} then string filtering will ignore case. Does not apply to {search}@{choice of input mode} mode.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                            "true" :
+                            {
+                                "doc" : "",
+                                "value" : {}
+                            },
+                            "false" :
+                            {
+                                "doc" : "",
+                                "value" : {}
+                            }
+                        },
+                        "default": "true"
+                        }
+                    },
+                    "refresh":
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value": { "internal_option": true }
+                    }
+                }
+            }
+        }
+    ]
+}

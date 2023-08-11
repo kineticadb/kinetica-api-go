@@ -1,0 +1,33 @@
+{
+    "endpoint": "/drop/datasource",
+    "type": "record",
+    "name": "drop_datasource_request",
+    "desc_name": "Drop Data Source",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Drop an existing data source",
+    "doc": "Drops an existing {data source}@{link /concepts/data_sources/}.  Any external
+tables that depend on the data source must be dropped before it can be dropped.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the data source to be dropped. Must be an existing data source.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

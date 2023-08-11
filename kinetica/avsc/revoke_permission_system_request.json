@@ -1,0 +1,63 @@
+{
+    "endpoint": "/revoke/permission/system",
+    "type": "record",
+    "name": "revoke_permission_system_request",
+    "desc_name": "Revoke System Permission",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Revoke a system-level permission from a user or role",
+    "doc": "Revokes a system-level permission from a user or role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user or role from which the permission will be revoked. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Permission to revoke from the user or role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "system_admin" :
+                    {
+                        "doc" : "Full access to all data and system functions.",
+                        "value" : {}
+                    },
+                    "system_user_admin" :
+                    {
+                        "doc": "Access to administer users and roles that do not have system_admin permission.",
+                        "value" : {}
+                    },
+                    "system_write" :
+                    {
+                        "doc" : "Read and write access to all tables.",
+                        "value" : {}
+                    },
+                    "system_read" :
+                    {
+                        "doc" : "Read-only access to all tables.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

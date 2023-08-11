@@ -1,0 +1,38 @@
+{
+    "endpoint": "/grant/role",
+    "type": "record",
+    "name": "grant_role_request",
+    "desc_name": "Grant Role",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Grant membership in a role to a user or role",
+    "doc": "Grants membership in a role to a user or role.",
+    "fields": [
+        {
+            "name": "role",
+            "type": "string",
+            "doc": "Name of the role in which membership will be granted. Must be an existing role.",
+            "value": {}
+        },
+        {
+            "name": "member",
+            "type": "string",
+            "doc": "Name of the user or role that will be granted membership in @{input role}. Must be an existing user or role.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

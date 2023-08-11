@@ -1,0 +1,30 @@
+{
+    "endpoint": "/clear/statistics",
+    "type": "record",
+    "name": "clear_statistics_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Value of @{input table_name}.",
+            "value": {}
+        },
+        {
+            "name": "column_name",
+            "type": "string",
+            "doc": "Value of @{input column_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

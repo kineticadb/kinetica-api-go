@@ -1,0 +1,26 @@
+{
+    "endpoint": "/admin/backup/begin",
+    "type": "record", 
+    "name": "admin_backup_begin_request",
+    "desc_name": "Administration: Begin Backup",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Prepares the system for a backup operation",
+    "doc": "Prepares the system for a backup by closing all open file handles after allowing current active jobs to complete. When the database is in backup mode, queries that result in a disk write operation will be blocked until backup mode has been completed by using @{endpoint /admin/backup/end}.",
+    "fields": [
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,143 @@
+{
+    "endpoint": "/show/graph",
+    "name": "show_graph_response",
+    "desc_name": "Shows Graph(s) Info",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a success. This call will fails of the graph specified in the request does not exist."
+        },        
+        {
+            "name": "load",
+            "type": {
+                "type": "array",
+                "items": "int"
+            },            
+            "value": {},
+            "doc": "A percentage approximating the current computational load on the server."
+        },
+        {
+            "name": "memory",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "Available memory."
+        },
+        {
+            "name": "graph_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "value": {},
+            "doc": "Name(s) of the graph(s)."
+        },
+        {
+            "name": "graph_server_ids",
+            "type": {
+                "type": "array",
+                "items": "int"
+            },
+            "value": {},
+            "doc": "Id(s) of the graph(s)."
+        },
+        {
+            "name": "directed",
+            "type": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "value": {},
+            "doc": "Whether or not the edges of the graph have directions (bi-directional edges can still exist in directed graphs). Consult {Directed Graphs}@{link /graph_solver/network_graph_solver/#directed-graphs} for more details."
+        },
+        {
+            "name": "num_nodes",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "Total number of nodes in the graph."
+        },
+        {
+            "name": "num_edges",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "Total number of edges in the graph."
+        },
+        {
+            "name": "num_bytes",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+            "value": {},
+            "doc": "Memory this graph uses in bytes."
+        },
+        {
+            "name": "is_persisted",
+            "type": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "value": {},
+            "doc": "Shows whether or not the graph is persisted (saved and loaded on launch)."
+        },
+        {
+            "name": "is_partitioned",
+            "type": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "value": {},
+            "doc": "Indicated if the graph data data is distributed across all available servers."
+        },
+        {
+            "name": "is_sync_db",
+            "type": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "value": {},
+            "doc": "Shows whether or not the graph is linked to the original tables that created it, and will potentially be re-created instead loaded from persist on launch."
+        },
+        {
+            "name": "has_insert_table_monitor",
+            "type": {
+                "type": "array",
+                "items": "boolean"
+            },
+            "value": {},
+            "doc": "Shows whether or not the graph has an insert table monitor attached to it."
+        },
+        {
+            "name": "original_request",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "value": {},
+            "doc": "The original client request used to create the graph (before any expression evaluation or separator processing)."
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

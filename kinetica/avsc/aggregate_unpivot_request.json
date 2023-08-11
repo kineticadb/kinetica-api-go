@@ -1,0 +1,228 @@
+{
+    "endpoint": "/aggregate/unpivot",
+    "type": "record",
+    "name": "aggregate_unpivot_request",
+    "desc_name": "Unpivot Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Rotate column values into rows values.",
+    "doc": "Rotate the column values into rows values. 
+
+For unpivot details and examples, see
+{Unpivot}@{link /concepts/unpivot/}.  For limitations, see
+{Unpivot Limitations}@{link /concepts/unpivot/#limitations}.
+
+Unpivot is used to normalize tables that are built for cross tabular reporting
+purposes. The unpivot operator rotates the column values for all the pivoted
+columns. A variable column, value column and all columns from the source table
+except the unpivot columns are projected into the result table. The variable
+column and value columns in the result table indicate the pivoted column name
+and values respectively. 
+
+The response is returned as a dynamic schema. For details see:
+{dynamic schemas documentation}@{link /api/#dynamic-schemas}.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table on which the operation will be performed. Must be an existing table/view, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "column_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of column names or expressions. A wildcard '*' can be used to include all the non-pivoted columns from the source table.",
+            "value": {}
+        },
+        {
+            "name" : "variable_column_name",
+            "type" : "string",
+            "doc"  : "Specifies the variable/parameter column name.",
+            "value" : { "default":""}
+        },
+        {
+            "name" : "value_column_name",
+            "type" : "string",
+            "doc"  : "Specifies the value column name.",
+            "value" : { "default":""}
+        },
+        {
+            "name": "pivoted_columns",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of one or more values typically the column names of the input table. All the columns in the source table must have the same data type.",
+            "value": {}
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                    "doc": "Indicates that the returned records should be binary encoded.",
+                    "value" : {}
+                    },
+                    "json" :
+                    {
+                    "doc": "Indicates that the returned records should be json encoded.",
+                    "value" : {}
+                    }
+                },
+                "default" : "binary",
+                "semantics":
+                {
+                    "type" : "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema as part of {result_table}@{key of input options} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema which is to contain the table specified in {result_table}@{key of input options}. If the schema is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+
+                    "result_table":
+                    {
+                        "doc" : "The name of a table used to store the results, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}. If present, no results are returned in the response.",
+                        "value" :
+                        {
+                            "is_output_table_name": true
+                        }
+                    },
+                    "result_table_persist" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.result_table_persist}, then the result table specified in {result_table}@{key of input options} will be persisted and will not expire unless a {ttl}@{key of input options} is specified.   If {false}@{choice of input.key options.result_table_persist}, then the result table will be an in-memory table and will expire unless a {ttl}@{key of input options} is specified otherwise.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "expression" :
+                    {
+                        "doc"  : "Filter expression to apply to the table prior to unpivot processing.",
+                        "value" : {}
+                    },
+                    "order_by" :
+                    {
+                        "doc": "Comma-separated list of the columns to be sorted by; e.g. 'timestamp asc, x desc'.  The columns specified must be present in input table.  If any alias is given for any column name, the alias must be used, rather than the original column name.",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "chunk_size" :
+                    {
+                        "doc"  : "Indicates the number of records per chunk to be used for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "chunk_column_max_memory" :
+                    {
+                        "doc"  : "Indicates the target maximum data size for each column in a chunk to be used for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "limit" :
+                    {
+                        "doc": "The number of records to keep.",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the table specified in {result_table}@{key of input options}.",
+                        "value" : {}
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "view this result table is part of",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    },
+                    "materialize_on_gpu" :
+                    {
+                        "doc": "No longer used.  See {Resource Management Concepts}@{link /rm/concepts/} for information about how resources are managed.",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "create_indexes" :
+                    {
+                        "doc"  : "Comma-separated list of columns on which to create indexes on the table specified in {result_table}@{key of input options}. The columns specified must be present in output column names.  If any alias is given for any column name, the alias must be used, rather than the original column name.",
+                        "value" : {}
+                    },
+                    "result_table_force_replicated":
+                    {
+                        "doc" : "Force the result table to be replicated (ignores any sharding). Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

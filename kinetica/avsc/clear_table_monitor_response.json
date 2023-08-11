@@ -1,0 +1,24 @@
+{
+    "endpoint": "/clear/tablemonitor", 
+    "type": "record", 
+    "name": "clear_table_monitor_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "topic_id", 
+            "type": "string", 
+            "doc": "Value of @{input topic_id}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

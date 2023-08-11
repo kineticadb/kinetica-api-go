@@ -1,0 +1,2 @@
+{"level":"ERROR","ts":"2023-08-03T16:57:55.995+0530","msg":"EXPR_0: avro: float64 is unsupported for Avro union"}
+{"level":"ERROR","ts":"2023-08-06T10:28:11.906+0530","msg":"City: avro: string is unsupported for Avro union"}

@@ -1,0 +1,36 @@
+{
+    "endpoint": "/revoke/permission/datasink",
+    "type": "record",
+    "name": "revoke_permission_datasink_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "permission",
+            "type": "string",
+            "doc": "Value of @{input permission}.",
+            "value": {}
+        },
+        {
+            "name": "datasink_name",
+            "type": "string",
+            "doc": "Value of @{input datasink_name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

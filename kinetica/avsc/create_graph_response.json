@@ -1,0 +1,47 @@
+{
+    "endpoint": "/create/graph",
+    "name": "create_graph_response",
+    "desc_name": "Create Graph",
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a successful creation on all servers."
+        },
+        {
+            "name": "num_nodes",
+            "type": "long",
+            "value": {},
+            "doc": "Total number of nodes created."
+        },
+        {
+            "name": "num_edges",
+            "type": "long",
+            "value": {},
+            "doc": "Total number of edges created."
+        },
+        {
+            "name": "edges_ids",
+            "type": {
+                "type": "array",
+                "items": "long"
+            },
+          "doc": "Edges given as pairs of node indices. Only populated if {export_create_results}@{key of input options} is set to {true}@{choice of input.key options.export_create_results}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

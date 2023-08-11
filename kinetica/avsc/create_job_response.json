@@ -1,0 +1,35 @@
+{
+    "endpoint": "/create/job",
+    "type": "record", 
+    "name": "create_job_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "job_id",
+            "type": "long",
+            "doc":  "An identifier for the job created by this call.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default" : {},
+                "valid_keys" :
+                {
+                    "job_tag" :
+                    {
+                        "doc":  "The job tag specified by the user or if unspecified by user, a unique identifier generated internally for the job across clusters.",
+                        "value": {}
+                    }
+                }
+            }
+        }
+    ]
+}

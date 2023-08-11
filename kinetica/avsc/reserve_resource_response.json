@@ -1,0 +1,30 @@
+{
+    "endpoint": "/reserve/resource", 
+    "type": "record", 
+    "name": "reserve_resource_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "component",
+            "type": "string",
+            "doc": "value of @{input component}",
+            "value": {}
+        },
+        {
+            "name": "reservation", 
+            "type": "long", 
+            "doc": "Amount in bytes of new reservation. If the reservation failed and there was a previous reservation for the given component, this will be the size of the previous reservation", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

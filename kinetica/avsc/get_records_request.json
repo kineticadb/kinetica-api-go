@@ -1,0 +1,204 @@
+{
+    "endpoint": "/get/records",
+    "type": "record",
+    "name": "get_records_request",
+    "desc_name": "Get Records",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Retrieve records from a table with optional filtering and sorting",
+    "doc": "Retrieves records from a given table, optionally filtered by an
+expression and/or sorted by a column. This operation can be performed on tables
+and views. Records can be returned encoded as binary, json, or geojson.
+
+This operation supports paging through the data via the @{input offset} and
+@{input limit} parameters.  Note that when paging through a table, if the table
+(or the underlying table in case of a view) is updated (records are inserted,
+deleted or modified) the records retrieved may differ between calls based on the
+updates applied.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table or view from which the records will be fetched, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "offset",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the number of initial results to skip (this can be useful for paging through the results).",
+            "value" :
+            {
+                "default": 0,
+                "min" : 0,
+                "max" : "MAX_INT"
+            }
+        },
+        {
+            "name" : "limit",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the maximum number of results to be returned. Or END_OF_SET (-9999) to indicate that the max number of results should be returned.  The number of records returned will never exceed the server's own limit, defined by the {max_get_records_size}@{link /config/#general} parameter in the server configuration.  Use @{output has_more_records} to see if more records exist in the result to be fetched, and @{input offset} & @{input limit} to request subsequent pages of results.",
+            "value" :
+            {
+                "default": -9999
+            }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records; one of {binary}@{choice of input encoding}, {json}@{choice of input encoding}, or {geojson}@{choice of input encoding}.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "geojson" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default": "binary",
+                "semantics":
+                {
+                    "type": "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "expression" :
+                    {
+                        "doc"  : "Optional filter expression to apply to the table.",
+                        "value" : {}
+                    },
+                    "fast_index_lookup" :
+                    {
+                        "doc"  : "Indicates if indexes should be used to perform the lookup for a given expression if possible. Only applicable if there is no sorting, the expression contains only equivalence comparisons based on existing tables indexes and the range of requested values is from [0 to END_OF_SET].",
+                        "value" :
+                        {
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "sort_by" :
+                    {
+                        "doc"  : "Optional column that the data should be sorted by. Empty by default (i.e. no sorting is applied).",
+                        "value" : {}
+                    },
+                    "sort_order" :
+                    {
+                        "doc"  : "String indicating how the returned values should be sorted - ascending or descending. If sort_order is provided, sort_by has to be provided.",
+                        "value" :
+                        {
+                            "default" : "ascending",
+                            "valid_choices" :
+                            {
+                                "ascending" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "descending" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "force_refresh" :
+                    {
+                        "doc"  : "If the table is a vew or join, does a refresh",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "sort_algorithm" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "min_interval" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "max_bin_count" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "num_bins" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "too_big" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "too_many_requested" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

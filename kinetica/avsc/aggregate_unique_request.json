@@ -1,0 +1,252 @@
+{
+    "endpoint": "/aggregate/unique",
+    "type": "record",
+    "name": "aggregate_unique_request",
+    "desc_name": "Aggregate Unique",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Find unique values in a column",
+    "doc": "Returns all the unique values from a particular column
+(specified by @{input column_name}) of a particular table or view
+(specified by @{input table_name}). If @{input column_name} is a numeric column,
+the values will be in @{output binary_encoded_response}. Otherwise if
+@{input column_name} is a string column, the values will be in
+@{output json_encoded_response}.  The results can be paged via @{input offset}
+and @{input limit} parameters.
+
+Columns marked as {store-only}@{link /concepts/types/#data-handling}
+are unable to be used with this function.
+
+To get the first 10 unique values sorted in descending order @{input options}
+would be::
+
+{\"limit\":\"10\",\"sort_order\":\"descending\"}.
+
+The response is returned as a dynamic schema. For details see:
+{dynamic schemas documentation}@{link /api/#dynamic-schemas}.
+
+If a {result_table}@{key of input options} name is specified in the
+@{input options}, the results are stored in a new table with that name--no
+results are returned in the response.  Both the table name and resulting column
+name must adhere to
+{standard naming conventions}@{link /concepts/tables/#table};
+any column expression will need to be aliased.  If the source table's
+{shard key}@{link /concepts/tables/#shard-keys} is used as the
+@{input column_name}, the result table will be sharded, in all other cases it
+will be replicated.  Sorting will properly function only if the result table is
+replicated or if there is only one processing node and should not be relied upon
+in other cases.  Not available if the value of @{input column_name} is an
+unrestricted-length string.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of an existing table or view on which the operation will be performed, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "column_name",
+            "type": "string",
+            "doc": "Name of the column or an expression containing one or more column names on which the unique function would be applied.",
+            "value": {}
+        },
+        {
+            "name": "offset",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the number of initial results to skip (this can be useful for paging through the results).",
+            "value" :
+            {
+                "default": 0,
+                "min" : "0",
+                "max" : "MAX_INT"
+            }
+        },
+        {
+            "name" : "limit",
+            "type" : "long",
+            "doc"  : "A positive integer indicating the maximum number of results to be returned. Or END_OF_SET (-9999) to indicate that the max number of results should be returned.  The number of records returned will never exceed the server's own limit, defined by the {max_get_records_size}@{link /config/#general} parameter in the server configuration.  Use @{output has_more_records} to see if more records exist in the result to be fetched, and @{input offset} & @{input limit} to request subsequent pages of results.",
+            "value" :
+            {
+                "default": -9999
+            }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc": "Indicates that the returned records should be binary encoded.",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc": "Indicates that the returned records should be json encoded.",
+                        "value" : {}
+                    }
+                },
+                "default" : "binary",
+                "semantics":
+                {
+                    "type" : "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema as part of {result_table}@{key of input options} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema which is to contain the table specified in {result_table}@{key of input options}. If the schema provided is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "expression" :
+                    {
+                        "doc"  : "Optional filter expression to apply to the table.",
+                        "value" : {}
+                    },
+                    "sort_order" :
+                    {
+                        "doc"  : "String indicating how the returned values should be sorted.",
+                        "value" :
+                        {
+                            "default" : "ascending",
+                            "valid_choices" :
+                            {
+                                "ascending" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "descending" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "result_table":
+                    {
+                        "doc" : "The name of the table used to store the results, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  If present, no results are returned in the response.  Not available if @{input column_name} is an unrestricted-length string.",
+                        "value" :
+                        {
+                            "is_output_table_name": true
+                        }
+                    },
+                    "result_table_persist" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.result_table_persist}, then the result table specified in {result_table}@{key of input options} will be persisted and will not expire unless a {ttl}@{key of input options} is specified.   If {false}@{choice of input.key options.result_table_persist}, then the result table will be an in-memory table and will expire unless a {ttl}@{key of input options} is specified otherwise.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "result_table_force_replicated":
+                    {
+                        "doc" : "Force the result table to be replicated (ignores any sharding). Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "result_table_generate_pk":
+                    {
+                        "doc" : "If {true}@{choice of input.key options.result_table_generate_pk} then set a primary key for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "ttl" :
+                    {
+                        "doc" : "Sets the {TTL}@{link /concepts/ttl/} of the table specified in {result_table}@{key of input options}.",
+                        "value" : {}
+                    },
+                    "chunk_size" :
+                    {
+                        "doc"  : "Indicates the number of records per chunk to be used for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "chunk_column_max_memory" :
+                    {
+                        "doc"  : "Indicates the target maximum data size for each column in a chunk to be used for the result table. Must be used in combination with the {result_table}@{key of input options} option.",
+                        "value" : {}
+                    },
+                    "refresh" :
+                    {
+                        "doc"  : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "view_id" :
+                    {
+                        "doc"  : "ID of view of which the result table will be a member",
+                        "value" :
+                        {
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

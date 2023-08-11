@@ -1,0 +1,149 @@
+{
+    "endpoint": "/show/functions", 
+    "type": "record", 
+    "name": "show_functions_request", 
+    "desc_name": "Show Functions",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "generate" : "NO_DOCS",
+    "short_doc" : "List GPUdb Functions and operators",
+    "doc"  : "For internal use only.  Return the list of GPUdb functions for the SQL Planner.",
+    "fields": [
+          {
+            "name": "names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of names of function to be shown.",
+            "value": {}
+           }, 
+           { 
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "properties" :
+                    {
+                        "doc"  : "A list of comma separated names of properties requested. If not specified, all properties will be returned.",
+                        "value" : {}
+                    },
+                    "show_scalar_functions" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    }, 
+                    "show_aggregate_functions" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "show_sql_procedures" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "show_user_defined_functions" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    },
+                    "show_cast_functions" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "false" :
+                                {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+          } 
+    ]
+}

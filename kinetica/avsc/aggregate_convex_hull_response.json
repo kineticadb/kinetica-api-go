@@ -1,0 +1,50 @@
+{
+    "endpoint": "/aggregate/convexhull", 
+    "type": "record", 
+    "name": "aggregate_convex_hull_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "x_vector", 
+            "type": 
+            {
+                "type": "array", 
+                "items": "double"
+            }, 
+            "doc": "Array of x coordinates of the resulting convex set.", 
+            "value": {}
+        }, 
+        {
+            "name": "y_vector", 
+            "type": 
+            {
+                "type": "array", 
+                "items": "double"
+            }, 
+            "doc": "Array of y coordinates of the resulting convex set.", 
+            "value": {}
+        }, 
+        {
+            "name": "count", 
+            "type": "int", 
+            "doc": "Count of the number of points in the convex set.", 
+            "value": {}
+        }, 
+        {
+            "name": "is_valid", 
+            "type": "boolean", 
+            "doc": "", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

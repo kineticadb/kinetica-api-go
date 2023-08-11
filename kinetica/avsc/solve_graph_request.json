@@ -1,0 +1,396 @@
+{
+    "endpoint": "/solve/graph",
+    "name": "solve_graph_request",
+    "desc_name": "Solve Graph",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "doc": "Solves an existing graph for a type of problem (e.g., shortest path,
+page rank, travelling salesman, etc.) using source nodes, destination nodes, and
+additional, optional weights and restrictions. 
+
+IMPORTANT: It's highly recommended that you review the
+{Network Graphs & Solvers}@{link /graph_solver/network_graph_solver/}
+concepts documentation, the
+{Graph REST Tutorial}@{link /guides/graph_rest_guide/},
+and/or some
+{/solve/graph examples}@{link /guide-tags/graph-solve}
+before using this endpoint.",
+    "short_doc": "Solves an existing graph.",
+    "fields": [
+        {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Name of the graph resource to solve.",
+            "value": {}
+        },
+        {
+            "name": "weights_on_edges",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Additional weights to apply to the edges of an existing
+graph. Weights must be specified using
+{identifiers}@{link /graph_solver/network_graph_solver/#identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#id-combos}.
+Identifiers can be used with existing column names, e.g.,
+'table.column AS WEIGHTS_EDGE_ID', expressions, e.g.,
+'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED', or constant values, e.g.,
+'{4, 15, 2} AS WEIGHTS_VALUESPECIFIED'. Any provided weights will be added
+(in the case of 'WEIGHTS_VALUESPECIFIED') to or multiplied with
+(in the case of 'WEIGHTS_FACTORSPECIFIED') the existing weight(s). If using
+constant values in an identifier combination, the number of values specified
+must match across the combination.",
+            "value": {
+              "default": []
+            }
+        },
+        {
+            "name": "restrictions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Additional restrictions to apply to the nodes/edges of an
+existing graph. Restrictions must be specified using
+{identifiers}@{link /graph_solver/network_graph_solver/#identifiers};
+identifiers are grouped as
+{combinations}@{link /graph_solver/network_graph_solver/#id-combos}.
+Identifiers can be used with existing column names, e.g.,
+'table.column AS RESTRICTIONS_EDGE_ID', expressions, e.g.,
+'column/2 AS RESTRICTIONS_VALUECOMPARED', or constant values, e.g.,
+'{0, 0, 0, 1} AS RESTRICTIONS_ONOFFCOMPARED'. If using constant values in an
+identifier combination, the number of values specified must match across the
+combination. If {remove_previous_restrictions}@{key of input options} is set
+to {true}@{choice of input.key options.remove_previous_restrictions}, any
+provided restrictions will replace the existing restrictions. If
+{remove_previous_restrictions}@{key of input options} is set to
+{false}@{choice of input.key options.remove_previous_restrictions}, any provided
+restrictions will be added (in the case of 'RESTRICTIONS_VALUECOMPARED') to or
+replaced (in the case of 'RESTRICTIONS_ONOFFCOMPARED').",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "solver_type",
+            "type": "string",
+            "doc": "The type of solver to use for the graph.",
+            "value": {
+                "default": "SHORTEST_PATH",
+                "valid_choices": {
+                    "SHORTEST_PATH": {
+                        "doc": "Solves for the optimal (shortest) path based on weights and restrictions from one source to destinations nodes. Also known as the Dijkstra solver.",
+                        "value": {}
+                    },
+                    "PAGE_RANK": {
+                        "doc": "Solves for the probability of each destination node being visited based on the links of the graph topology. Weights are not required to use this solver.",
+                        "value": {}
+                    },
+                    "PROBABILITY_RANK": {
+                        "doc": "Solves for the transitional probability (Hidden Markov) for each node based on the weights (probability assigned over given edges).",
+                        "value": {}
+                    },
+                    "CENTRALITY": {
+                        "doc": "Solves for the degree of a node to depict how many pairs of individuals that would have to go through the node to reach one another in the minimum number of hops. Also known as betweenness.",
+                        "value": {}
+                    },
+                    "MULTIPLE_ROUTING": {
+                      "doc": "Solves for finding the minimum cost cumulative path for a round-trip starting from the given source and visiting each given destination node once then returning to the source. Also known as the travelling salesman problem.",
+                      "value": {}
+                    },
+                    "INVERSE_SHORTEST_PATH": {
+                        "doc": "Solves for finding the optimal path cost for each destination node to route to the source node. Also known as inverse Dijkstra or the service man routing problem.",
+                        "value": {}
+                    },
+                    "BACKHAUL_ROUTING": {
+                        "doc": "Solves for optimal routes that connect remote asset nodes to the fixed (backbone) asset nodes.",
+                        "value": {}
+                    },
+                    "ALLPATHS": {
+                        "doc": "Solves for paths that would give costs between max and min solution radia - Make sure to limit by the 'max_solution_targets' option. Min cost shoudl be >= shortest_path cost.",
+                        "value": {}
+                    },
+                    "STATS_ALL": {
+                        "doc": "Solves for graph statistics such as graph diameter, longest pairs, vertex valences, topology numbers, average and max cluster sizes, etc.",
+                        "value": {}
+                    },
+                    "CLOSENESS": {
+                        "doc": "Solves for the centrality closeness score per node as the sum of the inverse shortest path costs to all nodes in the graph.", 
+                        "value": {}
+                    }
+                    
+                }
+            }
+        },
+        {
+            "name": "source_nodes",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "It can be one of the nodal identifiers - e.g: 'NODE_WKTPOINT' for source nodes. For {BACKHAUL_ROUTING}@{choice of input solver_type}, this list depicts the fixed assets.",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "destination_nodes",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "It can be one of the nodal identifiers - e.g: 'NODE_WKTPOINT' for destination (target) nodes. For {BACKHAUL_ROUTING}@{choice of input solver_type}, this list depicts the remote assets.",
+            "value": {
+                "default":[]
+            }
+        },
+        {
+            "name": "solution_table",
+            "type": "string",
+            "doc": "Name of the table to store the solution, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value": {
+                "default" : "graph_solutions"
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Additional parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "max_solution_radius": {
+                        "type": "float",
+                        "doc": "For {ALLPATHS}@{choice of input solver_type}, {SHORTEST_PATH}@{choice of input solver_type} and {INVERSE_SHORTEST_PATH}@{choice of input solver_type} solvers only. Sets the maximum solution cost radius, which ignores the @{input destination_nodes} list and instead outputs the nodes within the radius sorted by ascending cost. If set to '0.0', the setting is ignored.",
+                        "value": {
+                            "default": "0.0"
+                        }
+                    },
+                    "min_solution_radius": {
+                        "type": "float",
+                        "doc": "For {ALLPATHS}@{choice of input solver_type}, {SHORTEST_PATH}@{choice of input solver_type} and {INVERSE_SHORTEST_PATH}@{choice of input solver_type} solvers only. Applicable only when {max_solution_radius}@{key of input options} is set. Sets the minimum solution cost radius, which ignores the @{input destination_nodes} list and instead outputs the nodes within the radius sorted by ascending cost. If set to '0.0', the setting is ignored.",
+                        "value": {
+                            "default": "0.0"
+                        }
+                    },
+                    "max_solution_targets": {
+                        "type": "int",
+                        "doc": "For {ALLPATHS}@{choice of input solver_type}, {SHORTEST_PATH}@{choice of input solver_type} and {INVERSE_SHORTEST_PATH}@{choice of input solver_type} solvers only. Sets the maximum number of solution targets, which ignores the @{input destination_nodes} list and instead outputs no more than n number of nodes sorted by ascending cost where n is equal to the setting value. If set to 0, the setting is ignored.",
+                        "value": {
+                            "default": "1000"
+                        }
+                    },
+                    "export_solve_results": {
+                        "type": "boolean",
+                        "doc": "Returns solution results inside the @{output result_per_destination_node} array in the response if set to {true}@{choice of input.key options.export_solve_results}.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "remove_previous_restrictions": {
+                        "type": "boolean",
+                        "doc": "Ignore the restrictions applied to the graph during the creation stage and only use the restrictions specified in this request if set to {true}@{choice of input.key options.remove_previous_restrictions}.",
+                        "value" : {
+                            "default":"false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "restriction_threshold_value": {
+                        "type": "float",
+                        "doc": "Value-based restriction comparison. Any node or edge with a RESTRICTIONS_VALUECOMPARED value greater than the {restriction_threshold_value}@{key of input options} will not be included in the solution.",
+                        "value": {}
+                    },
+                    "uniform_weights": {
+                        "type": "float",
+                        "doc": "When specified, assigns the given value to all the edges in the graph. Note that weights provided in @{input weights_on_edges} will override this value.",
+                        "value": {}
+                    },
+                    "left_turn_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as 'left turn' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "right_turn_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as' right turn' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "intersection_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as 'intersection' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "sharp_turn_penalty": {  
+                        "type": "float",
+                        "doc": "This will add an additonal weight over the edges labelled as 'sharp turn' or 'u-turn' if the 'add_turn' option parameter of the @{endpoint /create/graph} was invoked at graph creation.",
+                        "value": {"default": "0.0"}
+                    },
+                    "num_best_paths": {
+                        "type": "int",
+                        "doc": "For {MULTIPLE_ROUTING}@{choice of input solver_type} solvers only; sets the number of shortest paths computed from each node. This is the heuristic criterion. Default value of zero allows the number to be computed automatically by the solver. The user may want to override this parameter to speed-up the solver.",
+                        "value": {"default" : "0"}
+                    },
+                    "max_num_combinations": {
+                        "type": "int",
+                        "doc":"For {MULTIPLE_ROUTING}@{choice of input solver_type} solvers only; sets the cap on the combinatorial sequences generated. If the default value of two millions is overridden to a lesser value, it can potentially speed up the solver.",
+                        "value": { "default": "2000000" }
+                    },
+                    "accurate_snaps" : {
+                        "type": "boolean",
+                        "doc": " Valid for single source destination pair solves if points are described in NODE_WKTPOINT identifier types: When true (default), it snaps to the nearest node of the graph; otherwise, it searches for the closest entity that could be an edge. For the latter case (false), the solver modifies the resulting cost with the weights proportional to the ratio of the snap location within the edge. This may be an over-kill when the performance is considered and the difference is well less than 1 percent. In batch runs, since the performance is of utmost importance, the option is always considered 'false'.",
+                        "value" : { 
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "output_edge_path" : {
+                        "type": "boolean",
+                        "doc": " If true then concatenated edge ids will be added as the EDGE path column of the solution table for each source and target pair in shortest path solves.",
+                        "value" : { 
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "output_wkt_path" : {
+                        "type": "boolean",
+                        "doc": " If true then concatenated wkt line segments will be added as the Wktroute column of the solution table for each source and target pair in shortest path solves.",
+                        "value" : { 
+                            "default" : "true",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "server_id": {
+                        "doc": "Indicates which graph server(s) to send the request to. Default is to send to the server, amongst those containing the corresponding graph, that has the most computational bandwidth. For SHORTEST_PATH solver type, the input is split amongst the server containing the corresponding graph.",
+                        "value": {}
+                    },
+                    "convergence_limit": {
+                        "type": "float",
+                        "doc":"For {PAGE_RANK}@{choice of input solver_type} solvers only; Maximum percent relative threshold on the pagerank scores of each node between consecutive iterations to satisfy convergence. Default value is 1 (one) percent.",
+                        "value": { "default": "1.0" }
+                    },
+                    "max_iterations": {
+                        "type": "int",
+                        "doc":"For {PAGE_RANK}@{choice of input solver_type} solvers only; Maximum number of pagerank iterations for satisfying convergence. Default value is 100.",
+                        "value": { "default": "100" }
+                    },
+                    "max_runs": {
+                        "type": "int",
+                        "doc":"For all {CENTRALITY}@{choice of input solver_type} solvers only; Sets the maximum number of shortest path runs; maximum possible value is the number of nodes in the graph. Default value of 0 enables this value to be auto computed by the solver.",
+                        "value": { "default": "0" }
+                    },
+                    "output_clusters" : {
+                        "type": "boolean",
+                        "doc": "For {STATS_ALL}@{choice of input solver_type} solvers only; the cluster index for each node will be inserted as an additional column in the output.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "An additional column 'CLUSTER' will be added for each node", "value": {} },
+                                "false": { "doc": "No extra cluster info per node will be available in the output", "value": {} }
+                            }
+                        }
+                    },
+                    "keep_derived_table": {
+                        "type": "boolean",
+                        "doc": "",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "simplified_xyz": {
+                        "type": "boolean",
+                        "doc": "",
+                        "value": {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "early_exit": {
+                        "type": "boolean",
+                        "doc": "For distributed solves; end propagation immediately when the target is reached.",
+                        "value": {
+                            "internal_option": true,
+                            "default": "true",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },         
+                    "max_partition_loops": {
+                        "type": "int",
+                        "doc": "For distributed solves; when positive limits the number of solve iterations. ",
+                        "value": {
+                            "internal_option": true,
+                            "default": "-1"
+                        }
+                    },
+                    "internal_security_token" :
+                    {
+                        "doc" : "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    }                
+                }
+            }
+        }
+    ]
+}

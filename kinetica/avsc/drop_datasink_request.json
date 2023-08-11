@@ -1,0 +1,50 @@
+{
+    "endpoint": "/drop/datasink",
+    "type": "record",
+    "name": "drop_datasink_request",
+    "desc_name": "Drop Data Sink",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Drop an existing data sink",
+    "doc": "Drops an existing {data sink}@{link /concepts/data_sinks/}. By default, if any {table monitors}@{link /concepts/table_monitors} 
+use this sink as a destination, the request will be blocked unless option {@input clear_table_monitors} is 'true'.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the data sink to be dropped. Must be an existing data sink.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "clear_table_monitors": 
+                    {
+                        "type": "boolean",
+                        "doc": "If 'true', any {table monitors}@{link /concepts/table_monitors/} that use this data sink will be cleared.",
+                        "value": 
+                        { 
+                            "default": "false",
+                            "valid_choices":
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

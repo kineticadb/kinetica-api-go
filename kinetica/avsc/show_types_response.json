@@ -1,0 +1,94 @@
+{
+    "endpoint": "/show/types", 
+    "type": "record", 
+    "name": "show_types_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "type_ids", 
+            "type":
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "", 
+            "value":
+            {
+            "semantics":
+                {
+                    "type": "type_id",
+                    "dimensionality": 1
+                }
+            }
+        }, 
+        {
+            "name": "type_schemas", 
+            "type": 
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "", 
+            "value":
+            {
+            "semantics":
+                {
+                    "type": "type_schema",
+                    "dimensionality": 1
+                }
+            }
+        }, 
+        {
+            "name": "labels", 
+            "type":
+            {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "label",
+                    "dimensionality": 1
+                }
+            }
+        },  
+        {
+            "name": "properties", 
+            "type":
+            {
+                "type": "array", 
+                "items":
+                {
+                    "type": "map", 
+                    "values":
+                    {
+                        "type": "array", 
+                        "items": "string"
+                    }
+                }
+            }, 
+            "doc": "", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "properties",
+                    "dimensionality": 1
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "endpoint": "/admin/add/host",
+    "type": "record",
+    "name": "admin_add_host_response",
+    "desc_name": "Admin Add Host Response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "added_host",
+            "type": "string",
+            "doc":  "Identifier for the newly added host, of the format 'hostN' where N is the integer identifier of that host. Note that the host identifier is transient, i.e. it may change in the future if other hosts are removed.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

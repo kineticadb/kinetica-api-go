@@ -1,0 +1,83 @@
+{
+    "endpoint": "/create/trigger/byarea",
+    "type": "record",
+    "name": "create_trigger_by_area_request",
+    "desc_name": "Create Trigger by Area",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a table trigger for new records falling within a 2-D boundary",
+    "doc": "Sets up an area trigger mechanism for two column_names for one or
+more tables. (This function is essentially the two-dimensional version of
+@{endpoint /create/trigger/byrange}.) Once the trigger has been activated, any
+record added to the listed tables(s) via @{endpoint /insert/records} with the
+chosen columns' values falling within the specified region will trip the
+trigger. All such records will be queued at the trigger port (by default '9001'
+but able to be retrieved via @{endpoint /show/system/status}) for any listening
+client to collect. Active triggers can be cancelled by using the
+@{endpoint /clear/trigger} endpoint or by clearing all relevant tables.
+
+The output returns the trigger handle as well as indicating success or failure
+of the trigger activation.",
+    "fields": [
+        {
+            "name": "request_id",
+            "type": "string",
+            "doc": "User-created ID for the trigger. The ID can be alphanumeric, contain symbols, and must contain at least one character.",
+            "value": {  }
+        },
+        {
+            "name": "table_names",
+            "type":
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Names of the tables on which the trigger will be activated and maintained, each in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value": {}
+        },
+        {
+            "name": "x_column_name",
+            "type": "string",
+            "doc": "Name of a numeric column on which the trigger is activated. Usually 'x' for geospatial data points.",
+            "value": {}
+        },
+        {
+            "name": "x_vector",
+            "type": {
+                "type": "array",
+                "items": "double"
+            },
+            "doc": "The respective coordinate values for the region on which the trigger is activated. This usually translates to the x-coordinates of a geospatial region.",
+            "value": {}
+        },
+        {
+            "name": "y_column_name",
+            "type": "string",
+            "doc": "Name of a second numeric column on which the trigger is activated. Usually 'y' for geospatial data points.",
+            "value": {}
+        },
+        {
+            "name": "y_vector",
+            "type": {
+                "type": "array",
+                "items": "double"
+            },
+            "doc": "The respective coordinate values for the region on which the trigger is activated. This usually translates to the y-coordinates of a geospatial region. Must be the same length as xvals.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

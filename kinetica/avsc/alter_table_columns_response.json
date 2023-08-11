@@ -1,0 +1,78 @@
+{
+    "endpoint": "/alter/table/columns",
+    "type": "record", 
+    "name": "alter_table_columns_response",
+    "doc": "", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Table on which the operation was performed.", 
+            "value": {}
+        }, 
+        {
+            "name": "type_id",
+            "type": "string",
+            "doc": "return the type_id (when changing a table, a new type may be created)",
+            "value":
+            {
+            }
+        },
+        {
+            "name": "type_definition",
+            "type": "string",
+            "doc": "return the type_definition  (when changing a table, a new type may be created)",
+            "value":
+            {
+            }
+        },
+        {
+            "name" : "properties",
+            "doc": "return the type properties  (when changing a table, a new type may be created)",
+            "type" : {
+                "type" : "map",
+                "values" : {
+                    "type" : "array",
+                    "items" : "string"
+                }
+            },
+            "value":
+            {
+            }
+        },
+        {
+            "name" : "label",
+            "doc": "return the type label  (when changing a table, a new type may be created)",
+            "type" : "string",
+            "value":
+            {
+            }
+
+        },
+        {
+            "name": "column_alterations",
+            "type":
+            {
+                "type": "array",
+        		"items": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "value": {},
+
+            "doc": "List of alter table add/delete/change column requests - all for the same table. Each request is a map that includes 'column_name', 'action' and the options specific for the action. Note that the same options as in alter table requests but in the same map as the column name and the action. For example: [{'column_name':'col_1','action':'change_column','rename_column':'col_2'},{'column_name':'col_1','action':'add_column', 'type':'int','default_value':'1'}]",
+            "default" : {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

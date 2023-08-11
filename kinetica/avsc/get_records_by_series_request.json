@@ -1,0 +1,98 @@
+{
+    "endpoint": "/get/records/byseries",
+    "type": "record",
+    "name": "get_records_by_series_request",
+    "desc_name": "Get Records by Series",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Retrieve the complete series/track records from partial track information",
+
+    "doc": "Retrieves the complete series/track records from the given
+@{input world_table_name} based on the partial track information contained in
+the @{input table_name}.
+
+This operation supports paging through the data via the @{input offset} and
+@{input limit} parameters.
+
+In contrast to @{endpoint /get/records} this returns records grouped by
+series/track. So if @{input offset} is 0 and @{input limit} is 5 this operation
+would return the first 5 series/tracks in @{input table_name}. Each series/track
+will be returned sorted by their TIMESTAMP column.",
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of the table or view for which series/tracks will be fetched, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "world_table_name",
+            "type": "string",
+            "doc": "Name of the table containing the complete series/track information to be returned for the tracks present in the @{input table_name}, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Typically this is used when retrieving series/tracks from a view (which contains partial series/tracks) but the user wants to retrieve the entire original series/tracks. Can be blank.",
+            "value": {}
+        },
+        {
+            "name": "offset",
+            "type": "int",
+            "doc": "A positive integer indicating the number of initial series/tracks to skip (useful for paging through the results).",
+            "value":
+	        {
+		        "min": 0,
+		        "max":"MAX_INT",
+		        "default": 0
+	        }
+        },
+        {
+            "name": "limit",
+            "type": "int",
+            "doc": "A positive integer indicating the maximum number of series/tracks to be returned. Or END_OF_SET (-9999) to indicate that the max number of results should be returned.", 
+            "value":
+	        {
+		        "default" : 250
+	        }
+        },
+        {
+            "name" : "encoding",
+            "type" : "string",
+            "doc"  : "Specifies the encoding for returned records; either {binary}@{choice of input encoding} or {json}@{choice of input encoding}.",
+            "value" :
+            {
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default": "binary",
+                "semantics":
+                {
+                    "type": "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

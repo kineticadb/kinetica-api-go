@@ -1,0 +1,32 @@
+{
+    "endpoint": "/show/datasource",
+    "type": "record",
+    "name": "show_datasource_request",
+    "desc_name": "Show Data Source",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show information about a data source.",
+    "doc": "Shows information about a specified {data source}@{link /concepts/data_sources/} or all data sources.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the data source for which to retrieve information. The name must refer to a currently existing data source. If '*' is specified, information about all data sources will be returned.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+             {
+                "default": {}
+             }
+        }
+    ]
+}

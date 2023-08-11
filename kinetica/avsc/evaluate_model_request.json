@@ -1,0 +1,64 @@
+{
+    "endpoint": "/evaluate/model",
+    "type": "record",
+    "name": "evaluate_model_request",
+    "desc_name": "Evaluate a Model",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Evaluat a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Name of the model to be evaluated" ,
+            "value":{}
+
+        },
+        {
+            "name": "replicas",
+            "type": "int",
+            "doc": "Number of replicas" ,
+            "default" : {},
+            "value":{}
+
+        },     
+        {
+            "name": "deployment_mode",
+            "type": "string",
+            "doc": "Type of the deployment" ,
+            "default" : "BATCH",
+            "value":{}
+
+        },               
+        {
+            "name": "source_table",
+            "type": "string",
+            "doc": "Name of the source table",
+            "value":{}
+
+        },       
+        {
+            "name": "destination_table",
+            "type": "string",
+            "doc": "Output table" ,
+            "value":{}
+
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {}
+            }
+        }
+    ]
+}

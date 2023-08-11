@@ -1,0 +1,34 @@
+{
+    "endpoint": "/delete/records", 
+    "type": "record", 
+    "name": "delete_records_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "count_deleted", 
+            "type": "long", 
+            "doc": "Total number of records deleted across all expressions.", 
+            "value": {}
+        }, 
+        {
+            "name": "counts_deleted", 
+            "type":
+            {
+                "type": "array", 
+                "items": "long"
+            }, 
+            "doc": "Total number of records deleted per expression.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

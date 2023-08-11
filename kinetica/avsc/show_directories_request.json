@@ -1,0 +1,33 @@
+{
+    "endpoint": "/show/directories", 
+    "type": "record", 
+    "name": "show_directories_request", 
+    "desc_name": "Show Directories",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Show information about directories in KiFS",    
+    "doc": "Shows information about directories in {KiFS}@{link /tools/kifs/}. Can be used to show a single directory, or all directories.",
+    "fields": 
+    [
+        {
+            "name": "directory_name",
+            "type": "string",
+            "doc" : "The KiFS directory name to show. If empty, shows all directories.",
+            "value": { "default" : "" }
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "endpoint": "/alter/system/properties", 
+    "type": "record", 
+    "name": "alter_system_properties_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "updated_properties_map", 
+            "type":
+	    {
+            	"type" : "map",
+            	"values" : "string"
+            },
+            "doc": "map of values updated, For speed tests a map of values measured to the measurement", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

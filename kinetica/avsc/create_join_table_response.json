@@ -1,0 +1,44 @@
+{
+    "endpoint": "/create/jointable", 
+    "type": "record", 
+    "name": "create_join_table_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "join_table_name", 
+            "type": "string", 
+            "doc": "Value of @{input join_table_name}.", 
+            "value": {}
+        },
+        {
+            "name": "count", 
+            "type": "long", 
+            "doc": "The number of records in the join table filtered by the given select expression.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "qualified_join_table_name":
+                    {
+                        "doc" : "The fully qualified name of the join table (i.e. including the schema)",
+                        "value" :
+                        {
+                            "is_qualified_output_table_name": true
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

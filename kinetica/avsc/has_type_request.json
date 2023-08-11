@@ -1,0 +1,32 @@
+{
+    "endpoint": "/has/type", 
+    "type": "record", 
+    "name": "has_type_request", 
+    "desc_name": "Has Type",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Check for the existence of specified type",       
+    "doc": "Check for the existence of a type.", 
+    "fields": [
+        {
+            "name": "type_id", 
+            "type": "string",
+            "doc": "Id of the type returned in response to @{endpoint /create/type} request.", 
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

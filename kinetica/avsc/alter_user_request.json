@@ -1,0 +1,65 @@
+{
+    "endpoint": "/alter/user",
+    "type": "record",
+    "name": "alter_user_request",
+    "desc_name": "Alter User",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter a user",
+    "doc": "Alters a user.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the user to be altered. Must be an existing user.",
+            "value": {}
+        },
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Modification operation to be applied to the user.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "set_password" :
+                    {
+                        "doc" : "Sets the password of the user. The user must be an internal user.",
+                        "value" : {}
+                    },
+                    "set_resource_group" :
+                    {
+                        "doc" : "Sets the resource group for an internal user. The resource group must exist, otherwise, an empty string assigns the user to the default resource group.",
+                        "value" : {}
+                    },
+                    "set_default_schema" :
+                    {
+                        "doc" : "Set the default_schema for an internal user. An empty string means the user will have no default schema.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "value",
+            "type": "string",
+            "doc": "The value of the modification, depending on @{input action}.",
+            "value":
+            {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

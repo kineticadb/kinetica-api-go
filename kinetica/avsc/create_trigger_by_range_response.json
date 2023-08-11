@@ -1,0 +1,24 @@
+{
+    "endpoint": "/create/trigger/byrange", 
+    "type": "record", 
+    "name": "create_trigger_by_range_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "trigger_id", 
+            "type": "string", 
+            "doc": "Value of @{input request_id}.", 
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

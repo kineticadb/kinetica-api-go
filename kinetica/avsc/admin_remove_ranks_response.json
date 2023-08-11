@@ -1,0 +1,29 @@
+{
+    "endpoint": "/admin/remove/ranks",
+    "type" : "record",
+    "name" : "admin_remove_ranks_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name" : "removed_ranks",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "The number assigned to each rank removed from the cluster. This array will be empty if the operation fails.",
+            "value" : { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

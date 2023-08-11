@@ -1,0 +1,178 @@
+{
+    "endpoint": "/admin/verifydb",
+    "type": "record", 
+    "name": "admin_verify_db_request",
+    "desc_name": "Administration: Verify Database",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Verify database is in a consistent state",
+    "doc": "Verify database is in a consistent state.  When inconsistencies or errors are found, the verified_ok flag in the response is set to false and the list of errors found is provided in the error_list.",
+    "fields": [
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "rebuild_on_error" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "verify_nulls" :
+                    {
+                        "doc" : "When enabled, verifies that null values are set to zero",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "verify_persist" :
+                    {
+                        "doc" : "",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "concurrent_safe" :
+                    {
+                        "doc" : "When enabled, allows this endpoint to be run safely with other concurrent database operations. Other operations may be slower while this is running.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "true"
+                        }
+                    },
+                    "verify_rank0" :
+                    {
+                        "doc" : "When enabled, compares rank0 table meta-data against workers meta-data",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false"
+                        }
+                    },
+                    "refresh_dependent_tables" :
+                    {
+                        "doc" : "Refreshes filter views, joins, etc as part of processing",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false",
+                            "internal_option": "true"
+                        }
+                    },
+                    "kifs_full_verify" :
+                    {
+                        "doc" : "When verifying kifs, checks for existence of the real files on the backing server (expensive), plus another other deeper checks",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "false",
+                            "internal_option": "true"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

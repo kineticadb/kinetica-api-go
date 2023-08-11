@@ -1,0 +1,32 @@
+{
+    "endpoint": "/show/datasink",
+    "type": "record",
+    "name": "show_datasink_request",
+    "desc_name": "Show Data Sink",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Show information about a data datasink.",
+    "doc": "Shows information about a specified {data datasink}@{link /concepts/data_sinks/} or all data datasink.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the data sink for which to retrieve information. The name must refer to a currently existing data sink. If '*' is specified, information about all data sinks will be returned.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+             {
+                "default": {}
+             }
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "endpoint": "/alter/role",
+    "type": "record",
+    "name": "alter_role_request",
+    "desc_name": "Alter Role",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter a Role",
+    "doc": "Alters a Role.",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Name of the role to be altered. Must be an existing role.",
+            "value": {}
+        },
+        {
+            "name": "action",
+            "type": "string",
+            "doc": "Modification operation to be applied to the role.",
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "set_resource_group" :
+                    {
+                        "doc" : "Sets the resource group for an internal role. The resource group must exist, otherwise, an empty string assigns the role to the default resource group.",
+                        "value" : {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "value",
+            "type": "string",
+            "doc": "The value of the modification, depending on @{input action}.",
+            "value":
+            {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

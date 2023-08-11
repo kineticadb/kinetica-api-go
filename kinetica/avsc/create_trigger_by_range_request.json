@@ -1,0 +1,70 @@
+{
+    "endpoint": "/create/trigger/byrange",
+    "type": "record",
+    "name": "create_trigger_by_range_request",
+    "desc_name": "Create Trigger by Range",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a table trigger for new records falling within a 1-D range",
+    "doc": "Sets up a simple range trigger for a column_name for one or more
+tables. Once the trigger has been activated, any record added to the listed
+tables(s) via @{endpoint /insert/records} with the chosen column_name's value
+falling within the specified range will trip the trigger. All such records will
+be queued at the trigger port (by default '9001' but able to be retrieved via
+@{endpoint /show/system/status}) for any listening client to collect. Active
+triggers can be cancelled by using the @{endpoint /clear/trigger} endpoint or by
+clearing all relevant tables.
+
+The output returns the trigger handle as well as indicating success or failure
+of the trigger activation.",
+
+    "fields": [
+        {
+            "name": "request_id",
+            "type": "string",
+            "doc": "User-created ID for the trigger. The ID can be alphanumeric, contain symbols, and must contain at least one character.",
+            "value": { }
+        },
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Tables on which the trigger will be active, each in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.",
+            "value": {}
+        },
+        {
+            "name": "column_name",
+            "type": "string",
+            "doc": "Name of a numeric column_name on which the trigger is activated.",
+            "value": {}
+        },
+        {
+            "name": "min",
+            "type": "double",
+            "doc": "The lower bound (inclusive) for the trigger range.",
+            "value": {}
+        },
+        {
+            "name": "max",
+            "type": "double",
+            "doc": "The upper bound (inclusive) for the trigger range.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

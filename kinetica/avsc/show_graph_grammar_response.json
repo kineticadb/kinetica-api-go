@@ -1,0 +1,32 @@
+{
+    "endpoint": "/show/graph/grammar",
+    "name": "show_graph_grammar_response",
+    "desc_name": "Show Graph Grammar",
+    "type": "record",
+    "doc": "Component configuration identifiers and options for all graph endpoints as JSON string",
+    "generate" : "NO_DOCS",
+    "fields": [
+        {
+            "name": "result",
+            "type": "boolean",
+            "value": {},
+            "doc": "Indicates a successful retrieval."
+        },
+        {
+            "name": "components_json",
+            "type": "string",
+            "value": {},
+            "doc": "The stringified json structure for all the graph endpoints' components and options"
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

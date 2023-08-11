@@ -1,0 +1,254 @@
+{
+    "endpoint": "/update/records",
+    "type": "record",
+    "name": "update_records_request",
+    "desc_name": "Update Records",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc" : "Perform predicate-based updates to table data",
+    "doc": "Runs multiple predicate-based updates in a single call.  With the
+list of given expressions, any matching record's column values will be updated
+as provided in @{input new_values_maps}.  There is also an optional 'upsert'
+capability where if a particular predicate doesn't match any existing record,
+then a new record can be inserted.
+
+Note that this operation can only be run on an original table and not on a
+result view.
+
+This operation can update primary key values.  By default only
+'pure primary key' predicates are allowed when updating primary key values. If
+the primary key for a table is the column 'attr1', then the operation will only
+accept predicates of the form: \"attr1 == 'foo'\" if the attr1 column is being
+updated.  For a composite primary key (e.g. columns 'attr1' and 'attr2') then
+this operation will only accept predicates of the form:
+\"(attr1 == 'foo') and (attr2 == 'bar')\".  Meaning, all primary key columns
+must appear in an equality predicate in the expressions.  Furthermore each
+'pure primary key' predicate must be unique within a given request.  These
+restrictions can be removed by utilizing some available options through
+@{input options}.
+
+The {update_on_existing_pk}@{key of input options} option specifies the record
+collision policy for tables with a {primary key}@{link /concepts/tables/#primary-keys}, and
+is ignored on tables with no primary key.",
+
+    "fields": [
+        {
+            "name": "table_name",
+            "type": "string",
+            "doc": "Name of table to be updated, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.  Must be a currently existing table and not a view.",
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        },
+        {
+            "name": "expressions",
+            "type":
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "A list of the actual predicates, one for each update; format should follow the guidelines {here}@{endpoint /filter}.",
+            "value": {}
+        },
+        {
+            "name": "new_values_maps",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": ["string", "null"]
+                }
+            },
+            "doc": "List of new values for the matching records.  Each element is a map with (key, value) pairs where the keys are the names of the columns whose values are to be updated; the values are the new values.  The number of elements in the list should match the length of @{input expressions}.",
+            "value": {}
+        },
+        {
+            "name": "records_to_insert",
+            "type":
+            {
+                "type": "array",
+                "items": "bytes"
+            },
+            "doc": "An *optional* list of new binary-avro encoded records to insert, one for each update.  If one of @{input expressions} does not yield a matching record to be updated, then the corresponding element from this list will be added to the table.",
+            "value":
+            {
+                "default" : [],
+                "semantics":
+                {
+                    "type": "data",
+                    "dimensionality": 1,
+                    "homogeneous" : true,
+                    "encoding": "binary"
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "records_to_insert_str",
+            "type":
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "An optional list of JSON encoded objects to insert, one for each update, to be added if the particular update did not match any objects.",
+            "value":
+            {
+                "default" : [],
+                "semantics":
+                {
+                    "type": "data",
+                    "dimensionality": 1,
+                    "homogeneous" : true,
+                    "encoding": "json"
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "record_encoding",
+            "type": "string",
+            "doc": "Identifies which of @{input records_to_insert} and @{input records_to_insert_str} should be used.",
+            "value":
+            {
+                "default": "binary",
+                "valid_choices" :
+                {
+                    "binary" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "json" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "semantics":
+                {
+                    "type": "encoding"
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "global_expression":
+                    {
+                        "doc": "An optional global expression to reduce the search space of the predicates listed in @{input expressions}.",
+                        "value":
+                        {
+                            "default" : ""
+                        }
+                    },
+                    "bypass_safety_checks" :
+                    {
+                        "doc"  : "When set to {true}@{choice of input.key options.bypass_safety_checks}, all predicates are available for primary key updates.  Keep in mind that it is possible to destroy data in this case, since a single predicate may match multiple objects (potentially all of records of a table), and then updating all of those records to have the same primary key will, due to the primary key uniqueness constraints, effectively delete all but one of those updated records.",
+                        "value" :
+                        {
+                            "default" : "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "update_on_existing_pk" :
+                    {
+                        "doc"  : "Specifies the record collision policy for tables with a {primary key}@{link /concepts/tables/#primary-keys} when updating columns of the {primary key}@{link /concepts/tables/#primary-keys} or inserting new records.  If {true}@{choice of input.key options.update_on_existing_pk}, existing records with primary key values that match those of a record being updated or inserted will be replaced by the updated and new records.  If {false}@{choice of input.key options.update_on_existing_pk}, existing records with matching primary key values will remain unchanged, and the updated or new records with primary key values that match those of existing records will be discarded.  If the specified table does not have a primary key, then this option has no effect.",
+                        "value" :
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "Overwrite existing records when updated and inserted records have the same primary keys",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "Discard updated and inserted records when the same primary keys already exist",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "update_partition" :
+                    {
+                        "doc"  : "Force qualifying records to be deleted and reinserted so their partition membership will be reevaluated.",
+                        "value" :
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+
+                    "truncate_strings" :
+                    {
+                        "doc"  : "If set to {true}@{choice of input.key options.truncate_strings}, any strings which are too long for their charN string fields will be truncated to fit.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            },
+                            "default": "false"
+                        }
+                     },
+                    "use_expressions_in_new_values_maps" :
+                    {
+                        "doc"  : "When set to {true}@{choice of input.key options.use_expressions_in_new_values_maps}, all new values in @{input new_values_maps} are considered as expression values. When set to {false}@{choice of input.key options.use_expressions_in_new_values_maps}, all new values in @{input new_values_maps} are considered as constants.  NOTE:  When {true}@{choice of input.key options.use_expressions_in_new_values_maps}, string constants will need to be quoted to avoid being evaluated as expressions.",
+                        "value" :
+                        {
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+                        }
+                    },
+                    "record_id" :
+                    {
+                        "doc": "ID of a single record to be updated (returned in the call to @{endpoint /insert/records} or @{endpoint /get/records/fromcollection}).",
+                        "value": {}
+                    },
+                   "view_name" :
+                   {
+                       "doc": "<DEVELOPER>",
+                       "value":  { "internal_option": true } 
+                   },
+                   "internal_security_token" :
+                   {
+                       "doc" : "<DEVELOPER>",
+                       "value" :
+                       {
+                           "internal_option": true
+                       }
+                   }
+                }
+            }
+        }
+    ]
+}

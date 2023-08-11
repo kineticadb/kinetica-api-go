@@ -1,0 +1,96 @@
+{
+    "endpoint": "/filter/byvalue", 
+    "type": "record", 
+    "name": "filter_by_value_request", 
+    "desc_name": "Filter by Value",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": true,
+    "short_doc": "Filter a dataset for records matching a specific value",
+    "doc": "Calculates which objects from a table has a particular value for a
+particular column. The input parameters provide a way to specify either a String
+or a Double valued column and a desired value for the column on which the filter
+is performed. The operation is synchronous, meaning that a response will not be
+returned until all the objects are fully available. The response payload
+provides the count of the resulting set. A new result view which satisfies the
+input filter restriction specification is also created with a view name passed
+in as part of the input payload.  Although this functionality can also be
+accomplished with the standard filter function, it is more efficient.", 
+    "fields": [
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "Name of an existing table on which to perform the calculation, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution}.", 
+            "value":
+            {
+                "is_input_table_name": true
+            }
+        }, 
+        {
+            "name": "view_name", 
+            "type": "string", 
+            "doc": "If provided, then this will be the name of the view containing the results, in [schema_name.]view_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  Must not be an already existing table or view.", 
+            "value":
+            {
+                "is_output_table_name": true,
+                "default" : ""
+            }
+        }, 
+        {
+            "name": "is_string", 
+            "type": "boolean", 
+            "doc": "Indicates whether the value being searched for is string or numeric.", 
+            "value": {}
+        }, 
+        {
+            "name": "value", 
+            "type": "double", 
+            "doc": "The value to search for.", 
+            "value":
+            {
+                "default": 0
+            }
+        }, 
+        {
+            "name": "value_str", 
+            "type": "string", 
+            "doc": "The string value to search for.", 
+            "value":
+            {
+                "default": ""
+            }
+        }, 
+        {
+            "name": "column_name", 
+            "type": "string", 
+            "doc": "Name of a column on which the filter by value would be applied.", 
+            "value": {}
+        }, 
+        {
+            "name": "options", 
+            "doc": "Optional parameters.", 
+            "type":
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "collection_name" :
+                    {
+                        "doc": "[DEPRECATED--please specify the containing schema for the view as part of @{input view_name} and use @{endpoint /create/schema} to create the schema if non-existent]  Name of a schema for the newly created view. If the schema is non-existent, it will be automatically created.",
+                        "value" : {}
+                    },
+                    "refresh":
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value": { "internal_option": true }
+                    }
+                }                 
+            }
+        }
+    ]
+}

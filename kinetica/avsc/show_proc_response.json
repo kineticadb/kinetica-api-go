@@ -1,0 +1,100 @@
+{
+    "endpoint": "/show/proc",
+    "type": "record",
+    "name": "show_proc_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "proc_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The proc names.",
+            "value": {}
+        },
+        {
+            "name": "execution_modes",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The execution modes of the procs named in @{output proc_names}.",
+            "value": {
+                "valid_choices": {
+                    "@INNER_STRUCTURE": {
+                        "doc": "",
+                        "value": {
+                            "valid_choices": {
+                                "distributed": {
+                                    "doc": "Distributed",
+                                    "value": {}
+                                },
+                                "nondistributed": {
+                                    "doc": "Nondistributed",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "files",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "map",
+                    "values": "bytes"
+                }
+            },
+            "doc": "Maps of the files that make up the procs named in @{output proc_names}.",
+            "value": {}
+        },
+        {
+            "name": "commands",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "The commands (excluding arguments) that will be invoked when the procs named in @{output proc_names} are executed.",
+            "value": {}
+        },
+        {
+            "name": "args",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "string"
+                }
+            },
+            "doc": "Arrays of command-line arguments that will be passed to the procs named in @{output proc_names} when executed.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "array",
+                "items": {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "The optional parameters for the procs named in @{output proc_names}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

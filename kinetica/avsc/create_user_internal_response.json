@@ -1,0 +1,30 @@
+{
+    "endpoint": "/create/user/internal",
+    "type": "record",
+    "name": "create_user_internal_response",
+    "doc": "",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "doc": "Value of @{input name}.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                }
+            }
+        }
+    ]
+}

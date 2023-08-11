@@ -1,0 +1,112 @@
+{
+    "endpoint": "/admin/remove/ranks",
+    "type" : "record",
+    "name" : "admin_remove_ranks_request",
+    "desc_name": "Administration: Remove Ranks",
+    "on_prem_only": true,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Remove rank(s) from the Kinetica cluster",
+    "doc": "Remove one or more ranks from an existing Kinetica cluster. All data
+will be rebalanced to other ranks before the rank(s) is removed unless the
+{rebalance_sharded_data}@{key of input options} or
+{rebalance_unsharded_data}@{key of input options} parameters are set to
+{false}@{choice of input.key options.rebalance_unsharded_data} in the
+@{input options}, in which case the corresponding
+{sharded data}@{link /concepts/tables/#sharding} and/or unsharded data (a.k.a.
+{randomly-sharded}@{link /concepts/tables/#random-sharding}) will be deleted.
+
+The database must be offline for this operation, see @{endpoint /admin/offline}
+
+This endpoint's processing time depends on the amount of data in the system,
+thus the API call may time out if run directly.  It is recommended to run this
+endpoint asynchronously via @{endpoint /create/job}.
+",
+    "fields" : [
+        {
+            "name" : "ranks",
+            "type" :
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc"  : "Each array value designates one or more ranks to remove from the cluster. Values can be formatted as 'rankN' for a specific rank, 'hostN' (from the gpudb.conf file) to remove all ranks on that host, or the host IP address (hostN.address from the gpub.conf file) which also removes all ranks on that host. Rank 0 (the head rank) cannot be removed (but can be moved to another host using @{endpoint /admin/switchover}). At least one worker rank must be left in the cluster after the operation.",
+            "value" : { }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "rebalance_sharded_data" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.rebalance_sharded_data}, {sharded data}@{link /concepts/tables/#sharding} will be rebalanced approximately equally across the cluster. Note that for clusters with large amounts of sharded data, this data transfer could be time consuming and result in delayed query responses.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "true"
+                        }
+                    },
+                    "rebalance_unsharded_data" :
+                    {
+                        "doc" : "If {true}@{choice of input.key options.rebalance_unsharded_data}, unsharded data (a.k.a. {randomly-sharded}@{link /concepts/tables/#random-sharding}) will be rebalanced approximately equally across the cluster. Note that for clusters with large amounts of unsharded data, this data transfer could be time consuming and result in delayed query responses.",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            },
+                            "default" : "true"
+                        }
+                    },
+                    "aggressiveness" :
+                    {
+                      "doc" : "Influences how much data is moved at a time during rebalance.  A higher {aggressiveness}@{key of input options} will complete the rebalance faster.  A lower {aggressiveness}@{key of input options} will take longer but allow for better interleaving between the rebalance and other queries. Valid values are constants from 1 (lowest) to 10 (highest).",
+                        "value" :
+                        {
+                            "default" : "10"
+                        }
+                    },
+                    "rollback_mode" :
+                    {
+                        "doc"  : "<DEVELOPER> A bitmask that tests rollback by simulating failures during rebalance. Supported options are 0 (disable rollback), 1 (enable rollback), 2 (insert failure), 4 (gather failure), 8 (rollback failure).",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "default" : "0"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

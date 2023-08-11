@@ -1,0 +1,32 @@
+{
+    "endpoint": "/clear/trigger", 
+    "type": "record", 
+    "name": "clear_trigger_request", 
+    "desc_name": "Clear Trigger",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Delete a trigger",
+    "doc": "Clears or cancels the trigger identified by the specified handle. The output returns the handle of the trigger cleared as well as indicating success or failure of the trigger deactivation.", 
+    "fields": [
+        {
+            "name": "trigger_id", 
+            "type": "string", 
+            "doc": "ID for the trigger to be deactivated.", 
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "type": 
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc": "Optional parameters.", 
+            "value": 
+            {
+                "default": {}
+            }
+        }
+    ]
+}

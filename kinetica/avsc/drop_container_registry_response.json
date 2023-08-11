@@ -1,0 +1,38 @@
+{
+    "endpoint": "/drop/container/registry",
+    "type": "record",
+    "name": "drop_container_registry_response",
+    "desc_name": "Drop a container registry",
+    "is_host_manager_endpoint": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Drop a container registry",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "registry_name",
+            "type": "string",
+            "doc": "Name of the registry to be dropped" ,
+            "value":{}
+
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "kml_response" :
+                    {
+                        "doc": "KML response",
+                        "value" : {}
+                    } 
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+{
+    "endpoint": "/drop/model",
+    "type": "record",
+    "name": "drop_model_response",
+    "desc_name": "Drop a Model",
+    "is_host_manager_endpoint": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Drop a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Name of the model to be imported" ,
+            "value":{}
+
+        } ,
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {
+                "default" : {},
+                "valid_keys" : {
+                    "kml_response" :
+                    {
+                        "doc": "KML response",
+                        "value" : {}
+                    } 
+                }
+            }
+        }
+    ]
+}

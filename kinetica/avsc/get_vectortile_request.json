@@ -1,0 +1,80 @@
+{
+    "endpoint" : "/get/vectortile",
+    "type" : "record",
+    "name" : "get_vectortile_request",
+    "desc_name": "Get Vector Tile",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Generate vector tiles from specified tables",
+    "generate" : "NO_DOCS",
+    "doc"  : "For internal use only. Generates the vector tiles requested using the given tables and parameters",
+
+    "fields" : [
+        {
+            "name" : "table_names",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "Names of the tables containing the data for generating vector tiles.",
+            "value": {}
+        },
+        {
+            "name" : "column_names",
+            "type" :
+            {
+                "type" : "array",
+                "items" : "string"
+            },
+            "doc"  : "Names of the columns containing geometric feature data.",
+            "value": {}
+        },
+        { 
+            "name" : "layers",
+            "type" :
+            {
+                "type": "map",
+                "values":
+                {
+                    "type" : "array",
+                    "items" : "string"
+                }
+            },
+            "doc"  : "A map of tables to colums from which vector tile layers are being generated.",
+            "value": {}
+        },
+        {
+            "name" : "tile_x",
+            "type" : "int",
+            "doc"  : "Horizontal tile index.",
+            "value": {}
+        },
+        { 
+            "name" : "tile_y",
+            "type" : "int",
+            "doc"  : "Vertical tile index.",
+            "value": {}
+        },
+        { 
+            "name" : "zoom",
+            "type" : "int",
+            "doc"  : "Zoom level of the tile requested.",
+            "value": {}
+        },
+        {
+            "name": "options", 
+            "doc": "Optional parameters.", 
+            "type":
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

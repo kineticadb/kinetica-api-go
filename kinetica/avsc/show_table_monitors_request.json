@@ -1,0 +1,55 @@
+{
+    "endpoint": "/show/tablemonitors",
+    "type": "record", 
+    "name": "show_table_monitors_request",
+    "desc_name": "Show Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Shows information about table monitors",
+    "doc": "Show table monitors and their properties. Table monitors are created using @{endpoint /create/tablemonitor}.",
+    "fields": [
+        {
+            "name": "monitor_ids", 
+            "type": 
+            {
+                "type": "array", 
+                "items": "string"
+            },
+            "doc": "List of monitors to be shown. An empty list or a single entry with an empty string returns all table monitors.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "show_all_fields":
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value":
+                        {
+                            "internal_option": true,
+                            "default": "false",
+                            "valid_choices":
+                            {
+                                "true": { "doc": "", "value": {} },
+                                "false": { "doc": "", "value": {} }
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        }
+    ]
+}

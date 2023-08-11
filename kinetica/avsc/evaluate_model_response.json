@@ -1,0 +1,39 @@
+{
+    "endpoint": "/evaluate/model",
+    "type": "record",
+    "name": "evaluate_model_response",
+    "desc_name": "Evaluate a Model",
+    "is_host_manager_endpoint": false,
+    "generate" : "NO_DOCS",
+    "short_doc": "Evaluat a model",
+    "doc": " ",
+    "fields": [
+        {
+            "name": "model_name",
+            "type": "string",
+            "doc": "Name of the model to be evaluated" ,
+            "value":{}
+
+        },
+        {
+            "name": "destination_table",
+            "type": "string",
+            "doc": "Output table" ,
+            "value":{}
+
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default" : {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "endpoint": "/admin/backup/end",
+    "type": "record", 
+    "name": "admin_backup_end_request",
+    "desc_name": "Administration: End Backup",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "End system backup mode",
+    "doc": "Restores the system to normal operating mode after a backup has completed, allowing any queries that were blocked to complete.",
+    "fields": [
+        {
+            "name": "options",
+            "type":
+            {
+                "type":   "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

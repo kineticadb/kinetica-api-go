@@ -1,0 +1,80 @@
+{
+    "endpoint": "/get/records/bycolumn", 
+    "type": "record", 
+    "name": "get_records_by_column_response", 
+    "doc": "", 
+    "fields": [ 
+        {
+            "name": "table_name", 
+            "type": "string", 
+            "doc": "The same table name as was passed in the parameter list.", 
+            "value": {}
+        },
+        {
+            "name" : "response_schema_str", 
+            "type" : "string",
+            "doc"  : "Avro schema of @{output binary_encoded_response} or @{output json_encoded_response}.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "table_schema"
+                }
+            }
+        }, 
+        {
+            "name" : "binary_encoded_response", 
+            "type" : "bytes",
+            "doc"  : "Avro binary encoded response.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "binary",
+                    "homogeneous": true,
+                    "dimensionality": 0
+                },
+                "managed": "zero_copy"
+            }
+        }, 
+        {
+            "name" : "json_encoded_response", 
+            "type" : "string",
+            "doc"  : "Avro JSON encoded response.", 
+            "value":
+            {
+                "semantics":
+                {
+                    "type": "data",
+                    "encoding": "json",
+                    "homogeneous": true,
+                    "dimensionality": 0
+                },
+                "managed": "zero_copy"
+            }
+        },
+        {
+            "name": "total_number_of_records",
+            "type": "long",
+            "doc":  "Total/Filtered number of records.",
+            "value": {}
+        },
+        {
+            "name": "has_more_records",
+            "type": "boolean",
+            "doc":  "Too many records. Returned a partial set.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

@@ -1,0 +1,291 @@
+{
+    "endpoint": "/visualize/video/heatmap", 
+    "type": "record", 
+    "name": "visualize_video_heatmap_request", 
+    "desc_name": "Visualize Video Heatmap",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc" : "Generate a sequence of raster heat map images from table data showing the data over a specified time",    
+    "generate" : "NO_DOCS", 
+    "doc": "Creates raster heat-map images of table data based on input parameters. Numerous parameters are required to call this function. Some of the important parameters are the attributes of the generated images ({bg_color}@{key of input style_options}, @{input width}, @{input height}), the table names on which this function is to be applied and a user specified session key. This session key is later used to fetch the generated images. The operation is synchronous, meaning that a response will not be returned until all the images are fully available.
+
+Once the request has been processed then the generated video frames are available for download via WMS using STYLES=cached. In this request the LAYERS parameter should be populated with the session key passed in @{input session_key} of the visualize video request and the FRAME parameter indicates which 0-based frame of the video should be returned. All other WMS parameters are ignored for this mode.
+
+For instance, if a 20 frame video with the session key 'MY-SESSION-KEY' was generated, the first frame could be retrieved with the URL::
+
+    http://[hostname/ipAddress]:9191/wms?REQUEST=GetMap&STYLES=cached&LAYERS=MY-SESSION-KEY&FRAME=0
+
+and the last frame could be retrieved with::
+
+    http://[hostname/ipAddress]:9191/wms?REQUEST=GetMap&STYLES=cached&LAYERS=MY-SESSION-KEY&FRAME=19
+
+", 
+    "fields": [
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array", 
+                "items": "string"
+            }, 
+            "doc": "Names of the tables containing the data for various layers of the resulting video", 
+            "value": {}
+        }, 
+        {
+            "name": "x_column_name",
+            "type": "string", 
+            "doc": "Name of the column containing the x coordinates.", 
+            "value": {}
+        }, 
+        {
+            "name": "y_column_name",
+            "type": "string", 
+            "doc": "Name of the column containing the y coordinates.", 
+            "value": {}
+        }, 
+        {
+            "name": "min_x", 
+            "type": "double", 
+            "doc": "Lower bound for the x values.", 
+            "value": {}
+        }, 
+        {
+            "name": "max_x", 
+            "type": "double", 
+            "doc": "Upper bound for the x values.", 
+            "value": {}
+        }, 
+        {
+            "name": "min_y", 
+            "type": "double", 
+            "doc": "Lower bound for the y values.", 
+            "value": {}
+        }, 
+        {
+            "name": "max_y", 
+            "type": "double", 
+            "doc": "Upper bound for the y values.", 
+            "value": {}
+        }, 
+        {
+            "name": "time_intervals", 
+            "type": {
+                "type": "array", 
+                "items": {
+                    "type": "array", 
+                    "items": "double"
+                }
+            }, 
+            "doc": "", 
+            "value": {}
+        }, 
+        {
+            "name": "width", 
+            "type": "int", 
+            "doc": "Width of the generated video.", 
+            "value": {}
+        }, 
+        {
+            "name": "height", 
+            "type": "int", 
+            "doc": "Height of the generated video.", 
+            "value": {}
+        }, 
+        {
+            "name": "projection", 
+            "type": "string", 
+            "doc": "Spatial Reference System (i.e. EPSG Code).", 
+            "value":
+            {
+                "valid_choices" :
+                {
+                    "EPSG:4326" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "PLATE_CARREE" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "900913" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:900913" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "102100" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:102100" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "3857" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "EPSG:3857" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    },
+                    "WEB_MERCATOR" :
+                    {
+                        "doc" : "",
+                        "value" : {}
+                    }
+                },
+                "default": "PLATE_CARREE"
+            }
+        }, 
+        {
+            "name": "video_style", 
+            "type": "string", 
+            "doc": "", 
+            "value": {}
+        }, 
+        {
+            "name": "session_key", 
+            "type": "string", 
+            "doc": "User Provided session key that is later used to retrieve the generated video from the WMS.", 
+            "value": {}
+        }, 
+        {
+            "name" : "style_options",
+            "type" :
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "doc" : "Various style related options.",
+            "value" :
+            {
+                "valid_keys" :
+                {
+                    "colormap" :
+                    {
+                        "doc"  : "Colormap for the heat map.",
+                        "value":
+                        {
+                            "default": "reds",
+                            "valid_choices" :
+                            {
+                                "jet" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "hot" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "hsv" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "gray" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "blues" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "greens" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "greys" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "oranges" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "purples" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "reds" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "blur_radius" :
+                    {
+                        "value_type" : "int",
+                        "doc"  : "Blurring radius for the heat map.",
+                        "value":
+                        {
+                            "min" : "1",
+                            "max" : "32",
+                            "default":"5"
+                        }
+                    },
+                    "bg_color" :
+                    {
+                        "value_type" : "long",
+                        "doc"  : "Background color of the generated image.",
+                        "value":
+                        {
+                            "default" : "FF000000"
+                        }
+                    },
+                    "gradient_start_color" :
+                    {
+                        "value_type" : "long",
+                        "doc"  : "User defined gradient start color for the heat map.",
+                        "value":
+                        {
+                            "default": "FFFFFF"
+                        }
+                    },
+                    "gradient_end_color" :
+                    {
+                        "value_type" : "long",
+                        "doc"  : "User defined gradient end color for the heat map.",
+                        "value":
+                        {
+                            "default": "FF0000"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "options", 
+            "doc": "Optional parameters.", 
+            "type":
+            {
+                "type": "map", 
+                "values": "string"
+            }, 
+            "value":
+            {
+                "default": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,749 @@
+{
+    "endpoint": "/visualize/isochrone",
+    "name": "visualize_isochrone_request",
+    "desc_name": "Visualize Isochrone",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "type": "record",
+    "short_doc": "Draw isolines for travel results.",    
+    "doc": "Generate an image containing isolines for travel results using an
+existing graph. Isolines represent curves of equal cost, with cost typically
+referring to the time or distance assigned as the weights of the underlying
+graph. See
+{Network Graphs & Solvers}@{link /graph_solver/network_graph_solver/}
+for more information on graphs.",
+    "fields": [
+        {
+            "name": "graph_name",
+            "type": "string",
+            "doc": "Name of the graph on which the isochrone is to be computed.",
+            "value": {}
+        },
+        {
+            "name": "source_node",
+            "type": "string",
+            "doc": "Starting vertex on the underlying graph from/to which the isochrones are created.",
+            "value": {}
+        },
+        {
+            "name": "max_solution_radius",
+            "type": "double",
+            "doc": "Extent of the search radius around @{input source_node}. Set to '-1.0' for unrestricted search radius.",
+            "value": {
+                "default": "-1.0"
+            }
+        },    
+        {
+            "name": "weights_on_edges",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Additional weights to apply to the edges of an existing graph. Weights must be specified using {identifiers}@{link /graph_solver/network_graph_solver/#identifiers}; identifiers are grouped as {combinations}@{link /graph_solver/network_graph_solver/#id-combos}. Identifiers can be used with existing column names, e.g., 'table.column AS WEIGHTS_EDGE_ID', or expressions, e.g., 'ST_LENGTH(wkt) AS WEIGHTS_VALUESPECIFIED'. Any provided weights will be added (in the case of 'WEIGHTS_VALUESPECIFIED') to or multiplied with (in the case of 'WEIGHTS_FACTORSPECIFIED') the existing weight(s).",
+            "value": {
+              "default": []
+            }
+        },        
+        {
+            "name": "restrictions",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Additional restrictions to apply to the nodes/edges of an existing graph. Restrictions must be specified using {identifiers}@{link /graph_solver/network_graph_solver/#identifiers}; identifiers are grouped as {combinations}@{link /graph_solver/network_graph_solver/#id-combos}. Identifiers can be used with existing column names, e.g., 'table.column AS RESTRICTIONS_EDGE_ID', or expressions, e.g., 'column/2 AS RESTRICTIONS_VALUECOMPARED'. If {remove_previous_restrictions}@{key of input solve_options} is set to {true}@{choice of input.key solve_options.remove_previous_restrictions}, any provided restrictions will replace the existing restrictions. If {remove_previous_restrictions}@{key of input solve_options} is set to {false}@{choice of input.key solve_options.remove_previous_restrictions}, any provided restrictions will be added (in the case of 'RESTRICTIONS_VALUECOMPARED') to or replaced (in the case of 'RESTRICTIONS_ONOFFCOMPARED').",
+            "value": {
+                "default": []
+            }
+        },
+        {
+            "name": "num_levels",
+            "type": "int",
+            "doc": "Number of equally-separated isochrones to compute.",
+            "value": {
+                "default": "1"
+            }
+        },
+        {
+            "name": "generate_image",
+            "type": "boolean",
+            "doc": "If set to {true}@{choice of input generate_image}, generates a PNG image of the isochrones in the response.",
+            "value": {
+                "default": "true",
+                "valid_choices": {
+                  "true": {
+                    "doc": "",
+                    "value": {}
+                  },
+                  "false": {
+                    "doc": "",
+                    "value": {}
+                  }
+                }
+              }
+        },                
+        {
+            "name": "levels_table",
+            "type": "string",
+            "doc": "Name of the table to output the isochrones to, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  The table will contain levels and their corresponding WKT geometry. If no value is provided, the table is not generated.",            
+            "value": {
+                "default" : ""
+            }
+        },
+        {
+            "name": "style_options",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Various style related options of the isochrone image.",
+            "value": {
+                "valid_keys": {
+                    "line_size": {
+                        "doc": "The width of the contour lines in pixels.",
+                        "value": {
+                            "value_type": "int",
+                            "min": "0",
+                            "max": "20",
+                            "default": "3"
+                        }
+                    },
+                    "color": {
+                        "value_type": "long",
+                        "doc": "Color of generated isolines. All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value). If alpha is specified and flooded contours are enabled, it will be used for as the transparency of the latter.",
+                        "value": {
+                            "default": "FF696969"
+                        }
+                    },
+                    "bg_color": {
+                        "value_type": "long",
+                        "doc": "When @{input generate_image} is set to {true}@{choice of input generate_image}, background color of the generated image. All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value)",
+                        "value": {
+                            "default": "00000000"
+                        }
+                    },
+                    "text_color": {
+                        "value_type": "long",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, color for the labels. All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value)",
+                        "value": {
+                            "default": "FF000000"
+                        }
+                    },
+                    "colormap": {
+                        "doc": "Colormap for contours or fill-in regions when applicable. All color values must be in the format RRGGBB or AARRGGBB (to specify the alpha value)",
+                        "value": {
+                            "default": "jet",
+                            "valid_choices": {
+                                "jet": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "accent": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "afmhot": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "autumn": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "binary": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "blues": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "bone": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "brbg": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "brg": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "bugn": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "bupu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "bwr": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "cmrmap": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "cool": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "coolwarm": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "copper": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "cubehelix": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "dark2": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "flag": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_earth": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_gray": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_heat": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_ncar": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_rainbow": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_stern": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gist_yarg": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gnbu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gnuplot2": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gnuplot": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "gray": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "greens": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "greys": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "hot": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "hsv": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "inferno": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "magma": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "nipy_spectral": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "ocean": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "oranges": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "orrd": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "paired": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "pastel1": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "pastel2": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "pink": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "piyg": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "plasma": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "prgn": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "prism": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "pubu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "pubugn": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "puor": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "purd": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "purples": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "rainbow": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "rdbu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "rdgy": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "rdpu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "rdylbu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "rdylgn": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "reds": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "seismic": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "set1": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "set2": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "set3": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "spectral": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "spring": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "summer": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "terrain": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "viridis": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "winter": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "wistia": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "ylgn": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "ylgnbu": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "ylorbr": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "ylorrd": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }            
+        },
+        {
+            "name": "solve_options",
+            "doc": "Solver specific parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "remove_previous_restrictions": {
+                        "type": "boolean",
+                        "doc": "Ignore the restrictions applied to the graph during the creation stage and only use the restrictions specified in this request if set to {true}@{choice of input.key solve_options.remove_previous_restrictions}.",
+                        "value" : {
+                            "default":"false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "restriction_threshold_value": {
+                        "type": "float",
+                        "doc": "Value-based restriction comparison. Any node or edge with a 'RESTRICTIONS_VALUECOMPARED' value greater than the {restriction_threshold_value}@{key of input solve_options} will not be included in the solution.",
+                        "value": {}
+                    },
+                    "uniform_weights": {
+                        "type": "float",
+                        "doc": "When specified, assigns the given value to all the edges in the graph. Note that weights provided in @{input weights_on_edges} will override this value.",
+                        "value": {}
+                    }
+                }
+            }
+        },        
+        {
+            "name": "contour_options",
+            "doc": "Solver specific parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {                                    
+                    "projection": {
+                        "type": "string",
+                        "doc": "Spatial Reference System (i.e. EPSG Code).",
+                        "value": {
+                            "valid_choices": {
+                                "3857": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "102100": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "900913": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "EPSG:4326": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "PLATE_CARREE": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "EPSG:900913": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "EPSG:102100": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "EPSG:3857": {
+                                    "doc": "",
+                                    "value": {}
+                                },
+                                "WEB_MERCATOR": {
+                                    "doc": "",
+                                    "value": {}
+                                }
+                            },
+                            "default": "PLATE_CARREE"
+                        }
+                    },                    
+                    "width": {
+                        "type": "int",
+                        "doc": "When @{input generate_image} is set to {true}@{choice of input generate_image}, width of the generated image.",
+                        "value": {
+                            "default": 512
+                        }
+                    },
+                    "height": {
+                        "type": "int",
+                        "doc": "When @{input generate_image} is set to {true}@{choice of input generate_image}, height of the generated image. If the default value is used, the {height}@{key of input contour_options} is set to the value resulting from multiplying the aspect ratio by the {width}@{key of input contour_options}.",
+                        "value": {
+                            "default": -1
+                        }
+                    }, 
+                    "search_radius": {
+                        "type": "int",
+                        "doc": "When interpolating the graph solution to generate the isochrone, neighborhood of influence of sample data (in percent of the image/grid).",
+                        "value": {
+                            "default": "20"
+                        }
+                    },
+                    "grid_size": {
+                        "type": "int",
+                        "doc": "When interpolating the graph solution to generate the isochrone, number of subdivisions along the x axis when building the grid (the y is computed using the aspect ratio of the output image).",
+                        "value": {
+                            "default": "100"
+                        }
+                    },                    
+                    "color_isolines": {
+                        "type": "boolean",
+                        "doc": "Color each isoline according to the colormap; otherwise, use the foreground color.",
+                        "value": {
+                            "default": "true",
+                            "valid_choices": {
+                              "true": {
+                                "doc": "",
+                                "value": {}
+                              },
+                              "false": {
+                                "doc": "",
+                                "value": {}
+                              }
+                            }
+                        }
+                    },
+                    "add_labels": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key contour_options.add_labels}, add labels to the isolines.",
+                        "value": {
+                            "default": "false",
+                            "valid_choices": {
+                              "true": {
+                                "doc": "",
+                                "value": {}
+                              },
+                              "false": {
+                                "doc": "",
+                                "value": {}
+                              }
+                            }
+                        }
+                    },
+                    "labels_font_size": {
+                        "type": "int",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, size of the font (in pixels) to use for labels.",
+                        "value": {
+                            "default": "12"
+                        }
+                    },
+                    "labels_font_family": {
+                        "type": "string",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, font name to be used when adding labels.",
+                        "value": {
+                            "default": "arial"
+                        }
+                    },
+                    "labels_search_window": {
+                        "type": "int",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, a search window is used to rate the local quality of each isoline. Smooth, continuous, long stretches with relatively flat angles are favored. The provided value is multiplied by the {labels_font_size}@{key of input contour_options} to calculate the final window size.",
+                        "value": {
+                            "default": "4"
+                        }
+                    },
+                    "labels_intralevel_separation": {
+                        "type": "int",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, this value determines the  distance (in multiples of the {labels_font_size}@{key of input contour_options}) to use when separating labels of different values.",
+                        "value": {
+                            "default": "4"
+                        }
+                    },
+                    "labels_interlevel_separation": {
+                        "type": "int",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, this value determines the distance (in percent of the total window size) to use when separating labels of the same value.",
+                        "value": {
+                            "default": "20"
+                        }
+                    },
+                    "labels_max_angle": {
+                        "type": "int",
+                        "doc": "When {add_labels}@{key of input contour_options} is set to {true}@{choice of input.key contour_options.add_labels}, maximum angle (in degrees) from the vertical to use when adding labels.",
+                        "value": {
+                            "default": "60"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "doc": "Additional parameters",
+            "type": {
+                "type": "map",
+                "values": "string"
+            },
+            "value": {
+                "default": {},
+                "valid_keys": {
+                    "solve_table": {
+                        "type": "string",
+                        "doc": "Name of the table to host intermediate solve results, in [schema_name.]table_name format, using standard {name resolution rules}@{link /concepts/tables/#table-name-resolution} and meeting {table naming criteria}@{link /concepts/tables/#table-naming-criteria}.  This table will contain the position and cost for each vertex in the graph. If the default value is used, a temporary table is created and deleted once the solution is calculated.",
+                        "value": {
+                            "default" : ""
+                        }
+                    },
+                    "is_replicated": {
+                        "type": "boolean",
+                        "doc": "If set to {true}@{choice of input.key options.is_replicated}, replicate the {solve_table}@{key of input options}.",
+                        "value": {
+                            "default": "true",
+                            "valid_choices": {
+                              "true": {
+                                "doc": "",
+                                "value": {}
+                              },
+                              "false": {
+                                "doc": "",
+                                "value": {}
+                              }
+                            }
+                        }
+                    },
+                    "data_min_x": {
+                        "type": "double",
+                        "doc": "Lower bound for the x values. If not provided, it will be computed from the bounds of the input data.",
+                        "value": {}
+                    },
+                    "data_max_x": {
+                        "type": "double",
+                        "doc": "Upper bound for the x values. If not provided, it will be computed from the bounds of the input data.",
+                        "value": {}
+                    },
+                    "data_min_y": {
+                        "type": "double",
+                        "doc": "Lower bound for the y values. If not provided, it will be computed from the bounds of the input data.",
+                        "value": {}
+                    },
+                    "data_max_y": {
+                        "type": "double",
+                        "doc": "Upper bound for the y values. If not provided, it will be computed from the bounds of the input data.",
+                        "value": {}
+                    },
+                    "concavity_level": {
+                        "type": "double",
+                        "doc": "Factor to qualify the concavity of the isochrone curves. The lower the value, the more convex (with '0' being completely convex and '1' being the most concave).",
+                        "value": {
+                            "default": "0.5",
+                            "min": "0",
+                            "max": "1"
+                        }
+                    },
+                    "use_priority_queue_solvers": {
+                        "type": "boolean",
+                        "doc": "sets the solver methods explicitly if true",
+                        "value": {
+                            "default": "false",
+                            "valid_choices": {
+                              "true": {
+                                "doc": "uses the solvers scheduled for 'shortest_path' and 'inverse_shortest_path' based on solve_direction",
+                                "value": {}
+                              },
+                              "false": {
+                                "doc": "uses the solvers 'priority_queue' and 'inverse_priority_queue' based on solve_direction",
+                                "value": {}
+                              }
+                            }
+                        }                        
+                    },
+                    "solve_direction": {
+                        "type": "string",
+                        "doc": "Specify whether we are going to the source node, or starting from it.",
+                        "value": {
+                            "valid_choices": {
+                                "from_source": {
+                                    "doc": "Shortest path to get to the source (inverse Dijkstra)",
+                                    "value": {}
+                                },
+                                "to_source": {
+                                    "doc": "Shortest path to source (Dijkstra)",
+                                    "value": {}                                    
+                                }
+                            },
+                            "default": "from_source"                            
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

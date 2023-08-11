@@ -1,0 +1,32 @@
+{
+    "endpoint": "/show/resourcegroups",
+    "type": "record",
+    "name": "show_resource_groups_response",
+    "doc": "Returns detailed information about the requested resource groups.",
+    "fields": [
+        {
+            "name": "groups",
+            "type":
+            {
+                "type": "array",
+                "items":
+                {
+                    "type": "map",
+                    "values": "string"
+                }
+            },
+            "doc": "Map of resource group information.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

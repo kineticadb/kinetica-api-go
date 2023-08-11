@@ -1,0 +1,38 @@
+{
+    "endpoint": "/download/files", 
+    "type": "record", 
+    "name": "download_files_response", 
+    "doc": "", 
+    "fields": [
+        {
+            "name": "file_names",
+            "type": 
+            {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "Names of the files downloaded from KiFS",
+            "value" : {}
+        },
+        {
+            "name": "file_data",
+            "type": 
+            {
+                "type":"array",
+                "items": "bytes"
+            },
+            "doc": "Data for the respective downloaded files listed in @{output file_names}",
+            "value": { "managed": "zero_copy" }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

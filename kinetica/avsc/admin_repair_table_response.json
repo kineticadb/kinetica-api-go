@@ -1,0 +1,28 @@
+{
+    "endpoint": "/admin/repair/table",
+    "type": "record",
+    "name": "admin_repair_table_response",
+    "doc": "Returns information about affected tables.",
+    "fields": [
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of repaired tables.",
+            "value": {}
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

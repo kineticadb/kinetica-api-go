@@ -1,0 +1,105 @@
+{
+    "endpoint": "/create/job",
+    "type": "record", 
+    "name": "create_job_request",
+    "desc_name": "Create Asynchronous Job",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Create a new job to be executed asynchronously",
+    "doc": "Create a job which will run asynchronously. The response returns a job ID, which can be used to query the status and result of the job. The status and the result of the job upon completion can be requested by @{endpoint /get/job}.",
+
+    "fields": [
+        {
+            "name": "endpoint",
+            "type": "string",
+            "doc" : "Indicates which endpoint to execute, e.g. '/alter/table'.",
+            "value": {}
+        },
+        {
+            "name": "request_encoding",
+            "type": "string",
+            "doc" : "The encoding of the request payload for the job.",
+            "value": 
+            {
+                "default": "binary",
+                "valid_choices": 
+                {
+                    "binary":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "json":
+                    {
+                        "doc": "",
+                        "value": {}
+                    },
+                    "snappy":
+                    {
+                        "doc": "",
+                        "value": {}
+                    }
+                }
+            }
+        },
+        {
+            "name": "data",
+            "type": "bytes",
+            "doc": "Binary-encoded payload for the job to be run asynchronously.  The payload must contain the relevant input parameters for the endpoint indicated in @{input endpoint}.  Please see the documentation for the appropriate endpoint to see what values must (or can) be specified.  If this parameter is used, then @{input request_encoding} must be {binary}@{choice of input request_encoding} or {snappy}@{choice of input request_encoding}.",
+            "value":
+            {
+            } 
+        },
+        {
+            "name": "data_str",
+            "type": "string",
+            "doc": "JSON-encoded payload for the job to be run asynchronously.  The payload must contain the relevant input parameters for the endpoint indicated in @{input endpoint}.  Please see the documentation for the appropriate endpoint to see what values must (or can) be specified.  If this parameter is used, then @{input request_encoding} must be {json}@{choice of input request_encoding}.",
+            "value":
+            {
+            } 
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "remove_job_on_complete" :
+                    {
+                        "doc" : "",
+                        "default": "false",
+                        "internal_option": true,
+                        "value": {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "job_tag" :
+                    {
+                        "doc" : "Tag to use for submitted job. The same tag could be used on backup cluster to retrieve response for the job. Tags can use letter, numbers, '_' and '-'",
+                        "value" : {}
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "endpoint": "/admin/show/alerts",
+    "type" : "record",
+    "name" : "admin_show_alerts_response",
+    "doc": "Returns lists of alert data, including timestamp and type.",
+    "fields" : [
+        {
+            "name" : "timestamps",
+            "type" :
+            {
+                "type" : "array",
+                "items": "string"
+            },
+            "doc"  : "Timestamp for when the alert occurred, sorted from most recent to least recent. Each array entry corresponds with the entries at the same index in @{output types} and @{output params}.",
+            "value": { }
+        },
+        {
+            "name" : "types",
+            "type" :
+            {
+                "type" : "array",
+                "items": "string"
+            },
+            "doc"  : "Type of system alert, sorted from most recent to least recent. Each array entry corresponds with the entries at the same index in @{output timestamps} and @{output params}.",
+            "value": { }
+        },
+        {
+            "name" : "params",
+            "type" :
+            {
+                "type" :  "array",
+                "items":
+                {
+                    "type" : "map",
+                    "values" : "string"
+                }
+            },
+            "doc"  : "Parameters for each alert, sorted from most recent to least recent. Each array entry corresponds with the entries at the same index in @{output timestamps} and @{output types}.",
+            "value": { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Additional information.",
+            "value": {}
+        }
+    ]
+}

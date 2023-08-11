@@ -1,0 +1,58 @@
+{
+    "endpoint": "/admin/repair/table",
+    "type": "record",
+    "name": "admin_repair_table_request",
+    "desc_name": "Admin Repair Table",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Manually repair a corrupted table",
+    "doc": "Manually repair a corrupted table.",
+    "fields": [
+        {
+            "name": "table_names",
+            "type": {
+                "type": "array",
+                "items": "string"
+            },
+            "doc": "List of tables to query. An asterisk returns all tables.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys" :
+                {
+                    "repair_policy" :
+                    {
+                        "doc" : "Corrective action to take",
+                        "value" :
+                        {
+                            "valid_choices" :
+                            {
+                                "delete_chunks" :
+                                {
+                                    "doc" : "Deletes any corrupted chunks",
+                                    "value" : {}
+                                },
+                                "shrink_columns" :
+                                {
+                                    "doc" : "Shrinks corrupted chunks to the shortest column",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

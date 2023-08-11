@@ -1,0 +1,78 @@
+{
+    "endpoint": "/create/type", 
+    "type": "record", 
+    "name": "create_type_response", 
+    "doc": "", 
+    "fields":
+    [
+        {
+            "name": "type_id", 
+            "type": "string", 
+            "doc": "An identifier representing the created type. This type_id can be used in subsequent calls to {create a table}@{endpoint /create/table}", 
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "type_id",
+                    "dimensionality": 0
+                }
+            }
+
+        }, 
+        {
+            "name": "type_definition", 
+            "type": "string", 
+            "doc": "Value of @{input type_definition}.", 
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "type_schema",
+                    "dimensionality": 0
+                }
+            }
+        }, 
+        {
+            "name": "label", 
+            "type": "string", 
+            "doc": "Value of @{input label}.", 
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "label",
+                    "dimensionality": 0
+                }
+            }
+        }, 
+        {
+            "name": "properties", 
+            "type": {
+                "type": "map", 
+                "values": {
+                    "type": "array", 
+                    "items": "string"
+                }
+            }, 
+            "doc": "Value of @{input properties}.", 
+            "value":
+            {
+                "semantics" :
+                {
+                    "type": "properties",
+                    "dimensionality": 0
+                }
+            }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}

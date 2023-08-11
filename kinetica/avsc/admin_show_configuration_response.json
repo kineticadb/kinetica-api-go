@@ -1,0 +1,25 @@
+{
+    "endpoint": "/admin/show/configuration",
+    "type" : "record",
+    "name" : "admin_show_configuration_response",
+    "doc": "",
+    "fields" : [
+        {
+            "name" : "config_string",
+            "type" : "string",
+            "doc"  : "contents of the file",
+            "value" : { }
+        },
+        {
+            "name": "info",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            }, 
+            "doc": "Additional information.", 
+            "value": {}
+        }
+    ]
+}
+

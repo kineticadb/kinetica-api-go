@@ -1,0 +1,40 @@
+{
+    "endpoint": "/get/job",
+    "type": "record", 
+    "name": "get_job_request",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "desc_name": "Get Asynchronous Job Result",
+    "short_doc": "Get the status and result of asynchronously running job",
+    "doc": "Get the status and result of asynchronously running job.  See the @{endpoint /create/job} for starting an asynchronous job.  Some fields of the response are filled only after the submitted job has finished execution.",
+    "fields": [
+        {
+            "name": "job_id",
+            "type": "long",
+            "doc": "A unique identifier for the job whose status and result is to be fetched.",
+            "value": {}
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type": "map",
+                "values": "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+                "valid_keys":
+                {
+                    "job_tag":
+                    {
+                        "doc": "Job tag returned in call to create the job",
+                        "value": {}
+                    }
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,369 @@
+{
+    "endpoint": "/alter/system/properties",
+    "type": "record",
+    "name": "alter_system_properties_request",
+    "desc_name": "Alter System Properties",
+    "on_prem_only": false,
+    "is_host_manager_endpoint": false,
+    "is_single_table_oriented": false,
+    "short_doc": "Alter system configuration",
+    "doc": "The @{endpoint /alter/system/properties} endpoint is primarily used to simplify the testing of the system and is not expected to be used during normal execution.  Commands are given through the @{input property_updates_map} whose keys are commands and values are strings representing integer values (for example '8000') or boolean values ('true' or 'false').",
+    "fields":
+    [
+        {
+            "name": "property_updates_map",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Map containing the properties of the system to be updated. Error if empty.",
+            "value":
+            {
+                "valid_keys":
+                {
+                    "sm_omp_threads" :
+                    {
+                        "doc": "Set the number of OpenMP threads that will be used to service filter & aggregation requests to the specified integer value.",
+                        "value": {}
+                    },
+                    "kernel_omp_threads" :
+                    {
+                        "doc": "Set the number of kernel OpenMP threads to the specified integer value.",
+                        "value": {}
+                    },
+                    "concurrent_kernel_execution" :
+                    {
+                        "doc": "Enables concurrent kernel execution if the value is {true}@{choice of input.key property_updates_map.concurrent_kernel_execution} and disables it if the value is {false}@{choice of input.key property_updates_map.concurrent_kernel_execution}.",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "subtask_concurrency_limit" :
+                    {
+                        "doc" : "Sets the maximum number of simultaneous threads allocated to a given request, on each rank. Note that thread allocation may also be limted by resource group limits and/or system load.",
+                        "value":  {}
+                    },
+                    "chunk_size" :
+                    {
+                        "doc": "Sets the number of records per chunk to be used for all new tables.",
+                        "value": {}
+                    },
+                    "chunk_column_max_memory" :
+                    {
+                        "doc": "Sets the target maximum data size for each column in a chunk to be used for all new tables.",
+                        "value": {}
+                    },
+                    "evict_columns" :
+                    {
+                        "doc": "Attempts to evict columns from memory to the persistent store.  Value string is a semicolon separated list of entries, each entry being a table name optionally followed by a comma and a comma separated list of column names to attempt to evict.  An empty value string will attempt to evict all tables and columns.",
+                        "value": {}
+                    },
+                    "execution_mode" :
+                    {
+                        "doc": "Sets the execution_mode for kernel executions to the specified string value. Possible values are host, device, default (engine decides) or an integer value that indicates max chunk size to exec on host",
+                        "value": {}
+                    },
+                    "external_files_directory" :
+                    {
+                        "doc" : "Sets the root directory path where external table data files are accessed from.  Path must exist on the head node",
+                        "value": {}
+                    },
+                    "flush_to_disk" :
+                    {
+                        "doc": "Flushes any changes to any tables to the persistent store.  These changes include updates to the vector store, object store, and text search store, Value string is ignored",
+                        "value": {}
+                    },
+                    "clear_cache" :
+                    {
+                        "doc": "Clears cached results.  Useful to allow repeated timing of endpoints.  Value string is the name of the table for which to clear the cached results, or an empty string to clear the cached results for all tables.",
+                        "value": {}
+                    },
+                    "communicator_test" :
+                    {
+                        "doc": "Invoke the communicator test and report timing results. Value string is is a semicolon separated list of [key]=[value] expressions.  Expressions are: num_transactions=[num] where num is the number of request reply transactions to invoke per test; message_size=[bytes] where bytes is the size in bytes of the messages to send; check_values=[enabled] where if enabled is true the value of the messages received are verified.",
+                        "value": {}
+                    },
+                    "print_communicator_statistics" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "get_chunk_cache_state" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "get_chunk_cache_entries" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "get_chunk_cache_resident_set" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "get_sql_plan_cache_state" :
+                    {
+                        "doc": "Return statistics, in JSON format, about the SQL Plan Cache",
+                        "value" :
+                        {
+                            "internal_option": true
+                        }
+                    },
+                    "set_message_timers_enabled" :
+                    {
+                        "doc": "Enables the communicator test to collect additional timing statistics when the value string is {true}@{choice of input.key property_updates_map.set_message_timers_enabled}. Disables collecting statistics when the value string is {false}@{choice of input.key property_updates_map.set_message_timers_enabled}",
+                        "value":
+                        {
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    },
+                    "bulk_add_test" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value": {
+                            "internal_option": true
+                        }
+                    },
+                    "network_speed" :
+                    {
+                        "doc": "Invoke the network speed test and report timing results. Value string is a semicolon-separated list of [key]=[value] expressions.  Valid expressions are: seconds=[time] where time is the time in seconds to run the test; data_size=[bytes] where bytes is the size in bytes of the block to be transferred; threads=[number of threads]; to_ranks=[space-separated list of ranks] where the list of ranks is the ranks that rank 0 will send data to and get data from. If to_ranks is unspecified then all worker ranks are used.",
+                        "value": {}
+                    },
+                    "request_timeout" :
+                    {
+                        "doc": "Number of minutes after which filtering (e.g., @{endpoint /filter}) and aggregating (e.g., @{endpoint /aggregate/groupby}) queries will timeout.",
+                        "value":
+                        {
+                            "value_type" : "int",
+                            "default": 20,
+                            "min" : 0,
+                            "max" : 1440
+                        }
+                    },
+                    "max_get_records_size" :
+                    {
+                        "doc": "The maximum number of records the database will serve for a given data retrieval call",
+                        "value":
+                        {
+                            "value_type" : "int",
+                            "default": 20000,
+                            "min" : 0,
+                            "max" : 1000000
+                        }
+                    },
+                    "enable_audit" :
+                    {
+                        "doc" : "Enable or disable auditing.",
+                        "value" :
+                        {
+                            "value_type" : "boolean"
+                        }
+                    },
+                    "audit_headers" :
+                    {
+                        "doc" : "Enable or disable auditing of request headers.",
+                        "value" :
+                        {
+                            "value_type" : "boolean"
+                        }
+                    },
+                    "audit_body" :
+                    {
+                        "doc" : "Enable or disable auditing of request bodies.",
+                        "value" :
+                        {
+                            "value_type" : "boolean"
+                        }
+                    },
+                    "audit_data" :
+                    {
+                        "doc" : "Enable or disable auditing of request data.",
+                        "value" :
+                        {
+                            "value_type" : "boolean"
+                        }
+                    },
+                    "shadow_cube_enabled" :
+                    {
+                        "doc" : "Enable chunk level query caching. Flushes the chunk cache when value is false",
+                        "value" :
+                        {
+                            "internal_option": true,
+                            "value_type" : "boolean"
+                        }
+                    },
+                    "shadow_agg_size" :    
+                    {
+                        "doc" : "Size of the shadow aggregate chunk cache in bytes.",
+                        "value" :
+                        {
+                            "value_type" : "int",
+                            "default": 10000000,
+                            "min" : 0,
+                            "max" : 2147483647
+                        }
+                    },
+                    "shadow_filter_size" :
+                    {
+                        "doc" : "Size of the shdow filter chunk cache in bytes.",
+                        "value" :
+                        {
+                            "value_type" : "int",
+                            "default": 10000000,
+                            "min" : 0,
+                            "max" : 2147483647
+                        }
+                    },
+                    "shadow_cube_replacement_policy" :
+                    {
+                        "doc" : "Sets cache replacement policy",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "value_type" : "string",
+                            "default": "LEAST_PRECIOUS"
+                        }
+                    },                    
+                    "synchronous_compression" :                    {
+                        "doc" : "compress vector on set_compression (instead of waiting for background thread)",
+                        "value" :
+                        {
+                            "value_type" : "boolean",
+                            "default": "false"
+                        }
+                    },
+                    "enable_overlapped_equi_join" :                    
+                    {
+                        "doc" : "Enable overlapped-equi-join filter",
+                        "value" :
+                        {
+                            "value_type" : "boolean",
+                            "default": "true"
+                        }
+                    },
+                    "http_keep_alive" :
+                    {
+                        "doc" : "Enable HTTP keep alive",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "value_type" : "boolean",
+                            "default" : "false"
+                        }
+                    },
+                    "kafka_batch_size" :
+                    {
+                        "doc": "Maximum number of records to be read in a single kafka batched request",
+                        "value":
+                        {
+                            "value_type" : "int",
+                            "default": 1000,
+                            "min" : 1,
+                            "max" : 10000000
+                        }
+                    },
+                    "kafka_wait_time" :
+                    {
+                        "doc": "Maximum number of seconds to wait in a single kafka batched request",
+                        "value":
+                        {
+                            "value_type" : "int",
+                            "default": 30,
+                            "min" : 1,
+                            "max" : 120
+                        }
+                    },
+                    "kafka_timeout" :
+                    {
+                        "doc": "Number of seconds after which kakfa poll will timeout if datasource has no records",
+                        "value":
+                        {
+                            "value_type" : "int",
+                            "default": 5,
+                            "min" : 1,
+                            "max" : 30
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "options",
+            "type":
+            {
+                "type" : "map",
+                "values" : "string"
+            },
+            "doc": "Optional parameters.",
+            "value":
+            {
+                "default": {},
+		"valid_keys" :
+		{
+                    "request_timeout_seconds" :
+                    {
+                        "doc": "<DEVELOPER>",
+                        "value" :
+                        {
+                            "internal_option" : true,
+                            "default": "false",
+                            "valid_choices" :
+                            {
+                                "true" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                },
+                                "false" :
+                                {
+                                    "doc" : "",
+                                    "value" : {}
+                                }
+                            }
+                        }
+                    }
+		}
+            }
+        }
+    ]
+}
