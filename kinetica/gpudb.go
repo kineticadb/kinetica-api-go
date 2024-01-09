@@ -75,7 +75,6 @@ func NewWithOptions(ctx context.Context, url string, options *KineticaOptions) *
 	tracer := otel.GetTracerProvider().Tracer("kinetica-golang-api")
 	client.DisableWarn = true
 
-	fmt.Println("Local Kinetica API")
 	if options.ByPassSslCertCheck {
 		client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	}
