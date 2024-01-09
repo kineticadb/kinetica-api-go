@@ -75,6 +75,11 @@ func NewWithOptions(ctx context.Context, url string, options *KineticaOptions) *
 	tracer := otel.GetTracerProvider().Tracer("kinetica-golang-api")
 	client.DisableWarn = true
 
+	fmt.Println("Local Kinetica API")
+	if options.ByPassSslCertCheck {
+		client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	}
+
 	_, childSpan = tracer.Start(ctx, "NewWithOptions()")
 	defer childSpan.End()
 
@@ -357,6 +362,8 @@ func (kinetica *Kinetica) submitRawRequest(
 	))
 
 	body := httpResponse.Body()
+	bodyStr := string(body[:])
+	fmt.Println(bodyStr)
 	reader := avro.NewReader(bytes.NewBuffer(body), len(body))
 
 	status := reader.ReadString()
@@ -413,10 +420,6 @@ func (kinetica *Kinetica) buildHTTPRequest(ctx context.Context, requestBody *[]b
 	// childCtx context.Context
 	// childSpan trace.Span
 	)
-
-	if kinetica.options.ByPassSslCertCheck {
-		kinetica.client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-	}
 
 	request := kinetica.client.R().
 		SetBasicAuth(kinetica.options.Username, kinetica.options.Password)
