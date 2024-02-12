@@ -2,12 +2,13 @@
  <img width="200" src="https://www.kinetica.com/wp-content/uploads/2018/08/kinetica_logo.svg" alt="Kinetica Logo"/>
 </h3>
 <h5 align="center" style="margin:0px">
- <a href="https://www.kinetica.com/">Website</a>
- |
- <a href="https://docs.kinetica.com/7.1/">Docs</a>
- |
- <a href="https://join.slack.com/t/kinetica-community/shared_invite/zt-1bt9x3mvr-uMKrXlSDXfy3oU~sKi84qg">Community Slack</a>
+	<a href="https://www.kinetica.com/">Website</a>
+	|
+	<a href="https://docs.kinetica.com/7.2/">Docs</a>
+	|
+	<a href="https://join.slack.com/t/kinetica-community/shared_invite/zt-1bt9x3mvr-uMKrXlSDXfy3oU~sKi84qg">Community Slack</a>   
 </h5>
+
 
 # Kinetica GOLANG API
 
@@ -15,11 +16,12 @@
 - [Support](#support)
 - [Contact Us](#contact-us)
 
+
 ## Overview
 
 This project contains the source code of the Golang Kinetica API.
 
-The documentation can be found at <https://docs.kinetica.com/7.1/>.
+The documentation can be found at <https://docs.kinetica.com/7.2/>.
 
 ### Usage
 

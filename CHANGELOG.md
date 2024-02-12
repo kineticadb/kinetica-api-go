@@ -1,6 +1,13 @@
 # Kinetica Go API Changelog
 
 
+## Version 7.2
+
+### Version 7.2.0.0 - 2024-02-11
+
+-   Initial 7.2 release
+
+
 ## Version 7.1
 
 ### Version 7.1.9.0 - 2023-08-12
