@@ -19,7 +19,7 @@ var (
 )
 
 func main() {
-	endpoint := "http://127.0.0.1:9191" //os.Args[1]
+	endpoint := "http://localhost:9191" //os.Args[1]
 	username := ""                      //os.Args[2]
 	password := ""                      //os.Args[3]
 
