@@ -1,19 +1,21 @@
 <h3 align="center" style="margin:0px">
- <img width="200" src="https://www.kinetica.com/wp-content/uploads/2018/08/kinetica_logo.svg" alt="Kinetica Logo"/>
+	<img width="200" src="https://www.kinetica.com/wp-content/uploads/2018/08/kinetica_logo.svg" alt="Kinetica Logo"/>
 </h3>
 <h5 align="center" style="margin:0px">
- <a href="https://www.kinetica.com/">Website</a>
- |
- <a href="https://docs.kinetica.com/7.1/">Docs</a>
- |
- <a href="https://join.slack.com/t/kinetica-community/shared_invite/zt-1bt9x3mvr-uMKrXlSDXfy3oU~sKi84qg">Community Slack</a>
+	<a href="https://www.kinetica.com/">Website</a>
+	|
+	<a href="https://docs.kinetica.com/7.1/">Docs</a>
+	|
+	<a href="https://join.slack.com/t/kinetica-community/shared_invite/zt-1bt9x3mvr-uMKrXlSDXfy3oU~sKi84qg">Community Slack</a>
 </h5>
+
 
 # Kinetica GOLANG API
 
 - [Overview](#overview)
 - [Support](#support)
 - [Contact Us](#contact-us)
+
 
 ## Overview
 
@@ -27,7 +29,7 @@ For using this API in a `GO` project add the lines
 
 ```GO
 require (
- github.com/kineticadb/gpudb-api-go v0.0.1
+	github.com/kineticadb/gpudb-api-go v0.0.4
 )
 ```
 
@@ -43,38 +45,41 @@ For changes to the client-side API, please refer to
 package main
 
 import (
- "context"
- "fmt"
- "os"
- "sync"
- "time"
-
- "github.com/kineticadb/gpudb-api-go/example"
- "github.com/kineticadb/gpudb-api-go/kinetica"
- "go.uber.org/multierr"
- "go.uber.org/zap"
+	"context"
+	"fmt"
+	"os"
+	"sync"
+	"time"
+	
+	"github.com/kineticadb/gpudb-api-go/example"
+	"github.com/kineticadb/gpudb-api-go/kinetica"
+	"go.uber.org/multierr"
+	"go.uber.org/zap"
 )
 
 func main() {
- endpoint := os.Args[1]
- username := os.Args[2]
- password := os.Args[3]
-
- ctx := context.TODO()
- options := kinetica.KineticaOptions{Username: username, Password: password}
- // fmt.Println("Options", options)
- dbInst := kinetica.NewWithOptions(ctx, endpoint, &options)
+	endpoint := os.Args[1]
+	username := os.Args[2]
+	password := os.Args[3]
+	
+	ctx := context.TODO()
+	options := kinetica.KineticaOptions{Username: username, Password: password}
+	dbInst := kinetica.NewWithOptions(ctx, endpoint, &options)
 }
 
 ```
 
 ### Logging
 
-The logging is done using Uber zap package and `lumberjack` for rotating files based on size. Time based rotation is not supported yet. The configuration for `lumberjack` can be found here - <https://pkg.go.dev/gopkg.in/natefinch/lumberjack.v2>
+The logging is done using Uber zap package and `lumberjack` for rotating files
+based on size. Time based rotation is not supported yet. The configuration for
+`lumberjack` can be found here -
+<https://pkg.go.dev/gopkg.in/natefinch/lumberjack.v2>
 
 #### Default Log Config file
 
-This is included and will be used in case a user defined config file is not found. The name of the file is `log_config.yaml`.
+This is included and will be used in case a user defined config file is not
+found. The name of the file is `log_config.yaml`.
 
 ```yaml
 level: 'info'

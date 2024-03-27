@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gocarina/gocsv"
 	"github.com/kineticadb/kinetica-api-go/example"
 	"github.com/kineticadb/kinetica-api-go/kinetica"
+	"github.com/gocarina/gocsv"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 )
@@ -19,9 +19,9 @@ var (
 )
 
 func main() {
-	endpoint := "http://172.17.0.2:9191" //os.Args[1]
-	username := "admin"                  //os.Args[2]
-	password := "Kinetica1."             //os.Args[3]
+	endpoint := "http://localhost:9191" //os.Args[1]
+	username := ""                      //os.Args[2]
+	password := ""                      //os.Args[3]
 
 	// Logger, err := zap.NewProduction()
 	// if err != nil {
