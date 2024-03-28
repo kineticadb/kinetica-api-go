@@ -5,7 +5,8 @@
 
 ### Version 7.1.9.1 - 2024-03-27
 
--   Upgraded `golang.org/x/net` library from v0.9.0 to v0.16.0
+-   Upgraded `golang.org/x/net` library from v0.9.0 to v0.22.0
+-   Added runnable example to `examples.go`
 
 
 ### Version 7.1.9.0 - 2023-08-12
