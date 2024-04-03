@@ -19,16 +19,16 @@ var (
 )
 
 func main() {
-	endpoint := "http://172.17.0.2:9191" //os.Args[1]
-	username := "admin"                  //os.Args[2]
-	password := "Kinetica1."             //os.Args[3]
+	endpoint := "https://172.17.0.2:8082/gpudb-0" //os.Args[1]
+	username := "admin"                           //os.Args[2]
+	password := "Kinetica1."                      //os.Args[3]
 
 	// Logger, err := zap.NewProduction()
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
 	ctx := context.TODO()
-	options := kinetica.KineticaOptions{Username: username, Password: password}
+	options := kinetica.KineticaOptions{Username: username, Password: password, ByPassSslCertCheck: true}
 	// fmt.Println("Options", options)
 	dbInst := kinetica.NewWithOptions(ctx, endpoint, &options)
 
@@ -59,7 +59,7 @@ func main() {
 	// runShowSystemTiming1(dbInst)
 	// runShowSystemProperties1(dbInst)
 	// runExecuteSql1(dbInst)
-	pagingTable = runExecuteSql2(dbInst)
+	// pagingTable = runExecuteSql2(dbInst)
 	// runExecuteSql3(dbInst)
 	// runExecuteSql4(dbInst)
 	// runExecuteSql5(dbInst)
@@ -67,13 +67,15 @@ func main() {
 	// runExecuteSql7(dbInst)
 	// runExecuteSql8(dbInst)
 	// runExecuteSql9(dbInst)
+	runExecuteSql10(dbInst)
+	runShowTable(dbInst, "otel.metric_summary")
 	// runShowSchema1(dbInst)
 	// runShowTable1(dbInst)
 	// runGetRecords1(dbInst)
 	// runGetRecords2(dbInst)
 	// runGetRecords3(dbInst)
-	runGetRecords4(dbInst)
-	runGetRecords5(dbInst, pagingTable)
+	// runGetRecords4(dbInst)
+	// runGetRecords5(dbInst, pagingTable)
 	// runInsertRecords(Logger, dbInst)
 	// runCreateResourceGroup(dbInst, "lucid_test")
 	// runDeleteResourceGroup(dbInst, "lucid_test")
@@ -306,6 +308,36 @@ func runExecuteSql9(dbInst *kinetica.Kinetica) {
 	fmt.Println(result)
 	fmt.Println(result.Info)
 	fmt.Println("ExecuteSqlRaw - /has/table - ", duration.Milliseconds(), " ms")
+}
+
+// runExecuteSql10 - /has/schema
+func runExecuteSql10(dbInst *kinetica.Kinetica) {
+	start := time.Now()
+	result, err := dbInst.ExecuteSqlRaw(context.TODO(), "create table a1 (i1 int, f1 float) USING TABLE PROPERTIES (NO_ERROR_IF_EXISTS = TRUE);", 0, 0, "", nil)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	duration := time.Since(start)
+	fmt.Println(result)
+	fmt.Println("ExecuteSqlRaw - /create/table - ", duration.Milliseconds(), " ms")
+}
+
+func runShowTable(dbInst *kinetica.Kinetica, table string) {
+	start := time.Now()
+	showTableResult, err := dbInst.ShowTableRawWithOpts(context.TODO(), table, &kinetica.ShowTableOptions{
+		ForceSynchronous:   true,
+		GetSizes:           false,
+		ShowChildren:       false, // needs to be false for tables
+		NoErrorIfNotExists: false,
+		GetColumnInfo:      true,
+	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	duration := time.Since(start)
+	fmt.Println(showTableResult)
+	fmt.Println("ExecuteSqlRaw - /create/table - ", duration.Milliseconds(), " ms")
 }
 
 func runGetRecords1(dbInst *kinetica.Kinetica) {
