@@ -19,9 +19,9 @@ var (
 )
 
 func main() {
-	endpoint := "https://172.17.0.2:8082/gpudb-0" //os.Args[1]
-	username := "admin"                           //os.Args[2]
-	password := "Kinetica1."                      //os.Args[3]
+	endpoint := os.Args[1]
+	username := os.Args[2]
+	password := os.Args[3]
 
 	// Logger, err := zap.NewProduction()
 	// if err != nil {
@@ -38,6 +38,7 @@ func main() {
 
 	fmt.Println(anyValue...)
 
+	runMain(dbInst)
 	// runShowExplainVerboseAnalyseSqlStatement(dbInst)
 	// runShowExplainVerboseSqlStatement(dbInst)
 	// runShowStoredProcedureDDL(dbInst)
@@ -82,6 +83,27 @@ func main() {
 	// runCreateSchema(dbInst, "lucid_test")
 	// runDropSchema(dbInst, "lucid_test")
 
+}
+
+func runMain(dbInst *kinetica.Kinetica) {
+	start := time.Now()
+	result, err := dbInst.ExecuteSqlRaw(context.TODO(), "CREATE OR REPLACE TABLE go (id INT, name VARCHAR(64))", 0, 0, "", nil)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("\nCREATE: ", *result)
+	result, err = dbInst.ExecuteSqlRaw(context.TODO(), "INSERT INTO go VALUES (1, 'Joe'), (2, 'Jane')", 0, 0, "", nil)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("\nINSERT: ", *result)
+	records, grm_err := dbInst.ExecuteSqlRaw(context.TODO(), "SELECT * FROM go ORDER BY id", 0, 0, "", nil)
+	if grm_err != nil {
+		panic(grm_err)
+	}
+	duration := time.Since(start)
+	fmt.Printf("\nSELECT: %+v\n", *records)
+	fmt.Println("runMain", duration.Milliseconds(), " ms")
 }
 
 func runShowExplainVerboseAnalyseSqlStatement(dbInst *kinetica.Kinetica) {
