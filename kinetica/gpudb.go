@@ -75,6 +75,10 @@ func NewWithOptions(ctx context.Context, url string, options *KineticaOptions) *
 	tracer := otel.GetTracerProvider().Tracer("kinetica-golang-api")
 	client.DisableWarn = true
 
+	if options.ByPassSslCertCheck {
+		client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	}
+
 	_, childSpan = tracer.Start(ctx, "NewWithOptions()")
 	defer childSpan.End()
 
