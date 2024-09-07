@@ -3,6 +3,11 @@
 
 ## Version 7.2
 
+### Version 7.2.1.0 - 2024-09-07
+
+-   Initial 7.2.1.0 release
+
+
 ### Version 7.2.0.1 - 2024-03-27
 
 -   Upgraded `golang.org/x/net` library from v0.9.0 to v0.22.0
