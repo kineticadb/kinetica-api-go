@@ -3,6 +3,11 @@
 
 ## Version 7.2
 
+### Version 7.2.2.0 - 2024-10-15
+
+-   Initial 7.2.2.0 release
+
+
 ### Version 7.2.1.0 - 2024-09-07
 
 -   Initial 7.2.1.0 release
